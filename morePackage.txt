@@ -1,0 +1,10 @@
+1. animetion สไลด์ card 
+    Install: npm i swiper 
+    install link: https://swiperjs.com/get-started
+2. ถอนการติดตั้ง fontawesome ทั้งหมด
+    npm uninstall @fortawesome/fontawesome-svg-core @fortawesome/free-brands-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+3. ลง react icon
+    Install: npm i react-icons
+    install link: https://www.npmjs.com/package/react-icons
+    Icon Link: https://react-icons.github.io/react-icons/search/#q=instagram
+4. 

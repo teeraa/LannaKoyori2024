@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model businessinfo {
+  ID               Int @id
+  DataYear         Int    @db.Year
+  BusiTypeId       String @db.VarChar(255)
+  BussinessName    String @db.VarChar(255)
+  BussinessNameEng String @db.VarChar(255)
+  AddressThai      String @db.VarChar(255)
+  AddressT         String @db.VarChar(255)
+  TumbolT          String @db.VarChar(255)
+  AmphurT          String @db.VarChar(255)
+  ProvinceT        String @db.VarChar(255)
+  ZipCodeT         String @db.VarChar(255)
+  CountryT         String @db.VarChar(255)
+  AddressEng       String @db.VarChar(255)
+  AddressE         String @db.VarChar(255)
+  TumbolE          String @db.VarChar(255)
+  AmphurE          String @db.VarChar(255)
+  ProvinceE        String @db.VarChar(255)
+  ZipCodeE         String @db.VarChar(255)
+  CountryE         String @db.VarChar(255)
+  Latitude         Float  @db.Float
+  Longtitude       Float  @db.Float
+  picture          String  @db.VarChar(255)
+  products         products[]
+  personinfo       personinfo[]
+  consultantinfo   consultantinfo[]
+}
+
+model businesstype {
+  BusiTypeId      Int    @id
+  BusiTypeName_TH String @db.VarChar(50)
+  BusiTypeName_EN String @db.VarChar(50)
+}
+
+model consultantinfo {
+  ID          Int     @id
+  BusinessID  Int?
+  NameThai    String? @db.VarChar(255)
+  NameEng     String? @db.VarChar(255)
+  gender      String  @db.VarChar(10)
+  nationality String  @db.VarChar(100)
+  RoleThai    String? @db.VarChar(255)
+  RoleEng     String? @db.VarChar(255)
+  Year        Int     @db.Year
+  picture     String  @db.VarChar(255)
+  businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model materials {
+  ID       String  @id @db.VarChar(11)
+  Material String? @db.VarChar(100)
+
+  productsMain      products[] @relation("mainMaterial")
+  productsSub1      products[] @relation("subMaterial1")
+  productsSub2      products[] @relation("subMaterial2")
+  productsSub3      products[] @relation("subMaterial3")
+}
+
+model personinfo {
+  ID          Int     @id
+  BusinessID  Int?
+  NameThai    String? @db.VarChar(255)
+  NameEng     String? @db.VarChar(255)
+  RoleThai    String? @db.VarChar(255)
+  RoleEng     String? @db.VarChar(255)
+  Position    String? @db.VarChar(255)
+  nationality String  @db.VarChar(100)
+  gender      String  @db.VarChar(10)
+  Institute   String? @db.VarChar(255)
+  Contact     String? @db.VarChar(255)
+  Year        Int     @db.Year
+  picture     String? @db.VarChar(255)
+
+  businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model products {
+  ID           Int       @id
+  productName  String?      @db.VarChar(255)
+  price        Int?
+  mainMaterial String?      @db.VarChar(18)
+  subMaterial1 String?      @db.VarChar(18)
+  subMaterial2 String?      @db.VarChar(18)
+  subMaterial3 String?      @db.VarChar(18)
+  bussinessID  Int?      
+  image        String?      @db.VarChar(255)
+  sketch        String?      @db.VarChar(255)
+
+  materialMain materials? @relation("mainMaterial", fields: [mainMaterial], references: [ID])
+  materialSub1 materials? @relation("subMaterial1", fields: [subMaterial1], references: [ID])
+  materialSub2 materials? @relation("subMaterial2", fields: [subMaterial2], references: [ID])
+  materialSub3 materials? @relation("subMaterial3", fields: [subMaterial3], references: [ID])
+
+  businessinfo businessinfo? @relation(fields: [bussinessID], references: [ID])
+}
+
+model topic {
+  BusinessID         Int
+  TopicID            Int
+  First_TopicName    String? @db.VarChar(255)
+  Second_TopicName   String? @db.VarChar(255)
+  First_TopicNameEN  String? @db.VarChar(255)
+  Second_TopicNameEN String? @db.VarChar(255)
+  First_TopicNameJP  String? @db.VarChar(255)
+  Second_TopicNameJP String? @db.VarChar(255)
+
+  @@id([BusinessID, TopicID])
+}
+
+model topic_detail {
+  BusinessID           Int
+  TopicID              Int
+  First_DescriptionTH  String? @db.Text
+  Second_DescriptionTH String? @db.Text
+  First_DescriptionEN  String? @db.Text
+  Second_DescriptionEN String? @db.Text
+  First_DescriptionJP  String? @db.Text
+  Second_DescriptionJP String? @db.Text
+
+  @@id([BusinessID, TopicID])
+}
