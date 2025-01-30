@@ -3,32 +3,32 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model businessinfo {
-  ID               Int @id
-  DataYear         Int    @db.Year
-  BusiTypeId       String @db.VarChar(255)
-  BussinessName    String @db.VarChar(255)
-  BussinessNameEng String @db.VarChar(255)
-  AddressThai      String @db.VarChar(255)
-  AddressT         String @db.VarChar(255)
-  TumbolT          String @db.VarChar(255)
-  AmphurT          String @db.VarChar(255)
-  ProvinceT        String @db.VarChar(255)
-  ZipCodeT         String @db.VarChar(255)
-  CountryT         String @db.VarChar(255)
-  AddressEng       String @db.VarChar(255)
-  AddressE         String @db.VarChar(255)
-  TumbolE          String @db.VarChar(255)
-  AmphurE          String @db.VarChar(255)
-  ProvinceE        String @db.VarChar(255)
-  ZipCodeE         String @db.VarChar(255)
-  CountryE         String @db.VarChar(255)
-  Latitude         Float  @db.Float
-  Longtitude       Float  @db.Float
+  ID               Int     @id
+  DataYear         Int     @db.Integer
+  BusiTypeId       String  @db.VarChar(255)
+  BussinessName    String  @db.VarChar(255)
+  BussinessNameEng String  @db.VarChar(255)
+  AddressThai      String  @db.VarChar(255)
+  AddressT         String  @db.VarChar(255)
+  TumbolT          String  @db.VarChar(255)
+  AmphurT          String  @db.VarChar(255)
+  ProvinceT        String  @db.VarChar(255)
+  ZipCodeT         String  @db.VarChar(255)
+  CountryT         String  @db.VarChar(255)
+  AddressEng       String  @db.VarChar(255)
+  AddressE         String  @db.VarChar(255)
+  TumbolE          String  @db.VarChar(255)
+  AmphurE          String  @db.VarChar(255)
+  ProvinceE        String  @db.VarChar(255)
+  ZipCodeE         String  @db.VarChar(255)
+  CountryE         String  @db.VarChar(255)
+  Latitude         Float
+  Longtitude       Float
   picture          String  @db.VarChar(255)
   products         products[]
   personinfo       personinfo[]
@@ -50,12 +50,11 @@ model consultantinfo {
   nationality String  @db.VarChar(100)
   RoleThai    String? @db.VarChar(255)
   RoleEng     String? @db.VarChar(255)
-  Year        Int     @db.Year
+  Year        Int     @db.Integer
   picture     String  @db.VarChar(255)
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model materials {
   ID       String  @id @db.VarChar(11)
   Material String? @db.VarChar(100)
@@ -78,24 +77,23 @@ model personinfo {
   gender      String  @db.VarChar(10)
   Institute   String? @db.VarChar(255)
   Contact     String? @db.VarChar(255)
-  Year        Int     @db.Year
+  Year        Int     @db.Integer
   picture     String? @db.VarChar(255)
 
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model products {
   ID           Int       @id
-  productName  String?      @db.VarChar(255)
+  productName  String?   @db.VarChar(255)
   price        Int?
-  mainMaterial String?      @db.VarChar(18)
-  subMaterial1 String?      @db.VarChar(18)
-  subMaterial2 String?      @db.VarChar(18)
-  subMaterial3 String?      @db.VarChar(18)
-  bussinessID  Int?      
-  image        String?      @db.VarChar(255)
-  sketch        String?      @db.VarChar(255)
+  mainMaterial String?   @db.VarChar(18)
+  subMaterial1 String?   @db.VarChar(18)
+  subMaterial2 String?   @db.VarChar(18)
+  subMaterial3 String?   @db.VarChar(18)
+  bussinessID  Int?
+  image        String?   @db.VarChar(255)
+  sketch       String?   @db.VarChar(255)
 
   materialMain materials? @relation("mainMaterial", fields: [mainMaterial], references: [ID])
   materialSub1 materials? @relation("subMaterial1", fields: [subMaterial1], references: [ID])
