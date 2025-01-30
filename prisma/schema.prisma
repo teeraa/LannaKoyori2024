@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL") 
 }
 
-model businessinfo {
+model businessinfo { 
   ID               Int     @id
   DataYear         Int     @db.Integer
   BusiTypeId       String  @db.VarChar(255)
