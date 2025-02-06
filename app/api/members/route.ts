@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-// ใช้ Prisma Client แบบ Global เพื่อป้องกัน Connection Leak
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -63,5 +60,7 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         console.error('Error fetching members:', error);
         return NextResponse.json({ error: 'Failed to load members' }, { status: 500 });
+    } finally {
+        await prisma.$disconnect();
     }
 }

@@ -268,7 +268,7 @@ export default function StoresList() {
                                                     ID={store.ID}
                                                     name={store.BussinessName || "-"}
                                                     location={`(${store.Latitude}, ${store.Longtitude})` || "-"}
-                                                    image={`/images/entreprenuer/koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, '')}/banner/${store.picture}` || "/images/default.png"}
+                                                    image={`/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, '')}/banner/${store.picture}` || "/images/default.png"}
                                                 />
                                             ))
                                         ) : (
