@@ -415,7 +415,7 @@ export default function MembersList() {
                                                 ID={member.ID}
                                                 NameThai={member.NameThai || member.NameEng || "-"}
                                                 Role={member.RoleThai || "-"}
-                                                img={`/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.ID}/Profile/${member.picture}` || ""}
+                                                img={`/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Profile/${member.picture}` || ""}
                                                 Gender={member.gender || "-"}
                                             />
                                         ))

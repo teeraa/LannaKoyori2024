@@ -301,7 +301,7 @@ export default function ProductList() {
                         ID={product.ID}
                         productName={product.productName || "-"}
                         BusinessName={product.businessinfo.BussinessName || "-"}
-                        image={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""}
+                        image={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""}
                       />
                     ))
                   ) : (
