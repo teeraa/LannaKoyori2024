@@ -29,11 +29,16 @@ export async function GET(
     const personinfoData = await prisma.personinfo.findFirst({
       where: { BusinessID: businessID },
     });
+    const urlData = await prisma.urlbusiness.findFirst({
+      where: { BusinessID: businessID },
+    });
 
     // รวมข้อมูล
     const result = {
       ...businessinfoData,
+      urldata: urlData,
       personinfo: personinfoData || null, // เพิ่ม personinfo แถวแรก
+      
     };
 
     return NextResponse.json(result, { status: 200 });

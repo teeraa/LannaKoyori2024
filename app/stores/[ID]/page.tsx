@@ -113,7 +113,7 @@ export default function StoreDetail() {
                                 <div className="grid place-items-center md:flex justify-center items-center gap-4">
                                     <div className="relative w-[160px] h-[160px] md:w-[200px] md:h-[200px]">
                                         <Image
-                                            src={`/images/entreprenuer/koyori_${store.DataYear}/${store.ID}/Profile/${store.personinfo.picture}` || "/images/default.png"}
+                                            src={`/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, '')}/Profile/${store.personinfo.picture}` || "/images/entreprenuerdKfault.png"}
                                             className="rounded-full border-4 sm:border-6 border-white"
                                             layout="fill"
                                             objectFit="cover"
@@ -137,6 +137,14 @@ export default function StoreDetail() {
                             </div>
                         </div>
                     </div>
+                    {store.urldata != null ? (
+                        <div className="grid grid-cols-1 py-4 md:p-4 md:py-4  lg:px-0">
+                            <div className="col-span-1 flex flex-col items-center justify-start p-4 bg-white/75 rounded-md z-10 border border-gray-100">
+                                <iframe src={store.urldata.url} width="1200" height="600" allowFullScreen />
+
+                            </div>
+                        </div>
+                    ): ("")}
 
                 </main>
                 <div className="relative">
@@ -184,7 +192,7 @@ export default function StoreDetail() {
                                 {filteredProducts.map((product: any) => (
                                     <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                         <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                            <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                            <Image src={`/images/entreprenuer/Koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                         </Link>
                                     </SwiperSlide>
                                 ))}
@@ -194,7 +202,7 @@ export default function StoreDetail() {
                                     {filteredProducts.map((product: any) => (
                                         <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                             <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                                <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                                <Image src={`/images/entreprenuer/Koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                             </Link>
                                         </SwiperSlide>
                                     ))}

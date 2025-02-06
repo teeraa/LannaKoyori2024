@@ -33,12 +33,20 @@ model businessinfo {
   products         products[]
   personinfo       personinfo[]
   consultantinfo   consultantinfo[]
+  urlbusiness      urlbusiness[]
 }
 
 model businesstype {
   BusiTypeId      Int    @id
   BusiTypeName_TH String @db.VarChar(50)
   BusiTypeName_EN String @db.VarChar(50)
+}
+
+model urlbusiness {
+  ID          Int     @id
+  url         String? @db.VarChar(255)
+  BusinessID  Int?
+  businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
 }
 
 model consultantinfo {

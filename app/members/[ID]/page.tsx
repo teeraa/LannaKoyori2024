@@ -77,7 +77,7 @@ export default function MemberDetail() {
                 <main className=" pt-12 md:pt-[68px]">
                     <div className="bg-red-200 w-full h-[200px] sm:h-[300px] overflow-hidden relative rounded-b-md">
                         <Image
-                            src={`/images/entreprenuer/koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.ID}/banner/${member.businessinfo?.picture}` || "/images/default.jpg"}
+                            src={`/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/banner/${member.businessinfo?.picture}` || "/images/default.jpg"}
                             layout="fill"
                             alt="models"
                             priority={true}
@@ -95,7 +95,7 @@ export default function MemberDetail() {
                         <div className="col-span-3 md:col-span-1 flex flex-wrap md:flex-col items-center justify-center p-4 bg-white/75 rounded-md z-10 border border-gray-100">
                             <div className="relative w-[160px] h-[160px] md:w-[200px] md:h-[200px] -mt-16 sm:-mt-20 lg:-mt-24">
                                 <Image
-                                    src={`/images/entreprenuer/koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.ID}/Profile/${member.picture}` || "/images/default.jpg"}
+                                    src={`/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Profile/${member.picture}` || "/images/default.jpg"}
                                     className="rounded-full border-4 sm:border-6 border-white"
                                     layout="fill"
                                     objectFit="cover"
@@ -185,7 +185,7 @@ export default function MemberDetail() {
                                 {filteredProducts.map((product: any) => (
                                     <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                         <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                            <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                            <Image src={`/images/entreprenuer/Koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                         </Link>
                                     </SwiperSlide>
                                 ))}
@@ -195,7 +195,7 @@ export default function MemberDetail() {
                                     {filteredProducts.map((product: any) => (
                                         <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                             <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                                <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                                <Image src={`/images/entreprenuer/Koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                             </Link>
                                         </SwiperSlide>
                                     ))}
