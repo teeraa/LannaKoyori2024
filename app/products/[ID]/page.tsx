@@ -76,7 +76,7 @@ export default function ProductDetail() {
                         <div className="show-product w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 overflow-hidden">
                             <div className="main-show col-span-1 h-[330px] w-[330px] mx-auto">
                                 <Image
-                                    src={`/images/ผู้ประกอบการ/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                    src={`/images/entreprenuer/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.ID}/Product/${product?.ID}/${product?.image}` || ""}
                                     className="rounded-md w-full h-auto"
                                     width="290"
                                     height="321"
@@ -98,12 +98,12 @@ export default function ProductDetail() {
                                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
                                         {[...Array(7)].map((_, index) => (
                                             <a
-                                                href={`/images/ผู้ประกอบการ/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                                href={`/images/entreprenuer/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.ID}/Product/${product?.ID}/${product?.image}` || ""}
                                                 data-fancybox="gallery"
                                                 key={index}
                                             >
                                                 <Image
-                                                    src={`/images/ผู้ประกอบการ/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                                    src={`/images/entreprenuer/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.ID}/Product/${product?.ID}/${product?.image}` || ""}
                                                     className="rounded-md mb-2"
                                                     width="97"
                                                     height="97"
@@ -141,7 +141,7 @@ export default function ProductDetail() {
                             </div>
                             <div className="skech-image col-span-2 flex justify-end">
                                 <Image
-                                    src={`/images/ผู้ประกอบการ/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Sketch/${product?.sketch}` || "/images/default.png"}
+                                    src={`/images/entreprenuer/koyori_${product?.businessinfo?.DataYear}/${product?.businessinfo?.ID}/Sketch/${product?.sketch}` || "/images/default.png"}
                                     className="rounded-xl w-full h-auto"
                                     width="365"
                                     height="300"
@@ -165,7 +165,7 @@ export default function ProductDetail() {
                                 <div key={consult?.ID} className="personal relative mx-auto">
                                     <a href={`/members/${consult?.ID}`}>
                                         <Image
-                                            src={`/images/ผู้ประกอบการ/koyori_${consult?.businessinfo?.DataYear}/${consult?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Profile/${consult?.picture}` || "/images/default.png"}
+                                            src={`/images/entreprenuer/koyori_${consult?.businessinfo?.DataYear}/${consult?.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Profile/${consult?.picture}` || "/images/default.png"}
                                             className="rounded-3xl border-4 border-white"
                                             width="177"
                                             height="165"

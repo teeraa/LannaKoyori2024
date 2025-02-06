@@ -113,7 +113,7 @@ export default function StoreDetail() {
                                 <div className="grid place-items-center md:flex justify-center items-center gap-4">
                                     <div className="relative w-[160px] h-[160px] md:w-[200px] md:h-[200px]">
                                         <Image
-                                            src={`/images/ผู้ประกอบการ/koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, '')}/Profile/${store.personinfo.picture}` || "/images/default.png"}
+                                            src={`/images/entreprenuer/koyori_${store.DataYear}/${store.ID}/Profile/${store.personinfo.picture}` || "/images/default.png"}
                                             className="rounded-full border-4 sm:border-6 border-white"
                                             layout="fill"
                                             objectFit="cover"
@@ -184,7 +184,7 @@ export default function StoreDetail() {
                                 {filteredProducts.map((product: any) => (
                                     <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                         <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                            <Image src={`/images/ผู้ประกอบการ/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                            <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                         </Link>
                                     </SwiperSlide>
                                 ))}
@@ -194,7 +194,7 @@ export default function StoreDetail() {
                                     {filteredProducts.map((product: any) => (
                                         <SwiperSlide className="my-4 flex justify-center" key={product.ID}>
                                             <Link key={product.ID} href={`/products/${product.ID}`} className="cursor-pointer flex justify-center w-full">
-                                                <Image src={`/images/ผู้ประกอบการ/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.BussinessNameEng.replace(/\s+/g, '')}/Product/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
+                                                <Image src={`/images/entreprenuer/koyori_${product.businessinfo?.DataYear}/${product.businessinfo?.ID}/Product/${product.ID}/${product.image}` || ""} width={150} height={150} alt="models" className="rounded-md hover:shadow-md border-3 border-white shadow-md hover:border-2" />
                                             </Link>
                                         </SwiperSlide>
                                     ))}
