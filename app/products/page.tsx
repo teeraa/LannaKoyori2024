@@ -57,6 +57,7 @@ export default function ProductList() {
     try {
       const params: Record<string, any> = {};
       if (material) params.material = material;
+      if (search) params.search = search;
 
       const response = await axios.get('/api/products', { params });
       setFilteredProducts(response.data);
@@ -88,13 +89,21 @@ export default function ProductList() {
   const currentProducts = filteredProducts.slice(startIndex, startIndex + pageSize);
   // กรองแล้วให้ pagin กลับมาหน้าแรก
   const currentProductsFiltered = filteredProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      fetchProducts(search)
+      setCurrentPage(1);
+    } catch {
+      console.error('Error fetching search results:', error);
+    }
+  };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = e.target.value;
     setSearch(value);
     try {
-      fetchProducts(selectedMaterial)
+      fetchProducts(search)
       setCurrentPage(1);
     } catch {
       console.error('Error fetching search results:', error);
@@ -118,10 +127,10 @@ export default function ProductList() {
     setSelectedMaterial(newMaterial);
     fetchProducts(newMaterial);
   };
-  const TypeFilter = (type: string) => {
-    setSelectedType(selectedType === type ? null : type);
-    setSearch("");
-  };
+  // const TypeFilter = (type: string) => {
+  //   setSelectedType(selectedType === type ? null : type);
+  //   setSearch("");
+  // };
 
   const workTypes = [
     "ของตกแต่ว",
@@ -192,7 +201,7 @@ export default function ProductList() {
                 )}
               </div>
 
-               <div className="mb-4 text-gray-600">
+              <div className="mb-4 text-gray-600">
                 <button
                   className="w-full text-left py-2 px-4"
                   onClick={() => setTypeDropdown(!TypeDrpopdown)}
@@ -222,7 +231,7 @@ export default function ProductList() {
                     ))} */}
                   </ul>
                 )}
-              </div>  
+              </div>
             </div>
           </div>
         </aside>
@@ -239,14 +248,14 @@ export default function ProductList() {
                 <VscSettings size={24} />
               </button>
               <form
-                // onSubmit={handleSearchSubmit}
+                onSubmit={handleSearchSubmit}
                 className="flex items-center w-full justify-center"
               >
 
                 <input
                   type="text"
                   className="w-full py-1 px-4 md:py-2 md:px-4 rounded-l border border-gray-200 focus:outline-none"
-                  placeholder="ค้นหาบุคคล"
+                  placeholder="ค้นหาสินค้า"
                   value={search}
                   onChange={handleSearchChange}
                 />

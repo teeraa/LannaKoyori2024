@@ -20,11 +20,11 @@ export default function ProductCard({ productName, image, BusinessName, ID }: Pr
 
   return (
     <div
-      className="bg-white rounded-md  hover:shadow-md p-[15px] cursor-pointer border-2 border-gray-200"
+      className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full"
       onClick={handleProductLink}
     >
-      <div className="rounded-md bg-white w-48">
-        <div className="mx-auto w-42 h-44 group overflow-hidden">
+      <div className="rounded-md bg-white w-full">
+        <div className="mx-auto w-44 h-44 group overflow-hidden">
           <Image
             src={image || "/images/default.jpg"}
             alt={productName} 
@@ -34,7 +34,7 @@ export default function ProductCard({ productName, image, BusinessName, ID }: Pr
             className="rounded-md transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 origin-center"
             style={{
               objectFit: "cover",
-              objectPosition: "top center",
+              objectPosition: "center center",
               width: "100%",
               height: "100%",
             }}

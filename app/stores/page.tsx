@@ -47,12 +47,13 @@ export default function StoresList() {
         setFilterToggle(false);
     };
 
-    const fetchBusiness = async (province: string | null = null) => {
+    const fetchBusiness = async (province: string | null = null, search: string | null = null) => {
         setIsLoading(true);
         setError(null);
         try {
             const params: Record<string, any> = {};
             if (province) params.province = province;
+            if (search) params.search = search;
             const response = await axios.get(`api/business`, { params });
             setFilteredStores(response.data);
         } catch (error: any) {
@@ -71,7 +72,7 @@ export default function StoresList() {
         const value = e.target.value;
         setSearch(value);
         try {
-            fetchBusiness(selectedProvince)
+            fetchBusiness(selectedProvince, search)
             setCurrentPage(1);
         } catch {
             console.error('Error fetching search results:', error);
@@ -87,16 +88,13 @@ export default function StoresList() {
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitted(true);
-
-        const result = stores[0].filter((store: any) => {
-            const matchesSearch =
-                store.name.toLowerCase().includes(search.toLowerCase()) ||
-                store.location.toLowerCase().includes(search.toLowerCase())
-            return matchesSearch;
-        });
-        setFilteredStores(result);
-        setCurrentPage(1);
+        try {
+            fetchBusiness(search);
+            // setFilteredMembers(result);
+            setCurrentPage(1);
+        } catch {
+            console.error('Error fetching search results:', error);
+        }
     };
 
     // เริ่ม pagin ที่ 1
@@ -206,7 +204,7 @@ export default function StoresList() {
                                     <VscSettings size={24} />
                                 </button>
                                 <form
-                                    // onSubmit={handleSearchSubmit}
+                                    onSubmit={handleSearchSubmit}
                                     className="flex items-center w-full justify-center"
                                 >
 

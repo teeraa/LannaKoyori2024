@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
     try {
         let province = req.nextUrl.searchParams.get("province");
+        const search = req.nextUrl.searchParams.get("search");
 
         if(province == "เชียงใหม่"){
             province = "Chiang Mai";
@@ -33,6 +34,11 @@ export async function GET(req: NextRequest) {
         if(province){
             whereClause.OR = [
                 {ProvinceE: province}
+            ]
+        }
+        if(search){
+            whereClause.OR = [
+                {BussinessName: { contains: search }}
             ]
         }
         const data = await prisma.businessinfo.findMany({

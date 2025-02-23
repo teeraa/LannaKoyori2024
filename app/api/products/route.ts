@@ -5,6 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     // รับ query parameter 'material'
     const material = req.nextUrl.searchParams.get("material");
+    const search = req.nextUrl.searchParams.get("search");
 
     const whereClause: any = {};
 
@@ -14,6 +15,16 @@ export async function GET(req: NextRequest) {
         { materialSub1: { Material: material } },
         { materialSub2: { Material: material } },
         { materialSub3: { Material: material } },
+      ];
+    }
+
+    if (search) {
+      whereClause.OR = [
+        { materialMain: { Material: material } },
+        { materialSub1: { Material: material } },
+        { materialSub2: { Material: material } },
+        { materialSub3: { Material: material } },
+        { productName: { contains: search } },
       ];
     }
 
