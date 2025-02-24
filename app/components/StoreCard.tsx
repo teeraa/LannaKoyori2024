@@ -25,8 +25,8 @@ export default function MemberCard({ image, location, name, ID }: MemberCardProp
     className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full"
     onClick={handleMemberLink}
   >
-    <div className="rounded-md bg-white p-4">
-      <div className="mx-auto min-w-full h-full group overflow-hidden">
+    <div className="rounded-md bg-white w-full">
+      <div className="mx-auto w-44 h-44 group overflow-hidden">
         <Image
           src={image || "/images/default.jpg"}
           alt={name}
