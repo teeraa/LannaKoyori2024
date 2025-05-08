@@ -18,6 +18,7 @@ export default function ProductDetail() {
     const [products, setProducts] = useState<any>([]);
     const [consults, setConsults] = useState<any>([]);
 
+
     // หา product ที่ ID ตรงกัน
     const product = products?.flat().find((m: any) => m.ID === ID);
     const businessID = product?.businessinfo?.ID;
@@ -49,6 +50,8 @@ export default function ProductDetail() {
     }
 
     useEffect(() => {
+        const Fancybox = require('@fancyapps/ui').Fancybox;
+        Fancybox.bind('[data-fancybox="gallery"]');
         if (ID) {
             fetchProducts(ID); // ดึงข้อมูลทั้งหมดเมื่อโหลดหน้าเว็บ
         }
@@ -56,13 +59,13 @@ export default function ProductDetail() {
             fetchConsults(businessID); // ดึงข้อมูลที่เกี่ยวข้องกับ businessID
         }
     }, [ID, businessID]);
-    console.log(ID);
+
     if (!product) {
         return <div className="container">ไม่พบข้อมูลสินค้า</div>;
     }
     return (
         <>
-            <div className="container"> 
+            <div className="container">
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
                     <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]">
                     </div>
@@ -160,7 +163,7 @@ export default function ProductDetail() {
 
                         <div className="show-member h-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 items-center gap-8 md:gap-4 mb-4 place-content-center">
 
-                            {consults.map((consult:any) => (
+                            {consults.map((consult: any) => (
 
                                 <div key={consult?.ID} className="personal relative mx-auto">
                                     <a href={`/members/${consult?.ID}`}>
