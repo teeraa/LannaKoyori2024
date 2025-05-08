@@ -8,6 +8,7 @@ import SidebarLogo from "../../public/images/koyori-logo-banner.png";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { MdArrowUpward } from "react-icons/md";
+import GoogleTranslate from "./GoogleTranslate";
 
 
 export default function Navbar() {
@@ -78,7 +79,7 @@ export default function Navbar() {
     <>
       {/* navbar______________________________________ */}
       <div
-        className={`fixed top-0 w-full z-50 md:border-b md:border-gray-200 md:drop-shadow-sm transition-all duration-500 ease-in-out ${isScrolled
+        className={`fixed top-0 w-full z-40 md:border-b md:border-gray-200 md:drop-shadow-sm transition-all duration-500 ease-in-out ${isScrolled
             ? "md:backdrop-blur-md md:bg-white/75"
             : "backdrop-blur-none md:bg-white/40 md:border-b md:border-white shadow-sm"
           }`}
@@ -120,6 +121,7 @@ export default function Navbar() {
                   </li>
                 ))}
               </ul>
+              {/* <GoogleTranslate /> */}
             </div>
 
             {/* sidebar_______________________________________ */}

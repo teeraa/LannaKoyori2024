@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
+import GoogleTranslate from "./components/GoogleTranslate";
 
 
 
@@ -50,6 +51,7 @@ export default function Home({ }) {
                     8
                     จังหวัดทางภาคเหนือของประเทศไทยเพื่อพัฒนาคุณภาพงานหัตถกรรมด้วยการผสมผสานเทคนิคแบบดั้งเดิมเข้ากับการออกแบบที่สร้างสรรค์แล้วประดิษฐ์เป็นงานหัตถกรรมใหม่
                   </p>
+                  
                 </div>
 
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
@@ -84,6 +86,7 @@ export default function Home({ }) {
             <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">
               คำสำคัญ
             </h1>
+            
           </div>
           <div
             id="about"

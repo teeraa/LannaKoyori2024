@@ -9,6 +9,7 @@ import Navbar from "./components/navbar";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../lib/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import GoogleTranslate from "./components/GoogleTranslate";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,10 +38,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth no-scrollbar">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+       
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+          <GoogleTranslate/>
           <Navbar />
+          
           {/* <QueryClientProvider client={queryClient}> */}
             {children}
             {/* <ReactQueryDevtools initialIsOpen={false} /> */}
