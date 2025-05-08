@@ -25,9 +25,6 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Lanna | Koyori ",
   description: "",
-  icons: {
-    icon: "/images/koyori-meta-logo3.png",
-  },
 };
 
 export default function RootLayout({
