@@ -10,16 +10,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../lib/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import GoogleTranslate from "./components/GoogleTranslate";
+import { Kanit } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const kanit = Kanit({
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -35,17 +30,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth no-scrollbar">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-       
+
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`scroll-smooth ${kanit.className}`}
       >
-          <GoogleTranslate/>
-          <Navbar />
-          
-          {/* <QueryClientProvider client={queryClient}> */}
-            {children}
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-          {/* </QueryClientProvider> */}
+        <GoogleTranslate />
+        <Navbar />
+
+        {/* <QueryClientProvider client={queryClient}> */}
+        {children}
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        {/* </QueryClientProvider> */}
         {/* <Footer/>         */}
       </body>
     </html>
