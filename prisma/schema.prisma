@@ -27,9 +27,11 @@ model businessinfo {
   ProvinceE        String  @db.VarChar(255)
   ZipCodeE         String  @db.VarChar(255)
   CountryE         String  @db.VarChar(255)
-  Latitude         Float
-  Longtitude       Float
+  Latitude         Decimal?
+  Longtitude       Decimal?
   picture          String  @db.VarChar(255)
+  username         String?  @db.VarChar(255)
+  password         String?  @db.VarChar(255)
   products         products[]
   personinfo       personinfo[]
   consultantinfo   consultantinfo[]
@@ -64,7 +66,7 @@ model consultantinfo {
 }
 
 model materials {
-  ID       String  @id @db.VarChar(11)
+  ID       Int  @id @default(autoincrement())
   Material String? @db.VarChar(100)
 
   productsMain      products[] @relation("mainMaterial")
@@ -74,7 +76,7 @@ model materials {
 }
 
 model personinfo {
-  ID          Int     @id
+  ID          Int     @id 
   BusinessID  Int?
   NameThai    String? @db.VarChar(255)
   NameEng     String? @db.VarChar(255)
@@ -92,16 +94,19 @@ model personinfo {
 }
 
 model products {
-  ID           Int       @id
+  ID           Int       @id @default(autoincrement())
   productName  String?   @db.VarChar(255)
   price        Int?
-  mainMaterial String?   @db.VarChar(18)
-  subMaterial1 String?   @db.VarChar(18)
-  subMaterial2 String?   @db.VarChar(18)
-  subMaterial3 String?   @db.VarChar(18)
+  mainMaterial Int? 
+  subMaterial1 Int? 
+  subMaterial2 Int? 
+  subMaterial3 Int? 
   bussinessID  Int?
   image        String?   @db.VarChar(255)
   sketch       String?   @db.VarChar(255)
+  description String? @db.Text
+  color       String? @db.Text
+  size        String? @db.Text
 
   materialMain materials? @relation("mainMaterial", fields: [mainMaterial], references: [ID])
   materialSub1 materials? @relation("subMaterial1", fields: [subMaterial1], references: [ID])
@@ -109,6 +114,12 @@ model products {
   materialSub3 materials? @relation("subMaterial3", fields: [subMaterial3], references: [ID])
 
   businessinfo businessinfo? @relation(fields: [bussinessID], references: [ID])
+}
+
+model product_image {
+  image_id    Int   @id @default(autoincrement())
+  product_id  Int
+  image       String? @db.VarChar(255)
 }
 
 model topic {
