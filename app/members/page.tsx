@@ -413,7 +413,6 @@ export default function MembersList() {
             </div>
           </div>
 
-          {/* Content Area */}
           {shouldShowContentLoading ? (
             <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
               <div className="px-4">

@@ -10,14 +10,12 @@ import { IoStorefrontOutline } from "react-icons/io5"
 import axios from "axios"
 import { GrLocation } from "react-icons/gr"
 
-
 export default function StoresList() {
     const [search, setSearch] = useState("")
     const [FilterToggle, setFilterToggle] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(12)
     const [filteredStores, setFilteredStores] = useState<any>([])
-    const [isSubmitted, setIsSubmitted] = useState(false)
     const [searchbtn_moblie, setsearchbtn_moblie] = useState(false)
 
     const [business, setBusiness] = useState([])
@@ -25,7 +23,10 @@ export default function StoresList() {
     const [provinceDrpopdown, setProvinceDropdown] = useState(true)
 
     const [error, setError] = useState<string | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
+
+    // แยก loading state
+    const [isInitialLoading, setIsInitialLoading] = useState(true) // สำหรับโหลดครั้งแรก
+    const [isContentLoading, setIsContentLoading] = useState(false) // สำหรับโหลดเมื่อกรอง
 
     useEffect(() => {
         const handleRebtn = () => {
@@ -33,21 +34,29 @@ export default function StoresList() {
         }
 
         handleRebtn()
-        window.addEventListener("hiddenText", handleRebtn)
+        window.addEventListener("resize", handleRebtn)
 
-        return () => window.removeEventListener("hiddenText", handleRebtn)
+        return () => window.removeEventListener("resize", handleRebtn)
     }, [])
 
     function toggleSidebar() {
         setFilterToggle(!FilterToggle)
     }
+
     const closeFilter = () => {
         setFilterToggle(false)
     }
 
-    const fetchBusiness = async (province: string | null = null, search: string | null = null) => {
-        setIsLoading(true)
+    const fetchBusiness = async (province: string | null = null, search: string | null = null, isInitial = false) => {
+        // ตั้งค่า loading state ตามประเภทการโหลด
+        if (isInitial) {
+            setIsInitialLoading(true)
+        } else {
+            setIsContentLoading(true)
+        }
+
         setError(null)
+
         try {
             const params: Record<string, any> = {}
             if (province) params.province = province
@@ -57,41 +66,37 @@ export default function StoresList() {
         } catch (error: any) {
             setError(error.response?.data?.error || "Failed to fetch Business")
         } finally {
-            setIsLoading(false)
+            if (isInitial) {
+                setIsInitialLoading(false)
+            } else {
+                setIsContentLoading(false)
+            }
         }
     }
 
     useEffect(() => {
-        fetchBusiness()
+        fetchBusiness(null, null, true) // โหลดครั้งแรก
     }, [])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const value = e.target.value
         setSearch(value)
-        try {
-            fetchBusiness(selectedProvince, search)
-            setCurrentPage(1)
-        } catch {
-            console.error("Error fetching search results:", error)
-        }
+        fetchBusiness(selectedProvince, value, false)
+        setCurrentPage(1)
     }
 
     const provinceFilter = (province: string) => {
         const newProvince = selectedProvince === province ? null : province
         setSelectedProvince(newProvince)
-        fetchBusiness(newProvince)
+        fetchBusiness(newProvince, search, false)
+        setCurrentPage(1)
     }
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        try {
-            fetchBusiness(search)
-            // setFilteredMembers(result);
-            setCurrentPage(1)
-        } catch {
-            console.error("Error fetching search results:", error)
-        }
+        fetchBusiness(selectedProvince, search, false)
+        setCurrentPage(1)
     }
 
     // เริ่ม pagin ที่ 1
@@ -112,19 +117,25 @@ export default function StoresList() {
 
     const provinces = ["เชียงใหม่", "เชียงราย", "ลำพูน", "แม่ฮ่องสอน", "ลำปาง", "น่าน", "ตาก", "แพร่", "พะเยา"]
 
+    // ตรวจสอบว่าควรแสดง loading หรือไม่
+    const shouldShowFilterLoading = isInitialLoading
+    const shouldShowContentLoading = isInitialLoading || isContentLoading
+
     return (
         <>
             <div className="md:container">
+                {/* Background gradients */}
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
                     <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]"></div>
                 </div>
                 <div className="fixed inset-0 z-0 flex justify-end items-end bottom-0">
                     <div className="w-96 h-96 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-red-500 rounded-[60%] blur-3xl opacity-30 transform scale-80 rotate-[0deg] md:rotate-[140deg]"></div>
                 </div>
+
                 <div className="flex h-full max-h-full md:h-screen lg:h-screen overflow-hidden bg-white/75 border-none border-gray-200 md:border pt-12 lg:pt-[68px] md:pt-[68px]">
+                    {/* Filter Sidebar */}
                     <aside
-                        className={`fixed inset-y-0 left-0 w-3/4 lg:w-1/4 h-full border-l no-scrollbar overflow-y-auto border-gray-200 bg-white transform transition-transform duration-300 ease-in-out z-50 md:z-20 lg:static lg:translate-x-0 ${FilterToggle ? "translate-x-0 w-full" : "-translate-x-full"
-                            }`}
+                        className={`fixed inset-y-0 left-0 w-3/4 lg:w-1/4 h-full border-l no-scrollbar overflow-y-auto border-gray-200 bg-white transform transition-transform duration-300 ease-in-out z-50 md:z-20 lg:static lg:translate-x-0 ${FilterToggle ? "translate-x-0 w-full" : "-translate-x-full"}`}
                     >
                         <div className="sticky top-0 inset-x-0 z-20 px-4 py-[11px] text-center border-y border-gray-200 bg-gray-50 flex items-center justify-between lg:justify-center md:justify-between">
                             <h1 className="text-3xl font-medium text-gray-600">กรองข้อมูล</h1>
@@ -132,8 +143,10 @@ export default function StoresList() {
                                 <IoClose />
                             </button>
                         </div>
+
                         <div className="w-full no-scrollbar">
                             <div className="w-full overflow-y-auto">
+                                {/* Province Filter */}
                                 <div className="mb-4 text-gray-600">
                                     <button
                                         className="w-full text-left py-2 px-4"
@@ -150,11 +163,10 @@ export default function StoresList() {
                                         </h1>
                                     </button>
 
-
                                     {provinceDrpopdown && (
                                         <ul className="mt-2 flex flex-wrap gap-4 overflow-y-auto justify-start mx-4 max-h-60">
-                                            {isLoading ?
-                                                Array.from({ length: 9 }).map((_, index) => (
+                                            {shouldShowFilterLoading
+                                                ? Array.from({ length: 9 }).map((_, index) => (
                                                     <li key={index}>
                                                         <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
                                                     </li>
@@ -164,8 +176,8 @@ export default function StoresList() {
                                                         <button
                                                             onClick={() => provinceFilter(province)}
                                                             className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedProvince === province
-                                                                    ? "bg-blue-500 text-white"
-                                                                    : "bg-white hover:bg-gray-200 text-gray-800"
+                                                                ? "bg-blue-500 text-white"
+                                                                : "bg-white hover:bg-gray-200 text-gray-800"
                                                                 }`}
                                                         >
                                                             {province}
@@ -179,11 +191,11 @@ export default function StoresList() {
                         </div>
                     </aside>
 
-                    <main
-                        className={`w-screen flex-1  h-full overflow-y-auto relative no-scrollbar top-[-2px] lg:top-0 md:top-0 transform duration-300 ease-in-out md:border-x border-gray-200 `}
-                    >
-                        <div className="sticky top-0  flex-1 overflow-y-auto bg-white/75 backdrop-blur-m z-20  border-none md:border-y border-gray-200 ">
-                            <div className="bg-gray-50 flex justify-center items-center h-full py-2 px-2 md:px-4 border-y border-gray-200 rounded-none w-full ">
+                    {/* Main Content */}
+                    <main className="w-screen flex-1 h-full overflow-y-auto relative no-scrollbar top-[-2px] lg:top-0 md:top-0 transform duration-300 ease-in-out md:border-x border-gray-200">
+                        {/* Search Header */}
+                        <div className="sticky top-0 flex-1 overflow-y-auto bg-white/75 backdrop-blur-m z-20 border-none md:border-y border-gray-200">
+                            <div className="bg-gray-50 flex justify-center items-center h-full py-2 px-2 md:px-4 border-y border-gray-200 rounded-none w-full">
                                 <button
                                     className="lg:hidden md:block bg-white text-gray-500 py-1 px-1 rounded-md mr-2 border border-gray-300"
                                     onClick={toggleSidebar}
@@ -220,10 +232,10 @@ export default function StoresList() {
                                     แสดงผลลัพธ์สำหรับ&nbsp;"
                                     <span className="font-medium text-blue-950">{search ? search : "ค้นหาร้านค้า"}</span>"
                                 </h1>
-                                <div className="flex justify-center items-center gap-2 ">
-                                    <IoStorefrontOutline className="text-gray-600 " />
+                                <div className="flex justify-center items-center gap-2">
+                                    <IoStorefrontOutline className="text-gray-600" />
                                     <p className="font-light text-gray-600">ค้นพบ</p>
-                                    {!isLoading ? (
+                                    {!shouldShowContentLoading ? (
                                         <h1 className="text-gray-600 font-light">{filteredStores ? filteredStores.length : 0}</h1>
                                     ) : (
                                         <span className="loading loading-dots loading-xs"></span>
@@ -232,19 +244,20 @@ export default function StoresList() {
                             </div>
                         </div>
 
-                        {isLoading ? (
+
+                        {shouldShowContentLoading ? (
                             <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
                                 <div className="px-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
                                         {Array.from({ length: pageSize }).map((_, index) => (
                                             <div key={index} className="bg-white rounded-md p-4 shadow-md w-full animate-pulse">
                                                 <div className="rounded-md bg-white w-full">
-                                                    <div className="mx-auto w-44 h-44 bg-gray-200 rounded-md"></div>
+                                                    <div className="mx-auto w-full aspect-square max-w-[200px] bg-gray-200 rounded-md"></div>
                                                     <div className="mt-2 space-y-2">
-                                                        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                                                        <div className="h-6 bg-gray-200 rounded w-full"></div>
                                                         <div className="flex items-center gap-2">
                                                             <div className="w-4 h-4 bg-gray-200 rounded"></div>
-                                                            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                                            <div className="h-4 bg-gray-200 rounded w-full"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -256,7 +269,7 @@ export default function StoresList() {
                         ) : (
                             <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
                                 <div className="px-4">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0 ">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
                                         {currentStores.length > 0 ? (
                                             currentStoresFiltered.map((store: any) => (
                                                 <StoreCard
@@ -264,6 +277,7 @@ export default function StoresList() {
                                                     ID={store.ID}
                                                     name={store.BussinessName || "-"}
                                                     location={`(${store.Latitude}, ${store.Longtitude})` || "-"}
+                                                    province={store.ProvinceT || "-"}
                                                     image={
                                                         `/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, "")}/Banner/${store.picture}` ||
                                                         "/images/default.png"
@@ -278,8 +292,8 @@ export default function StoresList() {
                             </div>
                         )}
 
-                        {!isLoading ? (
-                            <div className=" sticky bottom-0 w-full bg-white px-4">
+                        {!shouldShowContentLoading && (
+                            <div className="sticky bottom-0 w-full bg-white px-4">
                                 <Pagination
                                     totalPages={Math.ceil(filteredStores.length / pageSize)}
                                     filteredData={filteredStores.length}
@@ -287,7 +301,7 @@ export default function StoresList() {
                                     onChangeLimit={handleLimitChange}
                                 />
                             </div>
-                        ) : null}
+                        )}
                     </main>
                 </div>
             </div>
