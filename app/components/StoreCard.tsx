@@ -5,17 +5,17 @@ import { useRouter } from "next/navigation";
 import { VscTools } from "react-icons/vsc";
 import { IoStorefrontOutline } from "react-icons/io5";
 
-interface MemberCardProps {
+interface StoresProps {
   ID: number;
   name: string;
   location: string;
   image?: string;
 }
 
-export default function MemberCard({ image, location, name, ID }: MemberCardProps) {
+export default function StoreCard({ image, location, name, ID }: StoresProps) {
   const router = useRouter();
 
-  const handleMemberLink = () => {
+  const handleStoreLink = () => {
     router.push(`/stores/${ID}`);
   };
 
@@ -23,7 +23,7 @@ export default function MemberCard({ image, location, name, ID }: MemberCardProp
     // <Link href={`/members/member_detail/${ID}`}>
     <div
       className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full"
-      onClick={handleMemberLink}
+      onClick={handleStoreLink}
     >
       <div className="rounded-md bg-white w-full">
         <div className="mx-auto w-44 h-44 group overflow-hidden">

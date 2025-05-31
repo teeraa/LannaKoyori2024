@@ -35,7 +35,7 @@ export default function MembersList() {
     const [filteredMembers, setFilteredMembers] = useState<any>([]);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [searchbtn_moblie, setsearchbtn_moblie] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     // dropdown
     const [GenderDropdown, setGenderDropdown] = useState(true);
     const [RoleDropdown, setRoleDropdown] = useState(true);
@@ -219,21 +219,28 @@ export default function MembersList() {
                                     )}
                                 </h1>
                             </button>
+
                             {GenderDropdown && (
                                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
-                                    {Gender.map((items) => (
-                                        <li key={items}>
-                                            <button
-                                                onClick={() => GenderFilter(items)}
-                                                className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedGender === items
-                                                    ? "bg-blue-500 text-white"
-                                                    : "bg-white hover:bg-gray-200 text-gray-800"
-                                                    }`}
-                                            >
-                                                {items}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {isLoading ?
+                                        Array.from({ length: 9 }).map((_, index) => (
+                                            <li key={index}>
+                                                <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                                            </li>
+                                        )) :
+                                        Gender.map((items) => (
+                                            <li key={items}>
+                                                <button
+                                                    onClick={() => GenderFilter(items)}
+                                                    className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedGender === items
+                                                        ? "bg-blue-500 text-white"
+                                                        : "bg-white hover:bg-gray-200 text-gray-800"
+                                                        }`}
+                                                >
+                                                    {items}
+                                                </button>
+                                            </li>
+                                        ))}
                                 </ul>
                             )}
                         </div>
@@ -254,19 +261,25 @@ export default function MembersList() {
                             </button>
                             {RoleDropdown && (
                                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
-                                    {RoleThai.map((items) => (
-                                        <li key={items}>
-                                            <button
-                                                onClick={() => RoleFilter(items)}
-                                                className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedRole === items
-                                                    ? "bg-blue-500 text-white"
-                                                    : "bg-white hover:bg-gray-200 text-gray-800"
-                                                    }`}
-                                            >
-                                                {items}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {isLoading ?
+                                        Array.from({ length: 9 }).map((_, index) => (
+                                            <li key={index}>
+                                                <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                                            </li>
+                                        )) :
+                                        RoleThai.map((items) => (
+                                            <li key={items}>
+                                                <button
+                                                    onClick={() => RoleFilter(items)}
+                                                    className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedRole === items
+                                                        ? "bg-blue-500 text-white"
+                                                        : "bg-white hover:bg-gray-200 text-gray-800"
+                                                        }`}
+                                                >
+                                                    {items}
+                                                </button>
+                                            </li>
+                                        ))}
                                 </ul>
                             )}
                         </div>
@@ -286,21 +299,28 @@ export default function MembersList() {
                                     )}
                                 </h1>
                             </button>
+
                             {NationDropdown && (
                                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
-                                    {Nation.map((items) => (
-                                        <li key={items}>
-                                            <button
-                                                onClick={() => NationFilter(items)}
-                                                className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedNation === items
-                                                    ? "bg-blue-500 text-white"
-                                                    : "bg-white hover:bg-gray-200 text-gray-800"
-                                                    }`}
-                                            >
-                                                {items}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {isLoading ?
+                                        Array.from({ length: 9 }).map((_, index) => (
+                                            <li key={index}>
+                                                <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                                            </li>
+                                        ))
+                                        : Nation.map((items) => (
+                                            <li key={items}>
+                                                <button
+                                                    onClick={() => NationFilter(items)}
+                                                    className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedNation === items
+                                                        ? "bg-blue-500 text-white"
+                                                        : "bg-white hover:bg-gray-200 text-gray-800"
+                                                        }`}
+                                                >
+                                                    {items}
+                                                </button>
+                                            </li>
+                                        ))}
                                 </ul>
                             )}
                         </div>
@@ -321,19 +341,25 @@ export default function MembersList() {
                             </button>
                             {YearDropdown && (
                                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
-                                    {Year.map((items: any) => (
-                                        <li key={items}>
-                                            <button
-                                                onClick={() => YearFilter(items)}
-                                                className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedYear === items
-                                                    ? "bg-blue-500 text-white"
-                                                    : "bg-white hover:bg-gray-200 text-gray-800"
-                                                    }`}
-                                            >
-                                                {items}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {isLoading ?
+                                        Array.from({ length: 9 }).map((_, index) => (
+                                            <li key={index}>
+                                                <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                                            </li>
+                                        )) :
+                                        Year.map((items: any) => (
+                                            <li key={items}>
+                                                <button
+                                                    onClick={() => YearFilter(items)}
+                                                    className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedYear === items
+                                                        ? "bg-blue-500 text-white"
+                                                        : "bg-white hover:bg-gray-200 text-gray-800"
+                                                        }`}
+                                                >
+                                                    {items}
+                                                </button>
+                                            </li>
+                                        ))}
                                 </ul>
                             )}
                         </div>
@@ -403,7 +429,26 @@ export default function MembersList() {
                     </div>
 
                     {isLoading ? (
-                        <span className=" absolute top-1/2 left-1/2 loading loading-spinner loading-xl w-40 h-40 bg-gradient-to-r from-blue-950 via-blue-500 to-cyan-400 animate-spin"></span>
+                        <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
+                            <div className="px-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
+                                    {Array.from({ length: pageSize }).map((_, index) => (
+                                        <div key={index} className="bg-white rounded-md p-4 shadow-md w-full animate-pulse">
+                                            <div className="rounded-md bg-white w-full">
+                                                <div className="mx-auto w-44 h-44 bg-gray-200 rounded-md"></div>
+                                                <div className="mt-2 space-y-2">
+                                                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                                                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     ) : (
                         <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
                             <div className="px-4">

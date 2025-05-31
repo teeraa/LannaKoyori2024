@@ -17,16 +17,13 @@ export default function MemberCard({ NameThai, Role, img, ID }: MemberCardProps)
   const router = useRouter();
 
   const handleMemberLink = () => {
-    if (ID) router.push(`/members/${ID}`);
+    if (ID) router.push(`/members/${ID}`)
   };
 
   return (
-    <div
-      className="bg-white rounded-md hover:shadow-lg cursor-pointer shadow-md w-full "
-      onClick={handleMemberLink}
-    >
-      <div className="rounded-md bg-white p-4">
-        <div className="mx-auto min-w-full h-full group overflow-hidden">
+    <div className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full" onClick={handleMemberLink}>
+      <div className="rounded-md bg-white w-full">
+        <div className="mx-auto w-44 h-44 group overflow-hidden">
           <Image
             src={img || "/images/default.jpg"}
             alt={NameThai}
@@ -45,11 +42,11 @@ export default function MemberCard({ NameThai, Role, img, ID }: MemberCardProps)
             }}
           />
         </div>
-        <div className="mt-2">
-          <h1 className="card-title text-xl text-start text-gray-600 truncate">
+        <div className="mt-2 w-full">
+          <h1 className="text-xl text-start text-gray-600 truncate w-full">
             {NameThai}
-          </h1>
-          <h1 className="text-md text-start text-gray-400 flex justify-start items-center gap-2 truncate">
+            </h1>
+          <h1 className="text-md text-start text-gray-400 flex justify-start items-center gap-2 truncate w-full">
             <span>
               <VscTools size={16} />
             </span>
