@@ -157,17 +157,18 @@ export default function Home({ }) {
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 2 },
                 1024: { slidesPerView: 2 },
-                1280: { slidesPerView: 3 },
+                1280: { slidesPerView: 3  },
               }}
               className="relative"
             >
               {personals.map((personal: any, index) => (
                 <SwiperSlide className="my-4 flex justify-center" key={index}>
-                  <div className="bg-white pb-4 py-2 px-6 w-64 lg:w-72 md:w-72 drop-shadow-md border-1 boderder border-gray-300 rounded-lg mx-auto ">
+             
+                  <div className="bg-white pb-4 py-6 px-6 w-64 lg:w-72 md:w-72 h-[450px] drop-shadow-[0px_0px_10px_rgba(0,0,0,0.09)]  border-1 boderder border-gray-300 rounded-lg mx-auto overflow-hidden hover:drop-shadow-md duration-300 transition ease-in-out">
                     <div className="space-y-4">
-                      <h1 className="bg-blue-950 text-white rounded-md text-2xl text-center font-bold">
-                        {personal.year}
-                      </h1>
+                      <div className="w-96 h-10 bg-blue-950 rotate-45 absolute -right-40">
+                        <p className="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-1/2 rotate-60 text-center text-white text-2xl">{personal.year}</p>
+                      </div>
                       <div className="mx-auto w-32 h-32 rounded-full overflow-hidden bg-gray-200 mb-4 relative">
                         <Image
                           src={personal.image}
@@ -183,15 +184,17 @@ export default function Home({ }) {
                           }}
                         />
                       </div>
-                      <h3 className="text-xl font-semibold text-blue-950 text-center truncate">
-                        {personal.name}
-                      </h3>
-                      <p className="text-gray-600 text-center truncate">
-                        {personal.position}
-                      </p>
+                      <div className="">
+                        <h3 className="text-xl font-semibold text-blue-950 text-center text-wrap">
+                          {personal.name}
+                        </h3>
+                        <p className="text-gray-400 text-center truncate ">
+                          {personal.position}
+                        </p>
+                      </div>
                       <div className="description">
                         <p
-                          className="text-black text-justify overflow-hidden text-ellipsis mt-2"
+                          className="text-gray-500 text-md overflow-hidden mt-4"
                           style={{
                             display: "-webkit-box",
                             WebkitBoxOrient: "vertical",
@@ -202,13 +205,14 @@ export default function Home({ }) {
                           {personal.text}
                         </p>
                       </div>
-                      <div className="text-center mt-4 border-t border-gray-300">
+                      <div className="text-center mt-4 border-t border-gray-300 bottom-2 left-0 right-0 absolute w-full">
                         <button className="px-3 pt-2 text-blue-950">
                           อ่านเพิ่มเติม
                         </button>
                       </div>
                     </div>
                   </div>
+              
                 </SwiperSlide>
               ))}
             </Swiper>
