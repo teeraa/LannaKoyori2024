@@ -103,21 +103,34 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                         </div>
                     </div>
                 ) : (
-                    <Image
-                        src={`/images/korori-logo.png`}
-                        layout="fill"
-                        alt=""
-                        priority={true}
-                        quality={90}
-                        style={{
-                            objectFit: "cover",
-                            objectPosition: "top",
-                            width: "100%",
-                            height: "100%",
-                        }}
-                        onError={() => handleImageError("banner")}
-                        onLoad={() => handleImageLoad("banner")}
-                    />
+                    <div className="relative w-full h-screen">
+                        <div className="absolute top-2 right-2 w-24 h-12 md:w-48 md:h-24">
+                            <Image
+                                src="/images/korori-logo.png"
+                                alt="Logo"
+                                fill
+                                priority
+                                quality={90}
+                                style={{ objectFit: "contain" }}
+                            />
+                        </div>
+                    </div>
+
+                    // <Image
+                    //     src={`${store?.Banner}`}
+                    //     layout="fill"
+                    //     alt=""
+                    //     priority={true}
+                    //     quality={90}
+                    //     style={{
+                    //         objectFit: "cover",
+                    //         objectPosition: "top",
+                    //         width: "100%",
+                    //         height: "100%",
+                    //     }}
+                    //     onError={() => handleImageError("banner")}
+                    //     onLoad={() => handleImageLoad("banner")}
+                    // />
                 )}
             </div>
 
@@ -179,7 +192,7 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                                     <Link href={`/members/${store?.personinfo.ID}`} className="text-blue-950 m-0 hover:underline underline-offset-4 ">
                                         <h1 className="flex items-center gap-2 text-[20px] font-bold text-wrap mt-1">
                                             {store?.personinfo.NameThai || "-"}
-                                            <span><HiExternalLink size={32} /></span>
+                                            <span><HiExternalLink size={28} /></span>
                                         </h1>
                                     </Link>
                                 )}

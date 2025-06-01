@@ -26,6 +26,7 @@ export interface Store {
     BussinessNameEng: string
     DataYear: string | number
     personinfo: PersonInfo
+    Banner?: string
     // เพิ่ม properties อื่นๆ ของ Store ตามต้องการ
 }
 
