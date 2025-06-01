@@ -21,18 +21,18 @@ export default function MemberDetailPage() {
   const member = members.flat().find((m: any) => m.ID === ID)
   const businessID = member?.businessinfo?.ID
 
-const fetchMembers = async (id: number) => {
-  try {
-    setIsMemberLoading(true)
-    const response = await axios.get(`/api/members/${id}`)
-    setMembers(response.data)
-    console.log("Fetched Member Data:", response.data) // <--- ตรวจสอบตรงนี้ใน console ของเบราว์เซอร์
-  } catch (error: any) {
-    setError(error.response?.data?.error || "Failed to fetch members")
-  } finally {
-    setIsMemberLoading(false)
+  const fetchMembers = async (id: number) => {
+    try {
+      setIsMemberLoading(true)
+      const response = await axios.get(`/api/members/${id}`)
+      setMembers(response.data)
+      console.log("Fetched Member Data:", response.data) // <--- ตรวจสอบตรงนี้ใน console ของเบราว์เซอร์
+    } catch (error: any) {
+      setError(error.response?.data?.error || "Failed to fetch members")
+    } finally {
+      setIsMemberLoading(false)
+    }
   }
-}
   // กรองผลิตภัณฑ์ตามผู้ประกอบการ
   const fetchProducts = async (id: number | null = null) => {
     try {
@@ -80,7 +80,7 @@ const fetchMembers = async (id: number) => {
 
   return (
     <>
-      <div className="container pb-10 px-4 sm:px-6 lg:px-8">
+     <div className="mx-4 md:mx-0 md:container">
         <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
           <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]"></div>
         </div>
@@ -89,8 +89,8 @@ const fetchMembers = async (id: number) => {
         </div>
 
         <main className="pt-12 md:pt-[68px]">
-          <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai}/>
-          <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai}/>
+          <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai} />
+          <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai} />
         </main>
       </div>
       <Footer />
