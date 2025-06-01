@@ -170,8 +170,8 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                             </div>
                             {/* Entrepreneur Details */}
                             <div className="flex flex-col gap-1 mt-4 md:mt-0 text-center md:text-start">
-                                <span className="text-xs lg:text-sm font-medium text-white bg-sky-700 px-2 py-1 rounded-md w-fit mx-auto md:mx-0">
-                                    ผู้ประกอบการ {/* Static Text */}
+                                <span className="text-[20px] font-medium text-white bg-blue-950 px-2 py-1 rounded-md w-fit mx-auto md:mx-0">
+                                    ผู้ประกอบการ 
                                 </span>
                                 {isLoading ? (
                                     <SkeletonText className="w-48 h-8 mt-1 mx-auto md:mx-0" />

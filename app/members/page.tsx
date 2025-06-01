@@ -14,6 +14,7 @@ import { FiCalendar } from "react-icons/fi"
 import { FaRegAddressCard, FaRegFlag } from "react-icons/fa"
 import { BsGenderAmbiguous } from "react-icons/bs"
 import axios from "axios"
+import { Member } from "@/app/types/Member"
 
 const RoleThai = [
   "ครูช่าง",
@@ -32,13 +33,11 @@ const Gender = ["ชาย", "หญิง"]
 const Nation = ["ไทย", "ญี่ปุ่น", "มาเลเซีย", "อเมริกัน", "มาซิโดเนีย"]
 
 export default function MembersList() {
-  const router = useRouter()
-  const URL = usePathname()
   const searchParams = useSearchParams()
   const [FilterToggle, setFilterToggle] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(12)
-  const [filteredMembers, setFilteredMembers] = useState<any>([])
+  const [filteredMembers, setFilteredMembers] = useState<Member[]>([])
   const [searchbtn_moblie, setsearchbtn_moblie] = useState(false)
 
   // แยก loading state
@@ -439,7 +438,7 @@ export default function MembersList() {
               <div className="px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
                   {currentMembers.length > 0 ? (
-                    currentMembersFiltered.map((member: any) => (
+                    currentMembersFiltered.map((member: Member) => (
                       <MemberCard
                         key={member.ID || "-"}
                         ID={member.ID}
