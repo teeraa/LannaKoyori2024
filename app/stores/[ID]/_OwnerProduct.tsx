@@ -6,25 +6,25 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
-import type { Product } from "@/app/types/page"
+import type { Product } from "./_client"
 import { GrLocation } from "react-icons/gr"
 
 interface OwnerProductProps {
   products: Product[]
-  isLoading?: boolean
-  roleThai?: string
+  isLoading: boolean
 }
 
-const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => void }) => {
+const ProductCard = ({ product, onClick }: { product: any; onClick?: () => void }) => {
   const [imageError, setImageError] = useState(false)
+
   const handleImageError = () => {
     setImageError(true)
   }
 
   return (
-    <div className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md group w-fit md:w-full lg:w-full" onClick={onClick}>
+    <div className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-fit md:w-full lg:w-full" onClick={onClick}>
       <div className="rounded-md bg-white w-full">
-        <div className="mx-auto w-full aspect-square max-w-[200px] overflow-hidden rounded-md">
+        <div className="mx-auto w-full aspect-square max-w-[200px] group overflow-hidden">
           {imageError ? (
             <div className="w-full h-full bg-gray-400 rounded-md flex items-center justify-center">
               <span className="text-white text-xs text-center">ไม่มีภาพ</span>
@@ -39,8 +39,8 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
               placeholder="blur"
               blurDataURL="/images/default.jpg"
               priority={true}
-                className="rounded-md transition-transform duration-300 group-hover:scale-110 origin-center w-full h-full object-cover"
-            sizes="(max-width: 640px) 150px, (max-width: 768px) 180px, (max-width: 1024px) 200px, 220px"
+              className="rounded-md transition-transform duration-300 group-hover:scale-110 origin-center w-full h-full object-cover"
+              sizes="(max-width: 640px) 150px, (max-width: 768px) 180px, (max-width: 1024px) 200px, 220px"
               onError={handleImageError}
             />
           )}
@@ -73,13 +73,6 @@ const ProductSkeleton = () => (
         </div>
       </div>
     </div>
-  </div>
-)
-
-const HeaderSkeleton = () => (
-  <div className="flex items-center mb-4">
-    <hr className="border-t-4 border-gray-600 flex-grow"></hr>
-    <div className="h-12 w-56 bg-gray-300 rounded md:ms-4 lg:ms-4 ms-4 animate-pulse"></div>
   </div>
 )
 
@@ -120,22 +113,19 @@ const ProductSkeletonSwiper = () => (
   </div>
 )
 
-export default function OwnerProduct({ roleThai, products, isLoading = false }: OwnerProductProps) {
-  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : "ผลิตภัณฑ์"
+export default function OwnerProduct({ products, isLoading = false }: OwnerProductProps) {
   // ตรวจสอบว่าควรใช้ Swiper หรือ Grid
   const shouldUseSwiper = products && products.length > 6
   const hasProducts = products && products.length > 0
 
   return (
     <div className="relative">
-      {isLoading ? (
-        <HeaderSkeleton />
-      ) : (
-        <div className="flex items-center mb-4">
-          <hr className="border-t-4 border-gray-600 flex-grow"></hr>
-          <h1 className="text-[24px] md:text-[32px] lg:text-[32px] font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">{ProductInfo}</h1>
-        </div>
-      )}
+      <div className="flex items-center mb-4">
+        <hr className="border-t-4 border-gray-600 flex-grow"></hr>
+        <h1 className="text-[32px] font-bold md:ms-4 lg:ms-4 ms-4 text-gray-600">
+          สินค้าผู้ประกอบการ
+        </h1>
+      </div>
 
       <div className="relative min-h-[300px]">
         <div

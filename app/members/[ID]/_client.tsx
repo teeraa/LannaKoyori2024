@@ -21,19 +21,18 @@ export default function MemberDetailPage() {
   const member = members.flat().find((m: any) => m.ID === ID)
   const businessID = member?.businessinfo?.ID
 
-  const fetchMembers = async (id: number) => {
-    try {
-      setIsMemberLoading(true)
-      const response = await axios.get(`/api/members/${id}`)
-      setMembers(response.data)
-      console.log(response.data)
-    } catch (error: any) {
-      setError(error.response?.data?.error || "Failed to fetch members")
-    } finally {
-      setIsMemberLoading(false)
-    }
+const fetchMembers = async (id: number) => {
+  try {
+    setIsMemberLoading(true)
+    const response = await axios.get(`/api/members/${id}`)
+    setMembers(response.data)
+    console.log("Fetched Member Data:", response.data) // <--- ตรวจสอบตรงนี้ใน console ของเบราว์เซอร์
+  } catch (error: any) {
+    setError(error.response?.data?.error || "Failed to fetch members")
+  } finally {
+    setIsMemberLoading(false)
   }
-
+}
   // กรองผลิตภัณฑ์ตามผู้ประกอบการ
   const fetchProducts = async (id: number | null = null) => {
     try {
@@ -90,8 +89,8 @@ export default function MemberDetailPage() {
         </div>
 
         <main className="pt-12 md:pt-[68px]">
-          <MemberDetail member={member} isMemberLoading={isMemberLoading} />
-          <OwnerProduct products={products} isLoading={isProductLoading} />
+          <MemberDetail member={member} isLoading={isMemberLoading} />
+          <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai}/>
         </main>
       </div>
       <Footer />

@@ -1,14 +1,14 @@
 "use client"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { IoIosArrowDown } from "react-icons/io"
 
 interface MemberDetailProps {
     member: any
-    isMemberLoading: boolean
+    isLoading: boolean
 }
 
-export default function MemberDetail({ member, isMemberLoading }: MemberDetailProps) {
+export default function MemberDetail({ member, isLoading }: MemberDetailProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [showContent, setShowContent] = useState(false)
     const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({})
@@ -16,6 +16,9 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
         banner: true,
         profile: true,
     })
+
+    const checkLongTextRef = useRef<HTMLParagraphElement>(null)
+    const [ReadMoreButton, setReadMoreButton] = useState(false)
 
     const handleImageError = (imageKey: string) => {
         setImageErrors((prev) => ({ ...prev, [imageKey]: true }))
@@ -26,12 +29,37 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
         setImageLoading((prev) => ({ ...prev, [imageKey]: false }))
     }
 
-    const shouldShowImage = !isMemberLoading && member
+    useEffect(() => {
+        if (!isLoading && member && checkLongTextRef.current) {
+            const pElement = checkLongTextRef.current
+            const styles = window.getComputedStyle(pElement)
+            const lineHeightStyle = styles.lineHeight
+            const fontSizeStyle = styles.fontSize
+            let lineHeightPx: number
+
+            if (lineHeightStyle === "normal") {
+                lineHeightPx = Number.parseFloat(fontSizeStyle) * 1.625
+            } else {
+                lineHeightPx = Number.parseFloat(lineHeightStyle)
+            }
+
+            if (pElement.scrollHeight > 0 && lineHeightPx > 0) {
+                const numberOfLines = pElement.scrollHeight / lineHeightPx
+                setReadMoreButton(numberOfLines > 5)
+            } else {
+                setReadMoreButton(false)
+            }
+        } else {
+            setReadMoreButton(false)
+        }
+    }, [isLoading, member])
+
+    const shouldShowImage = !isLoading && member
 
     return (
         <>
             <div className="bg-gray-200 w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] overflow-hidden relative rounded-b-md">
-                {isMemberLoading ? (
+                {isLoading ? (
                     <div className="w-full h-full bg-gray-300 animate-pulse"></div>
                 ) : imageErrors["banner"] ? (
                     <div className="relative w-full h-screen">
@@ -42,11 +70,10 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
                                 fill
                                 priority
                                 quality={90}
-                                style={{ objectFit: 'contain' }}
+                                style={{ objectFit: "contain" }}
                             />
                         </div>
                     </div>
-
                 ) : (
                     <Image
                         src={`/images/entreprenuer/Koyori_${member?.businessinfo?.DataYear || ""}/${member?.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${member?.businessinfo?.picture || ""}`}
@@ -70,7 +97,7 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
                 <div className="xl:col-span-1 flex flex-col sm:flex-row xl:flex-col items-center justify-center p-4 sm:p-6 bg-white/75 rounded-md z-10 border border-gray-100">
                     <div className="flex flex-col items-center sm:items-start xl:items-center sm:mr-6 xl:mr-0">
                         <div className="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] xl:w-[200px] xl:h-[200px] -mt-12 sm:-mt-16 lg:-mt-20 xl:-mt-24">
-                            {isMemberLoading ? (
+                            {isLoading ? (
                                 <div className="w-full h-full bg-gray-300 animate-pulse rounded-full border-4 sm:border-6 border-white"></div>
                             ) : imageErrors["profile"] ? (
                                 <div className="w-full h-full bg-gray-400 rounded-full border-4 sm:border-6 border-white flex items-center justify-center">
@@ -96,14 +123,14 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
 
                         {/* Name */}
                         <div className="text-center sm:text-left xl:text-center mt-4">
-                            {isMemberLoading ? (
+                            {isLoading ? (
                                 <div className="space-y-2">
                                     <div className="h-6 w-32 sm:w-40 bg-gray-300 animate-pulse rounded"></div>
                                     <div className="h-4 w-24 sm:w-32 bg-gray-300 animate-pulse rounded"></div>
                                 </div>
                             ) : (
                                 <>
-                                    <h1 className="text-[20px] sm:text-2xl lg:text-2xl font-bold text-gray-600 text-wrap">
+                                    <h1 className="text-[20px] sm:text-2xl lg:text-2xl font-bold text-blue-950 text-wrap">
                                         {member?.NameThai}
                                     </h1>
                                     <h2 className="text-[20px] text-gray-400 text-wrap">({member?.NameEng})</h2>
@@ -113,42 +140,33 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
                     </div>
 
                     <div className="mt-4 sm:mt-0 xl:mt-6 w-full sm:flex-1 xl:flex-none">
-                        <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] xl:grid-cols-[1fr_2fr] gap-2 text-[16px]  text-gray-600">
-                            <div className="font-semibold text-gray-500">เบอร์โทรศัพท์</div>
-                            {isMemberLoading ? (
-                                <div className="h-4 w-full bg-gray-300 animate-pulse rounded mb-2 sm:mb-0"></div>
-                            ) : (
-                                <div className="text-gray-400 text-wrap mb-2 sm:mb-0">{member?.Contact}</div>
-                            )}
-
-                            <div className="font-semibold text-gray-500">ตำแหน่ง</div>
-                            {isMemberLoading ? (
-                                <div className="h-4 w-full bg-gray-300 animate-pulse rounded mb-2 sm:mb-0"></div>
-                            ) : (
-                                <div className="text-gray-400 text-wrap mb-2 sm:mb-0">{member?.RoleThai}</div>
-                            )}
-
-                            <div className="font-semibold text-gray-500">ปี</div>
-                            {isMemberLoading ? (
-                                <div className="h-4 w-full bg-gray-300 animate-pulse rounded mb-2 sm:mb-0"></div>
-                            ) : (
-                                <div className="text-gray-400 text-wrap mb-2 sm:mb-0">{member?.Year}</div>
-                            )}
-                            <div className="font-semibold text-gray-500">เพศ</div>
-                            {isMemberLoading ? (
-                                <div className="h-4 w-full bg-gray-300 animate-pulse rounded mb-2 sm:mb-0"></div>
-                            ) : (
-                                <div className="text-gray-400 text-wrap">{member?.gender}</div>
-                            )}
+                        <div className="grid grid-cols-1 gap-2 text-[16px]">
+                            {/* Row Template */}
+                            {[
+                                { label: 'เบอร์โทรศัพท์', value: member?.Contact },
+                                { label: 'ตำแหน่ง', value: member?.RoleThai },
+                                { label: 'ปี', value: member?.Year },
+                                { label: 'เพศ', value: member?.gender },
+                            ].map(({ label, value }, index) => (
+                                <div key={index} className="flex flex-nowrap items-start gap-2">
+                                    <div className="font-semibold text-gray-500 min-w-[100px] whitespace-nowrap">{label}</div>
+                                    {isLoading ? (
+                                        <div className="h-4 w-full bg-gray-300 animate-pulse rounded mb-2 sm:mb-0"></div>
+                                    ) : (
+                                        <div className="text-gray-400 mb-2 sm:mb-0 line-clamp-2 break-words">{value || '-'}</div>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
+
                 </div>
 
                 <div className="xl:col-span-3 space-y-4">
                     <div className="border border-gray-100 rounded-md p-4 bg-gradient-to-t from-white to-white/75 z-10 relative overflow-hidden">
-                        <h1 className="text-[24px] font-bold mb-4 text-gray-600">เกี่ยวกับผู้ประกอบการ</h1>
+                        <h1 className="text-[24px] font-bold mb-4 text-blue-950">เกี่ยวกับผู้ประกอบการ</h1>
 
-                        {isMemberLoading ? (
+                        {isLoading ? (
                             <div className="space-y-3">
                                 <div className="h-4 w-full bg-gray-300 animate-pulse rounded"></div>
                                 <div className="h-4 w-full bg-gray-300 animate-pulse rounded"></div>
@@ -159,13 +177,18 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
                             </div>
                         ) : (
                             <div
-                                className={`transition-all duration-700 ease-in-out ${isExpanded ? "max-h-none opacity-100" : "max-h-36 opacity-100"
-                                    } overflow-hidden relative`}
+                                className={`transition-all duration-700 ease-in-out overflow-hidden relative ${isExpanded
+                                    ? "max-h-none"
+                                    : ReadMoreButton
+                                        ? "max-h-36"
+                                        :
+                                        "max-h-none" // แสดงเกี่ยวกับผู้ประกอบการทั้งหมดหากไม่เกิน 5 บรรทัด
+                                    } opacity-100`}
                             >
                                 <div
                                     className={`transition-opacity duration-500 ease-in-out ${showContent ? "opacity-100" : "opacity-100"}`}
                                 >
-                                    <p className="text-[16px] font-thin text-gray-400 leading-relaxed">
+                                    <p ref={checkLongTextRef} className="text-[16px] font-light text-gray-400 leading-relaxed">
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque quaerat ex expedita perspiciatis,
                                         aliquam rem cumque doloribus aliquid fugit ipsam omnis perferendis quae, eveniet ut! Voluptate
                                         repudiandae odio quaerat error eligendi distinctio iure eos? Laudantium consequuntur molestias
@@ -189,13 +212,13 @@ export default function MemberDetail({ member, isMemberLoading }: MemberDetailPr
                                     </p>
                                 </div>
 
-                                {!isExpanded && (
+                                {!isExpanded && ReadMoreButton && (
                                     <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/75 to-transparent pointer-events-none py-4"></div>
                                 )}
                             </div>
                         )}
 
-                        {!isMemberLoading && !isExpanded && (
+                        {!isLoading && ReadMoreButton && !isExpanded && (
                             <div className="flex justify-center mt-4">
                                 <button
                                     onClick={() => {
