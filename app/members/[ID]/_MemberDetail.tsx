@@ -58,6 +58,7 @@ export default function MemberDetail({ member, isLoading }: MemberDetailProps) {
 
     return (
         <>
+        {/* cover */}
             <div className="bg-gray-200 w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] overflow-hidden relative rounded-b-md">
                 {isLoading ? (
                     <div className="w-full h-full bg-gray-300 animate-pulse"></div>
@@ -98,19 +99,19 @@ export default function MemberDetail({ member, isLoading }: MemberDetailProps) {
                     <div className="flex flex-col items-center sm:items-start xl:items-center sm:mr-6 xl:mr-0">
                         <div className="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[160px] md:h-[160px] lg:w-[180px] lg:h-[180px] xl:w-[200px] xl:h-[200px] -mt-12 sm:-mt-16 lg:-mt-20 xl:-mt-24">
                             {isLoading ? (
-                                <div className="w-full h-full bg-gray-300 animate-pulse rounded-full border-4 sm:border-6 border-white"></div>
+                                <div className="w-full h-full bg-gray-300 animate-pulse rounded-md border-4 sm:border-6 border-white"></div>
                             ) : imageErrors["profile"] ? (
-                                <div className="w-full h-full bg-gray-400 rounded-full border-4 sm:border-6 border-white flex items-center justify-center">
+                                <div className="w-full h-full bg-gray-400 rounded-md border-4 sm:border-6 border-white flex items-center justify-center">
                                     <span className="text-white text-xs sm:text-sm">ไม่มีภาพ</span>
                                 </div>
                             ) : (
                                 <div className="relative w-full h-full">
                                     {imageLoading.profile && shouldShowImage && (
-                                        <div className="absolute inset-0 w-full h-full bg-gray-300 animate-pulse rounded-full border-4 sm:border-6 border-white z-10"></div>
+                                        <div className="absolute inset-0 w-full h-full bg-gray-300 animate-pulse rounded-md border-4 sm:border-6 border-white z-10"></div>
                                     )}
                                     <Image
                                         src={`/images/entreprenuer/Koyori_${member?.businessinfo?.DataYear || ""}/${member?.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/Profile/${member?.picture || ""}`}
-                                        className="rounded-full border-4 sm:border-6 border-white"
+                                        className="rounded-lg border-4 sm:border-6 border-white"
                                         layout="fill"
                                         objectFit="cover"
                                         alt={member?.NameThai || ""}
@@ -141,7 +142,6 @@ export default function MemberDetail({ member, isLoading }: MemberDetailProps) {
 
                     <div className="mt-4 sm:mt-0 xl:mt-6 w-full sm:flex-1 xl:flex-none">
                         <div className="grid grid-cols-1 gap-2 text-[16px]">
-                            {/* Row Template */}
                             {[
                                 { label: 'เบอร์โทรศัพท์', value: member?.Contact },
                                 { label: 'ตำแหน่ง', value: member?.RoleThai },

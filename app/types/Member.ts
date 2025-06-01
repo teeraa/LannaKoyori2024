@@ -14,6 +14,7 @@ export interface PersonInfo {
   Contact: string;
   Year: number;
   picture: string;
+  description?: string;
 }
 
 export interface Member {

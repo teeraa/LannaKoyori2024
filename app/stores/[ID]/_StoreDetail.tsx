@@ -1,7 +1,8 @@
 import Image from "next/image"
 import type { Store } from "./_client"
 import { useEffect, useRef, useState } from "react"
-
+import Link from "next/link"
+import { HiExternalLink } from "react-icons/hi";
 interface StoreDetailProps {
     store: Store | null
     isLoading: boolean
@@ -149,11 +150,10 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                 {/* Right Column: Entrepreneur Info */}
                 <div className="col-span-1 lg:col-span-3 border border-gray-200 rounded-lg p-4 bg-white/75 backdrop-blur-sm shadow-sm relative">
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                        <div className="grid place-items-center md:flex justify-center items-center gap-4 w-full md:w-auto">
-                            {/* Profile Picture */}
+                        <div className="grid place-items-center md:flex justify-center items-start gap-4 w-full md:w-auto">
                             <div className="relative w-[160px] h-[160px] md:w-[180px] md:h-[180px] flex-shrink-0">
                                 {isLoading ? (
-                                    <div className="w-full h-full bg-gray-300 rounded-full animate-pulse"></div>
+                                    <div className="w-full h-full bg-gray-300 rounded-md animate-pulse"></div>
                                 ) : (
                                     <Image
                                         src={
@@ -161,30 +161,33 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                                                 ? `/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, "")}/Profile/${store.personinfo.picture}`
                                                 : "/placeholder.svg?width=180&height=180&text=Profile"
                                         }
-                                        className="rounded-full border-4 border-white shadow-md"
+                                        className="rounded-md border-4 border-white shadow-md"
                                         layout="fill"
                                         objectFit="cover"
                                         alt={`${store?.personinfo.NameThai || "ผู้ประกอบการ"} profile picture`}
                                     />
                                 )}
                             </div>
-                            {/* Entrepreneur Details */}
                             <div className="flex flex-col gap-1 mt-4 md:mt-0 text-center md:text-start">
-                                <span className="text-[20px] font-medium text-white bg-blue-950 px-2 py-1 rounded-md w-fit mx-auto md:mx-0">
-                                    ผู้ประกอบการ 
+                                <span className="text-[18px] font-medium text-white bg-blue-950 px-2 py-1 rounded-md w-fit mx-auto md:mx-0">
+                                    ผู้ประกอบการ
                                 </span>
+
                                 {isLoading ? (
                                     <SkeletonText className="w-48 h-8 mt-1 mx-auto md:mx-0" />
                                 ) : (
-                                    <h1 className="text-xl lg:text-3xl font-bold text-gray-800 text-wrap mt-1">
-                                        {store?.personinfo.NameThai || "ชื่อ..."}
-                                    </h1>
+                                    <Link href={`/members/${store?.personinfo.ID}`} className="text-blue-950 m-0 hover:underline underline-offset-4 ">
+                                        <h1 className="flex items-center gap-2 text-[20px] font-bold text-wrap mt-1">
+                                            {store?.personinfo.NameThai || "-"}
+                                            <span><HiExternalLink size={32} /></span>
+                                        </h1>
+                                    </Link>
                                 )}
                                 {isLoading ? (
                                     <SkeletonText className="w-36 h-6 mt-1 mx-auto md:mx-0" />
                                 ) : (
-                                    <h2 className="text-lg md:text-xl text-gray-500 text-wrap">
-                                        {store?.personinfo.NameEng || "Name..."}
+                                    <h2 className="text-[20px] text-gray-500 text-wrap">
+                                        {store?.personinfo.NameEng || "-"}
                                     </h2>
                                 )}
                             </div>

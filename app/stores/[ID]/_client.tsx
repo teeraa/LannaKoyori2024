@@ -10,6 +10,7 @@ import StoreDetailComponent from "./_StoreDetail" // ตรวจสอบ path 
 import axios from "axios"
 
 export interface PersonInfo {
+    ID: number
     Contact: string
     RoleThai: string
     gender: string
@@ -86,7 +87,7 @@ export default function StoreClientPage() {
 
                 let foundStore: Store | null = null
                 const responseData = storeResponse.data
-
+console.log("responseData:", responseData)
                 if (responseData) {
                     if (Array.isArray(responseData)) {
                         foundStore = responseData.find((s: Store) => s.ID === storeId) || null
