@@ -134,9 +134,9 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                 )}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 py-4 md:p-4 md:py-4 lg:px-0 mt-4">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 py-4 md:p-4 md:py-4 lg:px-0">
                 {/* Left Column: Store Info */}
-                <div className="col-span-1 lg:col-span-2 flex flex-col items-start justify-start p-4 bg-white/75 backdrop-blur-sm rounded-lg z-10 border border-gray-200 shadow-sm">
+                <div className="col-span-1 lg:col-span-2 flex flex-col items-start justify-start p-4 bg-white/75 backdrop-blur-sm rounded-lg z-10 border border-gray-200">
                     {isLoading ? (
                         <SkeletonText className="w-full h-8 mb-2" />
                     ) : (
@@ -161,7 +161,7 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                 </div>
 
                 {/* Right Column: Entrepreneur Info */}
-                <div className="col-span-1 lg:col-span-3 border border-gray-200 rounded-lg p-4 bg-white/75 backdrop-blur-sm shadow-sm relative">
+                <div className="col-span-1 lg:col-span-3 border border-gray-200 rounded-lg p-4 bg-white/75 backdrop-blur-sm relative">
                     <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
                         <div className="grid place-items-center md:flex justify-center items-start gap-4 w-full md:w-auto">
                             <div className="relative w-[160px] h-[160px] md:w-[180px] md:h-[180px] flex-shrink-0">
@@ -174,7 +174,7 @@ export default function StoreDetailComponent({ store, isLoading }: StoreDetailPr
                                                 ? `/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, "")}/Profile/${store.personinfo.picture}`
                                                 : "/placeholder.svg?width=180&height=180&text=Profile"
                                         }
-                                        className="rounded-md border-4 border-white shadow-md"
+                                        className="rounded-md border-4 border-white"
                                         layout="fill"
                                         objectFit="cover"
                                         alt={`${store?.personinfo.NameThai || "ผู้ประกอบการ"} profile picture`}

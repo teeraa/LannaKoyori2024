@@ -123,7 +123,7 @@ export default function OwnerProduct({ products, isLoading = false }: OwnerProdu
       <div className="flex items-center mb-4">
         <hr className="border-t-4 border-gray-600 flex-grow"></hr>
         <h1 className="text-[32px] font-bold md:ms-4 lg:ms-4 ms-4 text-gray-600">
-          สินค้าผู้ประกอบการ
+          ผลิตภัณฑ์ผู้ประกอบการ
         </h1>
       </div>
 
