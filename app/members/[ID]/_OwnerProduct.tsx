@@ -45,14 +45,24 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             />
           )}
         </div>
-        <div className="mt-2 w-full">
-          <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[200px]">{product?.productName || "สินค้า"}</h1>
-          <h1 className="text-[16px] text-start text-gray-400 flex justify-start items-center gap-2 truncate w-full font-light">
-            <span>
-              <GrLocation size={16} />
-            </span>
-            {product?.businessinfo?.NameThai || "-"}
-          </h1>
+        <div className="flex flex-col justify-center gap-2">
+          <div className="mt-2 w-full">
+            <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[200px]">{product?.productName || "สินค้า"}</h1>
+          </div>
+          <div className="flex items-center text-gray-500 text-sm">
+            <GrLocation className="w-4 h-4 mr-1" />
+            <span className="truncate">{product?.businessinfo?.ProvinceT || "ไม่ระบุ"}</span>
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {[product?.materialMain?.Material, product?.materialSub1?.Material, product?.materialSub2?.Material]
+              .filter(Boolean)
+              .slice(0, 3)
+              .map((material, index) => (
+                <span key={index} className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full">
+                  {material}
+                </span>
+              ))}
+          </div>
         </div>
       </div>
     </div>
@@ -61,7 +71,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
 
 
 export default function OwnerProduct({ roleThai, products, isLoading = false }: OwnerProductProps) {
-  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : "ผลิตภัณฑ์"
+  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : "ผลิตภัณฑ์ที่เกี่ยวข้อง"
   // ตรวจสอบว่าควรใช้ Swiper หรือ Grid
   const shouldUseSwiper = products && products.length > 6
   const hasProducts = products && products.length > 0
@@ -73,7 +83,7 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
       ) : (
         <div className="flex items-center mb-4">
           <hr className="border-t-4 border-gray-600 flex-grow"></hr>
-          <h1 className="text-[24px] md:text-[32px] lg:text-[32px] font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">{ProductInfo}</h1>
+          <h1 className="text-[24px] font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">{ProductInfo}</h1>
         </div>
       )}
 

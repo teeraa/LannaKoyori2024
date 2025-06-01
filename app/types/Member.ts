@@ -18,6 +18,7 @@ export interface PersonInfo {
 }
 
 export interface Member {
+  ProvinceT: string;
   BussinessNameEng: any;
   DataYear: string;
   ID: number;

@@ -89,7 +89,7 @@ const fetchMembers = async (id: number) => {
         </div>
 
         <main className="pt-12 md:pt-[68px]">
-          <MemberDetail member={member} isLoading={isMemberLoading} />
+          <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai}/>
           <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai}/>
         </main>
       </div>
