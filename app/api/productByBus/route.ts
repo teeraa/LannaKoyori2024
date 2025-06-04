@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
       ];
     }
     if (businessID) {
-      
+
       const businessIDAsNumber = parseInt(businessID, 10); // Convert to number
       if (!isNaN(businessIDAsNumber)) {
         whereClause.OR = [
@@ -47,7 +47,13 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(data, {
+      headers: {
+        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(
