@@ -310,7 +310,7 @@ export default function ProductList() {
                         ID={product.ID}
                         productName={product.productName || "-"}
                         BusinessName={product.businessinfo.BussinessName || "-"}
-                        image={`/images/entreprenuer/Koyori_${product.businessinfo?.DataYear}/Producs/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""}
+                        image={`/images/entreprenuer/Koyori_${product.Year}/Products/${product.productName.replace(/\s+/g, '')}/${product.image}` || ""}
                       />
                     ))
                   ) : (
