@@ -110,7 +110,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
     : ""
 
   const profileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/Profiles/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/Profile/${storeData.picture}`
     : ""
 
   const storeProfileImageSrc = storeData?.picture
