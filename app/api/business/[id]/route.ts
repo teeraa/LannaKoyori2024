@@ -75,6 +75,7 @@ export async function GET(
         urlbusiness: true,
         personinfo: true,
         topic_detail: true,
+        contacts: true,
       },
     });
 
@@ -89,11 +90,17 @@ export async function GET(
       BussinessName: business.BussinessName,
       BussinessNameEng: business.BussinessNameEng,
       AddressThai: business.AddressThai,
+      TombolT: business.TumbolT,
+      AmphurT: business.AmphurT,
+      ProvinceT: business.ProvinceT,
+      ZipCodeT: business.ZipCodeT,
+      AddressT: business.AddressT,
       Latitude: business.Latitude,
       Longtitude: business.Longtitude,
       Year: business.DataYear,
       picture: business.picture,
 
+      memberID: firstPerson?.ID,
       memberNameThai: firstPerson?.NameThai,
       memberNameEng: firstPerson?.NameEng,
       memberRoleThai: firstPerson?.RoleThai,
@@ -102,7 +109,20 @@ export async function GET(
       memberNationality: firstPerson?.nationality,
       memberGender: firstPerson?.gender,
       memberContact: firstPerson?.Contact,
+      memberpicture: firstPerson?.picture,
 
+      contactUs: {
+        facebook_name: business.contacts?.[0]?.facebook_name || "ไม่ระบุ",
+        facebook_url: business.contacts?.[0]?.facebook_url || "ไม่ระบุ",
+        instagram_name: business.contacts?.[0]?.instagram_name || "ไม่ระบุ",
+        instagram_url: business.contacts?.[0]?.instagram_url || "ไม่ระบุ",
+        lineId_name: business.contacts?.[0]?.lineId_name || "ไม่ระบุ",
+        line_url: business.contacts?.[0]?.line_url || "ไม่ระบุ",
+        email: business.contacts?.[0]?.email || "ไม่ระบุ",
+        phone: business.contacts?.[0]?.phone_number || "ไม่ระบุ",
+        website_name: business.contacts?.[0]?.website_name || "ไม่ระบุ",
+        website_url: business.contacts?.[0]?.website_url || "ไม่ระบุ",
+      },
       BusiTypeName_TH: business.businesstype?.BusiTypeName_TH || "ไม่ระบุ",
       BusiTypeName_EN: business.businesstype?.BusiTypeName_EN || "ไม่ระบุ",
 
@@ -110,7 +130,11 @@ export async function GET(
       description_EN: (business.topic_detail?.[0].First_DescriptionEN || "") + (business.topic_detail?.[0].Second_DescriptionEN || ""),
       description_JP: (business.topic_detail?.[0].First_DescriptionJP || "") + (business.topic_detail?.[0].Second_DescriptionJP || ""),
 
-      url: business.urlbusiness?.[0]?.url || "ไม่ระบุ", // ถ้ามีหลาย url ให้เอาอันแรก
+      vedio: business.urlbusiness?.map((url) => ({
+        id: url?.ID || "ไม่ระบุ",
+        url: url?.url || "ไม่ระบุ",
+        title: url?.title || "ไม่ระบุ",
+      })) || [],
     };
 
     return NextResponse.json(result, {
@@ -146,7 +170,7 @@ export async function PUT(req: NextRequest) {
   const cleanedBusinessName = BussinessNameEng?.toString().replace(/[^\w\-]/g, "").replace(/\s+/g, "")
 
   let imagePath;
-  const uploadDir = path.join(process.cwd(), `public/images/entreprenuer/Koyori_${DataYear}/${cleanedBusinessName}/Banner`);
+  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/public/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/`);
 
   if (imageFile && imageFile instanceof Blob) {
     const currentDate = new Date();

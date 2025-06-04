@@ -37,6 +37,7 @@ model businessinfo {
   consultantinfo   consultantinfo[]
   urlbusiness      urlbusiness[]
   topic_detail     topic_detail[]
+  contacts         contacts[]
   businesstype     businesstype? @relation(fields: [BusiTypeId], references: [BusiTypeId])
 }
 
@@ -50,6 +51,7 @@ model businesstype {
 model urlbusiness {
   ID          Int     @id
   url         String? @db.VarChar(255)
+  title       String  @db.Text
   BusinessID  Int?
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
 }
@@ -95,7 +97,7 @@ model personinfo {
   picture     String? @db.VarChar(255)
 
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
-  contacts   contacts[]
+  
 }
 
 model products {
@@ -155,7 +157,7 @@ model topic_detail {
 
 model contacts {
   id              Int @id @default(autoincrement())
-  personID        Int
+  businessID        Int
   facebook_name   String? @db.Text
   facebook_url    String? @db.Text
   lineId_name     String? @db.Text
@@ -169,5 +171,5 @@ model contacts {
   website_url     String? @db.Text
   email           String? @db.Text
 
-  personinfo  personinfo? @relation(fields: [personID], references: [ID])
+  businessinfo  businessinfo? @relation(fields: [businessID], references: [ID])
 }

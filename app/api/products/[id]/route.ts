@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
+
     return NextResponse.json(productinfoData, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
@@ -66,7 +67,7 @@ export async function PUT(req: NextRequest) {
   let imagePath;
   const uploadDir = path.join(
     process.cwd(),
-    `public/uploads`
+    `https://lannakoyori.org/public/entrpenuer/Koyori_${DataYear}/Products/`
   );
 
   if (imageFile && imageFile instanceof Blob) {

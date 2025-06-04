@@ -47,7 +47,68 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(data, {
+    const formattedData = data.map((item) => ({
+      ID: item.ID,
+      productName: item.productName,
+      price: item.price,
+      mainMaterial: item.mainMaterial,
+      subMaterial1: item.subMaterial1,
+      subMaterial2: item.subMaterial2,
+      subMaterial3: item.subMaterial3,
+      bussinessID: item.bussinessID,
+      image: item.image,
+      sketch: item.sketch,
+      description: item.description,
+      color: item.color,
+      size: item.size,
+      materialMain: item.materialMain
+        ? {
+            ID: item.materialMain.ID,
+            Material: item.materialMain.Material,
+          }
+        : {
+            ID: 0,
+            Material: "ไม่มีวัตถุดิบรอง",
+          },
+      materialSub1: item.materialSub1
+        ? {
+            ID: item.materialSub1.ID,
+            Material: item.materialSub1.Material,
+          }
+        : {
+            ID: 0,
+            Material: "ไม่มีวัตถุดิบรอง",
+          },
+      materialSub2: item.materialSub2
+        ? {
+            ID: item.materialSub2.ID,
+            Material: item.materialSub2.Material,
+          }
+        : {
+            ID: 0,
+            Material: "ไม่มีวัตถุดิบรอง",
+          },
+      materialSub3: item.materialSub3
+        ? {
+            ID: item.materialSub3.ID,
+            Material: item.materialSub3.Material,
+          }
+        : {
+            ID: 0,
+            Material: "ไม่มีวัตถุดิบรอง",
+          },
+            BusinessID: item.businessinfo?.ID,
+            Year: item.businessinfo?.DataYear,
+            BusiTypeId: item.businessinfo?.BusiTypeId,
+            BussinessName: item.businessinfo?.BussinessName,
+            BussinessNameEng: item.businessinfo?.BussinessNameEng,
+            AddressThai: item.businessinfo?.AddressThai,
+            Latitude: item.businessinfo?.Latitude,
+            Longtitude: item.businessinfo?.Longtitude,
+            picture: item.businessinfo?.picture,
+    }));
+
+    return NextResponse.json(formattedData, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

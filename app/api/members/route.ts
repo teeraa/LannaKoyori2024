@@ -30,20 +30,12 @@ export async function GET(req: NextRequest) {
     }
     // console.log('Where Clause:', whereClause);
     const personinfoData = await prisma.personinfo.findMany({
-
       where: whereClause,
-      include: {
-        businessinfo: true,
-      }
     });
 
     // ดึงข้อมูลจาก consultantinfo
     const consultantinfoData = await prisma.consultantinfo.findMany({
-
       where: whereClause,
-      include: {
-        businessinfo: true,
-      }
     });
 
     // รวมข้อมูลจากทั้งสองตาราง
@@ -101,7 +93,7 @@ export async function POST(req: NextRequest) {
   let imagePath;
   const uploadDir = path.join(
     process.cwd(),
-    `public/images/entreprenuer/Koyori_${Year}/${cleanedBusinessName}/Profile`
+    `https://lannakoyori.org/public/entrpenuer/Koyori_${Year}/Profile/`
   );
 
   if (!imageFile || !(imageFile instanceof Blob)) {
