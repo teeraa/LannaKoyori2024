@@ -78,7 +78,7 @@ export const KeyValue = [
       id: 2,
       icon: <IoStorefront />,
       titleTH: "ร้านค้า",
-      titleEN: "(Stores)",
+      titleEN: "(businesses)",
     },
     {
       id: 3,

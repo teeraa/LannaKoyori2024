@@ -49,7 +49,7 @@ export function Footer() {
                   <Link href={"/products"}>ผลิตภัณท์</Link>
                 </li>
                 <li>
-                  <Link href={"/stores"}>ร้านค้า</Link>
+                  <Link href={"/businesses"}>ร้านค้า</Link>
                 </li>
                 <li>
                   <Link href={"/members"}>สมาชิก</Link>

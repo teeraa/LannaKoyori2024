@@ -1,5 +1,5 @@
 export const ProductSkeleton = () => (
-  <div className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md group w-full">
+  <div className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md group w-[200px] mx-auto md: mx-0 md:w-full">
     <div className="rounded-md bg-white w-full">
       <div className="mx-auto w-full aspect-square max-w-[200px] overflow-hidden rounded-md">
         <div className="w-full h-full bg-gray-300 animate-pulse rounded-md"></div>
@@ -42,7 +42,7 @@ export const ProductSkeletonGrid = () => (
         <ProductSkeleton />
       </div>
     ))}
-    {Array.from({ length: 6 }).map((_, index) => (
+    {Array.from({ length: 5 }).map((_, index) => (
       <div key={index} className="flex justify-center w-full hidden sm:block">
         <ProductSkeleton />
       </div>

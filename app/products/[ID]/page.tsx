@@ -120,7 +120,7 @@ export default function ProductDetail() {
                         </div>
                         <div className="show-detail py-4">
                             <div className="flex text-xl md:text-3xl px-0 md:px-4 pb-4">
-                                <Link href={`/stores/${product?.businessinfo?.ID}`} className="gap-2 items-center">
+                                <Link href={`/businesses/${product?.businessinfo?.ID}`} className="gap-2 items-center">
                                     <h1 className="text-gray-600 text-md md:text-3xl font-regular flex">ผลิตภัณฑ์จากร้าน:
                                         <span className="font-bold text-blue-950 hover:underline text-wrap">{product?.businessinfo?.BussinessName}</span>
                                         <AiOutlineLink size={40} className="text-gray-600" />

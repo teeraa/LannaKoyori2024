@@ -5,8 +5,84 @@ import axios from "axios"
 import Footer from "@/app/components/footer"
 import MemberDetail from "./_MemberDetail"
 import OwnerProduct from "./_OwnerProduct"
-import { Member, Product } from '@/app/types/page'
 
+
+export interface Product {
+  ID: number;
+  productName: string;
+  price: number;
+  mainMaterial: number;
+  subMaterial1: number;
+  subMaterial2: number;
+  subMaterial3: number;
+  bussinessID: number;
+  image: string;
+  sketch: string;
+  description: string | null;
+  color: string | null;
+  size: string | null;
+  materialMain: Material;
+  materialSub1: Material;
+  materialSub2: Material;
+  materialSub3: Material;
+  businessinfo: Member;
+}
+
+export interface Material {
+  ID: number;
+  Material: string;
+}
+
+
+export interface Member {
+  ProvinceT: string
+  BussinessNameEng: any
+  DataYear: string
+  ID: number;
+  BusinessID: number;
+  NameThai: string;
+  NameEng: string;
+  RoleThai: string;
+  RoleEng: string;
+  Position: string;
+  nationality: string;
+  gender: string;
+  Institute: string;
+  Contact: string;
+  Year: number;
+  picture: string;
+  businessinfo: BusinessInfo;
+  description?: string
+}
+
+
+interface BusinessInfo {
+  banner_image_url: string
+  ID: number;
+  DataYear: number;
+  BusiTypeId: string;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  AddressT: string;
+  TumbolT: string;
+  AmphurT: string;
+  ProvinceT: string;
+  ZipCodeT: string;
+  CountryT: string;
+  AddressEng: string;
+  AddressE: string;
+  TumbolE: string;
+  AmphurE: string;
+  ProvinceE: string;
+  ZipCodeE: string;
+  CountryE: string;
+  Latitude: string;
+  Longtitude: string;
+  picture: string;
+  username: string;
+  password: string;
+}
 
 export default function MemberDetailPage() {
   const params = useParams()
@@ -80,7 +156,7 @@ export default function MemberDetailPage() {
 
   return (
     <>
-     <div className="mx-4 md:mx-0 md:container">
+      <div className="mx-4 md:mx-auto md:container lg:container lg:mx-auto">
         <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
           <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]"></div>
         </div>
@@ -89,7 +165,11 @@ export default function MemberDetailPage() {
         </div>
 
         <main className="pt-12 md:pt-[68px]">
-          <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai} />
+          <div>
+            {(isMemberLoading || member) && (
+              <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai} />
+            )}
+          </div>
           <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai} />
         </main>
       </div>

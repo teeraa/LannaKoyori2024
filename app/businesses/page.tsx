@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import type React from "react"
 import Pagination from "../components/pagination"
-import StoreCard from "../components/StoreCard"
+import BusinessCard from "../components/BusinessCard"
 import { VscSettings } from "react-icons/vsc"
 import { IoClose } from "react-icons/io5"
 import { IoIosArrowDown, IoIosArrowUp, IoIosSearch } from "react-icons/io"
@@ -10,15 +10,26 @@ import { IoStorefrontOutline } from "react-icons/io5"
 import axios from "axios"
 import { GrLocation } from "react-icons/gr"
 
+interface Business {
+  BusinessID: number;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  Latitude: string;
+  Longtitude: string;
+  Year: number;
+  picture: string;
+  ProvinceT: string;
+}
+
 export default function StoresList() {
     const [search, setSearch] = useState("")
     const [FilterToggle, setFilterToggle] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(12)
-    const [filteredStores, setFilteredStores] = useState<any>([])
+    const [businesses, setBusinesses] = useState<Business[]>([])
     const [searchbtn_moblie, setsearchbtn_moblie] = useState(false)
 
-    const [business, setBusiness] = useState([])
     const [selectedProvince, setSelectedProvince] = useState<string | null>(null)
     const [provinceDrpopdown, setProvinceDropdown] = useState(true)
 
@@ -62,7 +73,7 @@ export default function StoresList() {
             if (province) params.province = province
             if (search) params.search = search
             const response = await axios.get(`api/business`, { params })
-            setFilteredStores(response.data)
+            setBusinesses(response.data)
         } catch (error: any) {
             setError(error.response?.data?.error || "Failed to fetch Business")
         } finally {
@@ -102,9 +113,9 @@ export default function StoresList() {
     // เริ่ม pagin ที่ 1
     const startIndex = (currentPage - 1) * pageSize
     // แสดง pagin ตามข้อมูล
-    const currentStores = filteredStores.slice(startIndex, startIndex + pageSize)
+    const currentBusiness = businesses.slice(startIndex, startIndex + pageSize)
     // กรองแล้วให้ pagin กลับมาหน้าแรก
-    const currentStoresFiltered = filteredStores.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    const currentBusinessFiltered = businesses.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 
     const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage)
@@ -236,7 +247,7 @@ export default function StoresList() {
                                     <IoStorefrontOutline className="text-gray-600" />
                                     <p className="font-light text-gray-600">ค้นพบ</p>
                                     {!shouldShowContentLoading ? (
-                                        <h1 className="text-gray-600 font-light">{filteredStores ? filteredStores.length : 0}</h1>
+                                        <h1 className="text-gray-600 font-light">{businesses ? businesses.length : 0}</h1>
                                     ) : (
                                         <span className="loading loading-dots loading-xs"></span>
                                     )}
@@ -270,16 +281,16 @@ export default function StoresList() {
                             <div className="space-y-4 bg-[#F0F3F8]/75 md:rounded-none rounded-md">
                                 <div className="px-4">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
-                                        {currentStores.length > 0 ? (
-                                            currentStoresFiltered.map((store: any) => (
-                                                <StoreCard
-                                                    key={store.ID || "-"}
-                                                    ID={store.ID}
-                                                    name={store.BussinessName || "-"}
-                                                    location={`(${store.Latitude}, ${store.Longtitude})` || "-"}
-                                                    province={store.ProvinceT || "-"}
+                                        {currentBusiness.length > 0 ? (
+                                            currentBusinessFiltered.map((business: Business) => (
+                                                <BusinessCard
+                                                    key={business?.BusinessID}
+                                                    BusinessID={business?.BusinessID}
+                                                    BussinessName={business?.BussinessName}
+                                                    location={`(${business.Latitude}, ${business.Longtitude})` || "-"}
+                                                    ProvinceT={business.ProvinceT || "-"}
                                                     image={
-                                                        `/images/entreprenuer/Koyori_${store.DataYear}/${store.BussinessNameEng.replace(/\s+/g, "")}/Banner/${store.picture}` ||
+                                                        `/images/entreprenuer/Koyori_${business}/${business.BussinessNameEng.replace(/\s+/g, "")}/Banner/${business.picture}` ||
                                                         "/images/default.png"
                                                     }
                                                 />
@@ -295,8 +306,8 @@ export default function StoresList() {
                         {!shouldShowContentLoading && (
                             <div className="sticky bottom-0 w-full bg-white px-4">
                                 <Pagination
-                                    totalPages={Math.ceil(filteredStores.length / pageSize)}
-                                    filteredData={filteredStores.length}
+                                    totalPages={Math.ceil(businesses.length / pageSize)}
+                                    filteredData={businesses.length}
                                     onChangePage={handlePageChange}
                                     onChangeLimit={handleLimitChange}
                                 />

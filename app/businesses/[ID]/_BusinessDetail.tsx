@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image" // Import Next.js Image component
-import type { BusinessInfo, YouTubeVideo } from "./_client" // Assuming _client.ts exists with these types
+import type { Business, YouTubeVideo } from "./_client" // Assuming _client.ts exists with these types
 import { useEffect, useState, useRef } from "react" // Added useRef
 import Link from "next/link" // Added Link
 import { HiExternalLink, HiLocationMarker } from "react-icons/hi"
@@ -16,7 +16,7 @@ import { PiInstagramLogoFill } from "react-icons/pi"
 import { AiFillTikTok } from "react-icons/ai"
 
 interface StoreDetailProps {
-  store: BusinessInfo | null
+  store: Business | null
   isLoading: boolean
   videos?: YouTubeVideo[]
 }
@@ -79,7 +79,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
       let lineHeightPx: number
 
       if (lineHeightStyle === "normal") {
-        lineHeightPx = Number.parseFloat(fontSizeStyle) * 1.625 
+        lineHeightPx = Number.parseFloat(fontSizeStyle) * 1.625
       } else {
         lineHeightPx = Number.parseFloat(lineHeightStyle)
       }
@@ -106,25 +106,25 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
   }
 
   const bannerImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.DataYear}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
     : ""
 
-  const profileImageSrc = storeData?.personinfo?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.DataYear}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/Profile/${storeData.personinfo.picture}`
+  const profileImageSrc = storeData?.picture
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/Profile/${storeData.picture}`
     : ""
 
   const storeProfileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.DataYear}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
     : ""
 
   const storeInitialLetter = storeData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""
-  const personInitialLetter = storeData?.personinfo?.NameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
+  const personInitialLetter = storeData?.memberNameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
 
   const mapEmbedUrl =
     storeData?.Latitude &&
-    storeData?.Longtitude &&
-    Number.parseFloat(storeData.Latitude) !== 0 &&
-    Number.parseFloat(storeData.Longtitude) !== 0
+      storeData?.Longtitude &&
+      Number.parseFloat(storeData.Latitude) !== 0 &&
+      Number.parseFloat(storeData.Longtitude) !== 0
       ? `https://maps.google.com/maps?q=${storeData.Latitude},${storeData.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
       : ""
 
@@ -136,16 +136,18 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
       <div className="bg-gray-200 w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] overflow-hidden relative rounded-b-md">
         {isLoading ? (
           <div className="w-full h-full bg-gray-300 animate-pulse"></div>
-        ) : imageErrors["banner"] || !bannerImageSrc ? (
-          <div className="relative w-full h-full bg-gray-100 flex items-center justify-center">
-            <Image
-              src="/placeholder.svg?width=120&height=60"
-              alt="Logo Fallback"
-              width={120}
-              height={60}
-              style={{ objectFit: "contain" }}
-            />
-            <span className="absolute bottom-2 left-2 text-xs text-gray-500">No banner image</span>
+        ) : imageErrors["banner"] ? (
+          <div className="relative w-full h-screen">
+            <div className="absolute top-2 right-2 w-24 h-12 md:w-48 md:h-24">
+              <Image
+                src="/images/korori-logo.png"
+                alt="Logo"
+                fill
+                priority
+                quality={90}
+                style={{ objectFit: "contain" }}
+              />
+            </div>
           </div>
         ) : (
           <>
@@ -236,45 +238,45 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                 ) : (
                   <>
                     {[
-                      { icon: <FaCalendarAlt className="text-gray-500" size={15} />, value: storeData?.DataYear },
-                      { icon: <FaPhone className="text-gray-500" size={15} />, value: storeData?.personinfo?.Contact },
+                      { icon: <FaCalendarAlt className="text-gray-500" size={15} />, value: storeData?.Year },
+                      { icon: <FaPhone className="text-gray-500" size={15} />, value: storeData?.Contact },
                       {
                         icon: <FaPhone className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.phone,
+                        label: storeData?.contactUs?.phone,
                       },
                       {
                         icon: <MdEmail className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.email,
+                        label: storeData?.contactUs?.email,
                       },
                       {
                         icon: <FaFacebookSquare className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.facebook_name,
-                        link: storeData?.personinfo?.contactUs?.facebook_url
+                        label: storeData?.contactUs?.facebook_name,
+                        link: storeData?.contactUs?.facebook_url
                       },
                       {
                         icon: <PiInstagramLogoFill className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.instagram_name,
-                        link: storeData?.personinfo?.contactUs?.instagram_url
+                        label: storeData?.contactUs?.instagram_name,
+                        link: storeData?.contactUs?.instagram_url
                       },
                       {
                         icon: <FaLine className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.lineId_name,
-                        link: storeData?.personinfo?.contactUs?.line_url
+                        label: storeData?.contactUs?.lineId_name,
+                        link: storeData?.contactUs?.line_url
                       },
                       {
                         icon: <AiFillTikTok className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.tiktok_name,
-                        link: storeData?.personinfo?.contactUs?.tiktok_url
+                        label: storeData?.contactUs?.tiktok_name,
+                        link: storeData?.contactUs?.tiktok_url
                       },
                       {
                         icon: <FaEarthAsia className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.website_name,
-                        link: storeData?.personinfo?.contactUs?.website_url,
+                        label: storeData?.contactUs?.website_name,
+                        link: storeData?.contactUs?.website_url,
                       },
                       {
                         icon: <FaYoutube className="text-gray-500" size={15} />,
-                        label: storeData?.personinfo?.contactUs?.youtube_name,
-                        link: storeData?.personinfo?.contactUs?.youtube_url
+                        label: storeData?.contactUs?.youtube_name,
+                        link: storeData?.contactUs?.youtube_url
                       },
                     ].map(({ icon, label, link }, index) =>
                       label ? (
@@ -338,17 +340,17 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                 ) : (
                   <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-4 text-sm lg:text-base text-gray-700">
                     <div className="font-semibold text-gray-600">ประเภทธุรกิจ:</div>
-                    <div className="text-gray-500">{storeData?.BusiTypeId || "-"}</div>
+                    <div className="text-gray-500">{storeData?.BusiTypeName_TH || "-"}</div>
                     <div className="font-semibold text-gray-600">ที่อยู่:</div>
                     <div className="text-gray-500 text-wrap">{storeData?.AddressThai || "-"}</div>
-                    <div className="font-semibold text-gray-600">ตำบล:</div>
-                    <div className="text-gray-500">{storeData?.TumbolT || "-"}</div>
+                    {/* <div className="font-semibold text-gray-600">ตำบล:</div>
+                    <div className="text-gray-500">{storeData?.AddressThai || "-"}</div>
                     <div className="font-semibold text-gray-600">อำเภอ:</div>
                     <div className="text-gray-500">{storeData?.AmphurT || "-"}</div>
                     <div className="font-semibold text-gray-600">จังหวัด:</div>
                     <div className="text-gray-500">{storeData?.ProvinceT || "-"}</div>
-                    <div className="font-semibold text-gray-600">รหัสไปรษณีย์:</div>
-                    <div className="text-gray-500">{storeData?.ZipCodeT || "-"}</div>
+                    <div className="font-semibold text-gray-600">รหัสไปรษณีย์:</div> */}
+                    {/* <div className="text-gray-500">{storeData?.ZipCodeT || "-"}</div> */}
                   </div>
                 )}
               </div>
@@ -383,7 +385,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                       <Image
                         key={profileImageSrc || "entrepreneur-profile-placeholder"}
                         src={profileImageSrc || "/placeholder.svg?width=80&height=80&query=entrepreneur+profile"}
-                        alt={`รูปโปรไฟล์ ${storeData?.personinfo?.NameThai || "ผู้ประกอบการ"}`}
+                        alt={`รูปโปรไฟล์ ${storeData?.memberNameThai || "ผู้ประกอบการ"}`}
                         width={80}
                         height={80}
                         objectFit="cover"
@@ -403,28 +405,28 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     ) : (
                       <>
                         <Link
-                          href={`/members/${storeData?.personinfo?.ID || "default-id"}`}
+                          href={`/members/${storeData?.memberID || "default-id"}`}
                           className="text-[20px] sm:text-xl font-light text-blue-950 hover:underline underline-offset-4"
                         >
                           <p className="flex items-center gap-2 m-0">
-                            {storeData?.personinfo?.NameThai || "-"}
+                            {storeData?.memberNameThai || "-"}
                             <HiExternalLink size={18} />
                           </p>
                         </Link>
-                        {storeData?.personinfo?.NameEng && (
-                          <p className="text-[16px] text-gray-500">({storeData.personinfo.NameEng})</p>
+                        {storeData?.memberNameEng && (
+                          <p className="text-[16px] text-gray-500">({storeData.memberNameEng})</p>
                         )}
                         <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-500">
-                          {storeData?.personinfo?.RoleThai && (
+                          {storeData?.memberRoleThai && (
                             <div className="flex items-center gap-1">
                               <BsTools size={14} />
-                              <span>{storeData.personinfo.RoleThai}</span>
+                              <span>{storeData.memberRoleThai}</span>
                             </div>
                           )}
-                          {storeData?.personinfo?.gender && (
+                          {storeData?.memberGender && (
                             <div className="flex items-center gap-1">
                               <PiGenderIntersexFill size={14} />
-                              <span>{storeData.personinfo.gender}</span>
+                              <span>{storeData.memberGender}</span>
                             </div>
                           )}
                         </div>
@@ -439,16 +441,16 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                   </div>
                 ) : (
                   <>
-                    {storeData?.personinfo?.Contact && (
+                    {storeData?.Contact && (
                       <div className="flex items-start space-x-2 text-sm">
                         <FaPhone className="w-4 h-4 text-gray-600 flex-shrink-0 mt-1" />
-                        <p className="text-gray-400 break-all">{storeData.personinfo.Contact}</p>
+                        <p className="text-gray-400 break-all">{storeData.Contact}</p>
                       </div>
                     )}
-                    {storeData?.personinfo?.Position && (
+                    {storeData?.memberPosition && (
                       <div className="flex items-start space-x-2 text-sm">
                         <BsTools className="w-4 h-4 text-gray-600 flex-shrink-0 mt-1" />
-                        <p className="text-gray-400">{storeData.personinfo.Position}</p>
+                        <p className="text-gray-400">{storeData.memberPosition}</p>
                       </div>
                     )}
                   </>
@@ -497,15 +499,15 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
         {isLoading && (
           <div className="mt-8">
             <div className="p-4 bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-t-md">
-              <div className="h-7 w-2/5 bg-gray-300 animate-pulse rounded"></div> 
+              <div className="h-7 w-2/5 bg-gray-300 animate-pulse rounded"></div>
             </div>
             <div className="bg-white/50 backdrop-blur-lg border border-t-0 border-gray-200/60 rounded-b-md p-4">
               <div className="aspect-video bg-gray-300 animate-pulse rounded-lg"></div>
-              <div className="mt-3 h-5 w-3/4 bg-gray-300 animate-pulse rounded"></div> 
+              <div className="mt-3 h-5 w-3/4 bg-gray-300 animate-pulse rounded"></div>
               <div className="mt-1 h-4 w-1/4 bg-gray-300 animate-pulse rounded"></div>{" "}
               <div className="mt-6 mb-3 h-5 w-1/3 bg-gray-300 animate-pulse rounded"></div>{" "}
               <div className="flex overflow-x-auto space-x-3 py-4 px-2 -mb-3">
-                {[1, 2, 3, 4, 5 ,6].map((i) => (
+                {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
                     key={i}
                     className="group rounded-lg overflow-hidden border-2 border-transparent flex-shrink-0 w-40 sm:w-48 md:w-56"
