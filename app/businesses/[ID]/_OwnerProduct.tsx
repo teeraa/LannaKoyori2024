@@ -134,7 +134,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             </div>
           ) : (
             <Image
-              src={`/images/entreprenuer/Koyori_${product.businessinfo?.Year || ""}/${product.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/Product/${product.productName?.replace(/\s+/g, "") || ""}/${product.image || "/images/default.png"}`}
+              src={`/images/entreprenuer/Koyori_${product.businessinfo?.Year || ""}/Products/${product.productName?.replace(/\s+/g, "") || ""}/${product.image || "/images/default.png"}`}
               alt={product?.productName || "สินค้า"}
               width={200}
               height={200}

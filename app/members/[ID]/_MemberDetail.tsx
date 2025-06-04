@@ -72,15 +72,15 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
   const mainBannerImageSrc = memberData?.businessinfo?.banner_image_url
     ? memberData.businessinfo.banner_image_url
     : memberData?.businessinfo?.picture
-      ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/${memberData?.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${memberData.businessinfo.picture}`
+      ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/Banner/${memberData.businessinfo.picture}`
       : ""
 
   const profileImageSrc = memberData?.picture
-    ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/${memberData?.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/Profile/${memberData.picture}`
+    ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/Profile/${memberData.picture}`
     : ""
 
   const storeProfileImageSrc = memberData?.businessinfo?.picture
-    ? `/images/entreprenuer/Koyori_${memberData.Year}/${memberData?.businessinfo?.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${memberData.businessinfo.picture}`
+    ? `/images/entreprenuer/Koyori_${memberData.Year}/LogoBusiness/${memberData.businessinfo.picture}`
     : ""
 
   const shopImageKey = memberData?.businessinfo?.ID

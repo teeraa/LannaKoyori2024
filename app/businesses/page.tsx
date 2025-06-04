@@ -290,7 +290,7 @@ export default function StoresList() {
                                                     location={`(${business.Latitude}, ${business.Longtitude})` || "-"}
                                                     ProvinceT={business.ProvinceT || "-"}
                                                     image={
-                                                        `/images/entreprenuer/Koyori_${business}/${business.BussinessNameEng.replace(/\s+/g, "")}/Banner/${business.picture}` ||
+                                                        `/images/entreprenuer/Koyori_${business}/Logo/${business.picture}` ||
                                                         "/images/default.png"
                                                     }
                                                 />

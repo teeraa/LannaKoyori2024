@@ -106,15 +106,15 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
   }
 
   const bannerImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/Banner/${storeData.picture}`
     : ""
 
   const profileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/Profile/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/Profiles/${storeData.picture}`
     : ""
 
   const storeProfileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/${storeData.BussinessNameEng?.replace(/\s+/g, "") || ""}/banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/Banner/${storeData.picture}`
     : ""
 
   const storeInitialLetter = storeData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""

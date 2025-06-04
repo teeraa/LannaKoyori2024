@@ -490,7 +490,7 @@ export default function MembersList() {
                         NameThai={member.NameThai || member.NameEng || "-"}
                         Role={member.RoleThai || "-"}
                         img={
-                          `/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/${member.businessinfo?.BussinessNameEng.replace(/\s+/g, "")}/Profile/${member.picture}` ||
+                          `/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/Profile/${member.picture}` ||
                           ""
                         }
                         Gender={member.gender || "-"}
