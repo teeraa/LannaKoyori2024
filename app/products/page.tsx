@@ -11,6 +11,60 @@ import { IoIosSearch } from "react-icons/io";
 // import { products } from '../database/product'
 import axios from 'axios';
 
+interface Material {
+  ID: number;
+  Material: string;
+}
+
+interface BusinessInfo {
+  ID: number;
+  DataYear: number;
+  BusiTypeId: number;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  AddressT: string;
+  TumbolT: string;
+  AmphurT: string;
+  ProvinceT: string;
+  ZipCodeT: string;
+  CountryT: string;
+  AddressEng: string | null;
+  AddressE: string | null;
+  TumbolE: string | null;
+  AmphurE: string | null;
+  ProvinceE: string;
+  ZipCodeE: string | null;
+  CountryE: string | null;
+  Latitude: string;
+  Longtitude: string;
+  picture: string;
+  username: string;
+  password: string;
+}
+
+export interface Product {
+  ID: number;
+  productName: string;
+  price: number;
+  mainMaterial: number;
+  subMaterial1: number;
+  subMaterial2: number;
+  subMaterial3: number;
+  bussinessID: number;
+  image: string;
+  sketch: string;
+  description: string | null;
+  color: string | null;
+  size: string | null;
+  materialMain: Material;
+  materialSub1: Material;
+  materialSub2: Material;
+  materialSub3: Material;
+  businessinfo: BusinessInfo;
+}
+
+
 export default function ProductList() {
   const [search, setSearch] = useState("");
   const [FilterToggle, setFilterToggle] = useState(false);
@@ -18,8 +72,8 @@ export default function ProductList() {
   const [TypeDrpopdown, setTypeDropdown] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [materials, setMaterials] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [searchbtn_moblie, setsearchbtn_moblie] = useState(false);
 
@@ -184,7 +238,7 @@ export default function ProductList() {
 
                 {MaterialDropdown && (
                   <ul className="mt-2 flex flex-wrap gap-4 overflow-y-auto justify-start mx-4 max-h-60">
-                    {materials.map((type: any) => (
+                    {materials.map((type: Material) => (
                       <li key={type?.ID}>
                         <button
                           onClick={() => MaterialFilter(type?.Material)}
@@ -304,13 +358,13 @@ export default function ProductList() {
               <div className="px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0 ">
                   {currentProducts.length > 0 ? (
-                    currentProductsFiltered.map((product: any) => (
+                    currentProductsFiltered.map((product: Product) => (
                       <ProductCard
-                        key={product.ID || "-"}
+                        key={product.ID}
                         ID={product.ID}
                         productName={product.productName || "-"}
                         BusinessName={product.businessinfo.BussinessName || "-"}
-                        image={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product.image}` || ""}
+                        image={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product.image}`}
                       />
                     ))
                   ) : (

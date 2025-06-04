@@ -6,7 +6,8 @@ import Footer from "@/app/components/footer";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { useParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-
+import { Product  } from "../page";
+import {Member } from "../../members/[ID]/_client";
 import axios from "axios";
 
 export default function ProductDetail() {
@@ -15,12 +16,12 @@ export default function ProductDetail() {
     const ID = parseInt(params?.ID as string);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [products, setProducts] = useState<any>([]);
-    const [consults, setConsults] = useState<any>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [consults, setConsults] = useState<Member[]>([]);
 
 
     // หา product ที่ ID ตรงกัน
-    const product = products?.flat().find((m: any) => m.ID === ID);
+    const product = products?.flat().find((m: Product) => m.ID === ID);
     const businessID = product?.businessinfo?.ID;
 
     const fetchProducts = async (id: Number) => {
@@ -79,7 +80,7 @@ export default function ProductDetail() {
                         <div className="show-product w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 overflow-hidden">
                             <div className="main-show col-span-1 h-[330px] w-[330px] mx-auto">
                                 <Image
-                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
                                     className="rounded-md w-full h-auto"
                                     width="290"
                                     height="321"
@@ -101,12 +102,12 @@ export default function ProductDetail() {
                                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
                                         {[...Array(7)].map((_, index) => (
                                             <a
-                                                href={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                                href={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
                                                 data-fancybox="gallery"
                                                 key={index}
                                             >
                                                 <Image
-                                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.productName.replace(/\s+/g, '')}/${product?.image}` || ""}
+                                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
                                                     className="rounded-md mb-2"
                                                     width="97"
                                                     height="97"

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { IoStorefrontOutline } from "react-icons/io5";
 
 interface ProductCardProps {
-  ID: string;
+  ID: number;
   productName: string;
   image?: string;
   BusinessName: string;
