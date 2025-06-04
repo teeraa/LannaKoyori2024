@@ -14,7 +14,52 @@ import { FiCalendar } from "react-icons/fi"
 import { FaRegAddressCard, FaRegFlag } from "react-icons/fa"
 import { BsGenderAmbiguous } from "react-icons/bs"
 import axios from "axios"
-import { Member } from "@/app/types/Member"
+
+interface BusinessInfo {
+  ID: number;
+  DataYear: number;
+  BusiTypeId: number;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  AddressT: string;
+  TumbolT: string;
+  AmphurT: string;
+  ProvinceT: string;
+  ZipCodeT: string;
+  CountryT: string;
+  AddressEng: string | null;
+  AddressE: string | null;
+  TumbolE: string | null;
+  AmphurE: string | null;
+  ProvinceE: string;
+  ZipCodeE: string | null;
+  CountryE: string | null;
+  Latitude: string;
+  Longtitude: string;
+  picture: string;
+  username: string;
+  password: string;
+}
+
+interface Member {
+  ID: number;
+  BusinessID: number;
+  NameThai: string;
+  NameEng: string;
+  RoleThai: string;
+  RoleEng: string;
+  Position: string;
+  nationality: string;
+  gender: string;
+  Institute: string;
+  Contact: string;
+  Year: number;
+  description: string | null;
+  picture: string;
+  businessinfo: BusinessInfo;
+}
+
 
 const RoleThai = [
   "ครูช่าง",
