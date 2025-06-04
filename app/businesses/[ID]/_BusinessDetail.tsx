@@ -1,14 +1,14 @@
 "use client"
 
-import Image from "next/image" // Import Next.js Image component
-import type { Business, YouTubeVideo } from "./_client" // Assuming _client.ts exists with these types
-import { useEffect, useState, useRef } from "react" // Added useRef
-import Link from "next/link" // Added Link
+import Image from "next/image" 
+import type { Business, YouTubeVideo } from "./_client" 
+import { useEffect, useState, useRef } from "react" 
+import Link from "next/link" 
 import { HiExternalLink, HiLocationMarker } from "react-icons/hi"
 import { FaCalendarAlt, FaRegBuilding, FaGlobeAmericas, FaMapMarkedAlt, FaPlayCircle } from "react-icons/fa"
-import { BsTools } from "react-icons/bs" // Added BsTools
-import { PiGenderIntersexFill } from "react-icons/pi" // Added PiGenderIntersexFill
-import { MdImageNotSupported } from "react-icons/md" // Added MdImageNotSupported
+import { BsTools } from "react-icons/bs"
+import { PiGenderIntersexFill } from "react-icons/pi" 
+import { MdImageNotSupported } from "react-icons/md"
 import { FaFacebookSquare, FaLine, FaYoutube } from "react-icons/fa"
 import { FaPhone, FaEarthAsia } from "react-icons/fa6"
 import { MdEmail } from "react-icons/md"
@@ -106,15 +106,15 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
   }
 
   const bannerImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/Banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData?.Year}/Banner/${storeData.picture}`
     : ""
 
   const profileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/Profile/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData?.Year || ""}/Profile/${storeData?.picture}`
     : ""
 
   const storeProfileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/Banner/${storeData.picture}`
+    ? `/images/entreprenuer/Koyori_${storeData.Year}/LogoBusiness/${storeData.picture}`
     : ""
 
   const storeInitialLetter = storeData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""

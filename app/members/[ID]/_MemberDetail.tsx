@@ -82,7 +82,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
   const storeProfileImageSrc = memberData?.businessinfo?.picture
     ? `/images/entreprenuer/Koyori_${memberData.Year}/LogoBusiness/${memberData.businessinfo.picture}`
     : ""
-
+  console.log(storeProfileImageSrc)
   const shopImageKey = memberData?.businessinfo?.ID
     ? `businessShopImage_${memberData.businessinfo.ID}`
     : "businessShopImage_default"
@@ -196,9 +196,9 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
 
   const mapEmbedUrl =
     memberData?.businessinfo?.Latitude &&
-    memberData?.businessinfo?.Longtitude &&
-    Number.parseFloat(memberData.businessinfo.Latitude) !== 0 &&
-    Number.parseFloat(memberData.businessinfo.Longtitude) !== 0
+      memberData?.businessinfo?.Longtitude &&
+      Number.parseFloat(memberData.businessinfo.Latitude) !== 0 &&
+      Number.parseFloat(memberData.businessinfo.Longtitude) !== 0
       ? `https://maps.google.com/maps?q=${memberData.businessinfo.Latitude},${memberData.businessinfo.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
       : ""
 
@@ -366,9 +366,8 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                   </div>
                 ) : (
                   <div
-                    className={`transition-all duration-700 ease-in-out overflow-hidden relative ${
-                      isExpanded ? "max-h-[1000px]" : ReadMoreButton ? "max-h-36" : "max-h-none"
-                    } opacity-100`}
+                    className={`transition-all duration-700 ease-in-out overflow-hidden relative ${isExpanded ? "max-h-[1000px]" : ReadMoreButton ? "max-h-36" : "max-h-none"
+                      } opacity-100`}
                   >
                     <div className="transition-opacity duration-500 ease-in-out opacity-100">
                       <p
@@ -423,12 +422,12 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-md overflow-hidden border-2 border-white bg-gray-200 flex items-center justify-center">
                       {imageErrors[shopImageKey] || !storeProfileImageSrc ? (
-                        shopInitialLetter && !imageErrors[shopImageKey] ? ( 
+                        shopInitialLetter && !imageErrors[shopImageKey] ? (
                           <div className="w-full h-full bg-gray-400 flex items-center justify-center rounded-md">
                             <span className="text-2xl sm:text-3xl font-semibold text-white select-none">
                               {shopInitialLetter}
                             </span>
-                          </div> 
+                          </div>
                         ) : (
                           <div className="w-full h-full bg-gray-400 flex flex-col items-center justify-center text-center rounded-md">
                             <MdImageNotSupported className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -438,12 +437,12 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                       ) : (
                         <div className="relative w-full h-full">
                           <Image
-                            key={storeProfileImageSrc} 
-                            src={storeProfileImageSrc || "/placeholder.svg"} 
+                            key={storeProfileImageSrc}
+                            src={storeProfileImageSrc || "/placeholder.svg"}
                             alt={`โลโก้ ${memberData.businessinfo.BussinessName || "ร้านค้า"}`}
-                            layout="fill" 
+                            layout="fill"
                             objectFit="cover"
-                            className="rounded-md" 
+                            className="rounded-md"
                             onError={() => handleImageError(shopImageKey)}
                             onLoad={() => handleImageLoad(shopImageKey)}
                           />
@@ -464,7 +463,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                         <p className="text-[16px] text-gray-500">({memberData.businessinfo.BussinessNameEng})</p>
                       )}
                       {memberData.businessinfo.DataYear && (
-                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5"><FaCalendarAlt size={16} className="text-gray-600"/> {memberData.businessinfo.DataYear}</p>
+                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5"><FaCalendarAlt size={16} className="text-gray-600" /> {memberData.businessinfo.DataYear}</p>
                       )}
                     </div>
                   </div>
