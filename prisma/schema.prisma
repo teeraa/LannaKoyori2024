@@ -10,7 +10,7 @@ datasource db {
 model businessinfo { 
   ID               Int     @id
   DataYear         Int     @db.Integer
-  BusiTypeId       String  @db.VarChar(255)
+  BusiTypeId       Int     @db.Integer
   BussinessName    String  @db.VarChar(255)
   BussinessNameEng String  @db.VarChar(255)
   AddressThai      String  @db.VarChar(255)
@@ -36,12 +36,15 @@ model businessinfo {
   personinfo       personinfo[]
   consultantinfo   consultantinfo[]
   urlbusiness      urlbusiness[]
+  topic_detail     topic_detail[]
+  businesstype     businesstype? @relation(fields: [BusiTypeId], references: [BusiTypeId])
 }
 
 model businesstype {
   BusiTypeId      Int    @id
   BusiTypeName_TH String @db.VarChar(50)
   BusiTypeName_EN String @db.VarChar(50)
+  businessinfo    businessinfo[]
 }
 
 model urlbusiness {
@@ -88,9 +91,11 @@ model personinfo {
   Institute   String? @db.VarChar(255)
   Contact     String? @db.VarChar(255)
   Year        Int     @db.Integer
+  description String? @db.Text
   picture     String? @db.VarChar(255)
 
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
+  contacts   contacts[]
 }
 
 model products {
@@ -123,7 +128,7 @@ model product_image {
 }
 
 model topic {
-  BusinessID         Int
+  BusinessID         Int  
   TopicID            Int
   First_TopicName    String? @db.VarChar(255)
   Second_TopicName   String? @db.VarChar(255)
@@ -136,8 +141,8 @@ model topic {
 }
 
 model topic_detail {
+  TopicID              Int  @id @default(autoincrement())
   BusinessID           Int
-  TopicID              Int
   First_DescriptionTH  String? @db.Text
   Second_DescriptionTH String? @db.Text
   First_DescriptionEN  String? @db.Text
@@ -145,5 +150,24 @@ model topic_detail {
   First_DescriptionJP  String? @db.Text
   Second_DescriptionJP String? @db.Text
 
-  @@id([BusinessID, TopicID])
+  businessinfo  businessinfo? @relation(fields: [BusinessID], references: [ID])
+}
+
+model contacts {
+  id              Int @id @default(autoincrement())
+  personID        Int
+  facebook_name   String? @db.Text
+  facebook_url    String? @db.Text
+  lineId_name     String? @db.Text
+  line_url        String? @db.Text
+  phone_number    String? @db.Text
+  instagram_name  String? @db.Text
+  instagram_url   String? @db.Text
+  youtube_name    String? @db.Text
+  youtube_url     String? @db.Text
+  website_name    String? @db.Text
+  website_url     String? @db.Text
+  email           String? @db.Text
+
+  personinfo  personinfo? @relation(fields: [personID], references: [ID])
 }

@@ -59,7 +59,13 @@ export async function GET(
     //     where: whereClause,
     // });
 
-    return NextResponse.json(uniqueData, { status: 200 });
+    return NextResponse.json(uniqueData, {
+      headers: {
+        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   } finally {

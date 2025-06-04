@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
                 );
             }
         }
-        
+
         const data = await prisma.consultantinfo.findMany({
             where: whereClause,
             include: {
@@ -30,7 +30,13 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        return NextResponse.json(data, { status: 200 });
+        return NextResponse.json(data, {
+            headers: {
+                'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            }
+        });
     } catch (error) {
         console.error("Error data fetching:", error);
         return NextResponse.json(
