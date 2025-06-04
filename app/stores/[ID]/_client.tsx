@@ -1,54 +1,155 @@
 "use client"
 import { useParams } from "next/navigation"
-import Footer from "@/app/components/footer" // ตรวจสอบ path นี้ให้ถูกต้อง
+import Footer from "@/app/components/footer"
 import "swiper/css"
 import "swiper/css/pagination"
 import "@fancyapps/ui/dist/fancybox/fancybox.css"
 import { useState, useEffect } from "react"
-import OwnerProduct from "./_OwnerProduct" // ตรวจสอบ path นี้ให้ถูกต้อง
-import StoreDetailComponent from "./_StoreDetail" // ตรวจสอบ path นี้ให้ถูกต้อง
+import OwnerProduct from "./_OwnerProduct"
+import StoreDetailComponent from "./_StoreDetail"
 import axios from "axios"
 
-export interface PersonInfo {
-    ID: number
-    Contact: string
-    RoleThai: string
-    gender: string
-    picture: string
-    NameThai: string
-    NameEng: string
-    description?: string
+const sampleYoutubeVideos: YouTubeVideo[] = [
+  { id: "lC72308b18Y", url: "https://www.youtube.com/watch?v=lC72308b18Y&t=7s", title: "Marks within Patterns of Clay : koyori Season 2 [ENG]" },
+  { id: "vWvjqOVJOio", url: "https://www.youtube.com/watch?v=vWvjqOVJOio", title: "Koyori Project โครงการพัฒนานักออกแบบรุ่นใหม่ สู่การเพิ่มรายได้งานหัตถกรรมไทยพื้นที่ภาคเหนือตอ" },
+  { id: "rvaHMcgLGnk", url: "https://www.youtube.com/watch?v=rvaHMcgLGnk", title: "MHESI Inside ตอน Koyori Project 2021งานวิจัยเพิ่มสมรรถนะการออกแบบงานหัตถกรรมพื้นเมือง" },
+  { id: "HccWHra-y_g", url: "https://www.youtube.com/watch?v=HccWHra-y_g", title: "นวัตหัตถศิลป์แห่งล้านนา | koyori หลอมรวม สืบสาน งานหัตถศิลป์" },
+  { id: "iCCB5s4X0dc", url: "https://www.youtube.com/watch?v=iCCB5s4X0dc", title: "ผลิตภัณฑ์ท้องถิ่นจากมิตรสองวัย | koyori หลอมรวม สืบสาน งานหัตถศิลป์" },
+  { id: "6aq1AcgKJ_U", url: "https://www.youtube.com/watch?v=6aq1AcgKJ_U", title: `กระทรวง อว.สนับสนุนโครงการ "Koyori Project 2021" หวังเพิ่มมูลค่าหัตถกรรมชุมชนในยุค New Normal` },
+  { id: "zG3x3qAF534", url: "https://www.youtube.com/watch?v=zG3x3qAF534", title: "รอยยิ้มจากธรรมชาติ : koyori หลอมรวม สืบสาน งานหัตถศิลป์ ซีซัน 2 [ไทย]" },
+  { id: "Qiib6swlTY4", url: "https://www.youtube.com/watch?v=Qiib6swlTY4", title: "​หัตถศิลป์จากผลผลิตทางธรรมชาติ | Koyori หลอมรวม สืบสาน งานหัตถศิลป์" },
+  
+]
+
+
+
+export interface YouTubeVideo {
+    id: string
+    url: string
+    title?: string
 }
 
-export interface Store {
+export interface BusinessInfo {
+    banner_image_url: string
     ID: number
+    DataYear: number
+    BusiTypeId: string
     BussinessName: string
     BussinessNameEng: string
-    DataYear: string | number
-    personinfo: PersonInfo
-    Banner?: string
-    // เพิ่ม properties อื่นๆ ของ Store ตามต้องการ
+    AddressThai: string
+    AddressT: string
+    TumbolT: string
+    AmphurT: string
+    ProvinceT: string
+    ZipCodeT: string
+    CountryT: string
+    AddressEng: string
+    AddressE: string
+    TumbolE: string
+    AmphurE: string
+    ProvinceE: string
+    ZipCodeE: string
+    CountryE: string
+    Latitude: string
+    Longtitude: string
+    picture: string
+    username: string
+    password: string
+    personinfo?: Member
+    youtubeVideos?: YouTubeVideo[]
+}
+
+const youtube: YouTubeVideo[] = [
+    {
+        id: "9eT0eK2XnI8",
+        url: "https://www.youtube.com/watch?v=Q4V3zN0Xrdo",
+        title: "clip1",
+    },
+    {
+        id: "9eT0eK2XnI8",
+        url: "https://www.youtube.com/watch?v=Q4V3zN0Xrdo",
+        title: "clip2",
+    },
+    {
+        id: "9eT0eK2XnI8",
+        url: "https://www.youtube.com/watch?v=Q4V3zN0Xrdo",
+        title: "clip3",
+    },
+]
+
+export interface Material {
+    ID: number
+    Material: string
+}
+
+interface MemberContactUsInfo {
+  facebook_name?: string;
+  facebook_url?: string;
+  instagram_name?: string;
+  instagram_url?: string;
+  lineId_name?: string; 
+  line_url?: string;
+  email?: string;
+  phone?: string;
+  tiktok_name?: string; 
+  tiktok_url?: string;
+  website_name?: string;
+  website_url?: string;
+  youtube_name?: string;
+  youtube_url?: string;
+}
+
+export interface Member {
+    ProvinceT: string
+    BussinessNameEng: any
+    DataYear: string
+    ID: number
+    BusinessID: number
+    NameThai: string
+    NameEng: string
+    RoleThai: string
+    RoleEng: string
+    Position: string
+    nationality: string
+    gender: string
+    Institute: string
+    Contact: string
+    contactUs: MemberContactUsInfo
+    Year: number
+    picture: string
+    businessinfo: BusinessInfo
+    description?: string
 }
 
 export interface Product {
     ID: number
-    productName?: string
-    businessinfo?: {
-        DataYear?: string | number
-        BussinessNameEng?: string
-        NameThai?: string
-    }
-    image?: string
+    productName: string
+    price: number
+    mainMaterial: number
+    subMaterial1: number
+    subMaterial2: number
+    subMaterial3: number
+    bussinessID: number
+    image: string
+    sketch: string
+    description: string | null
+    color: string | null
+    size: string | null
+    materialMain: Material
+    materialSub1: Material
+    materialSub2: Material
+    materialSub3: Material
+    businessinfo: Member
 }
 
 export default function StoreClientPage() {
     const params = useParams()
-    const idParam = params.ID as string // รับ ID จาก params เป็น string ก่อน
+    const idParam = params.ID as string
     const [storeId, setStoreId] = useState<number | null>(null)
 
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true)
-    const [currentStore, setCurrentStore] = useState<Store | null>(null)
+    const [currentStore, setCurrentStore] = useState<BusinessInfo | null>(null)
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
     useEffect(() => {
@@ -71,43 +172,41 @@ export default function StoreClientPage() {
 
     useEffect(() => {
         if (storeId === null) {
-            // ถ้า storeId ยังไม่ได้ถูกตั้งค่า (เช่น จากการ parsing error หรือ idParam ไม่มี)
-            // isLoading และ error ควรถูกจัดการใน useEffect ก่อนหน้าแล้ว
             return
         }
 
         const fetchStoreDataAndThenProducts = async () => {
             setIsLoading(true)
             setError(null)
-            setCurrentStore(null) // Reset store data
-            setFilteredProducts([]) // Reset product data
+            setCurrentStore(null)
+            setFilteredProducts([])
 
             try {
-                // 1. Fetch Store Data
-                const storeResponse = await axios.get<{ data: Store[] } | Store[] | Store>(`/api/business/${storeId}`)
+                const storeResponse = await axios.get<{ data: BusinessInfo[] } | BusinessInfo[] | BusinessInfo>(
+                    `/api/business/${storeId}`,
+                )
 
-                let foundStore: Store | null = null
+                let foundStore: BusinessInfo | null = null
                 const responseData = storeResponse.data
-console.log("responseData:", responseData)
+                console.log("responseData:", responseData)
                 if (responseData) {
                     if (Array.isArray(responseData)) {
-                        foundStore = responseData.find((s: Store) => s.ID === storeId) || null
+                        foundStore = responseData.find((s: BusinessInfo) => s.ID === storeId) || null
                     } else if (
                         typeof responseData === "object" &&
                         "data" in responseData &&
                         Array.isArray((responseData as any).data)
                     ) {
-                        foundStore = (responseData as any).data.find((s: Store) => s.ID === storeId) || null
+                        foundStore = (responseData as any).data.find((s: BusinessInfo) => s.ID === storeId) || null
                     } else if (typeof responseData === "object" && "ID" in responseData) {
-                        if ((responseData as Store).ID === storeId) {
-                            foundStore = responseData as Store
+                        if ((responseData as BusinessInfo).ID === storeId) {
+                            foundStore = responseData as BusinessInfo
                         }
                     }
                 }
 
                 setCurrentStore(foundStore)
 
-                // 2. Fetch Product Data if Store is found
                 if (foundStore) {
                     try {
                         const productResponse = await axios.get<Product[]>("/api/productByBus", {
@@ -116,19 +215,17 @@ console.log("responseData:", responseData)
                         setFilteredProducts(productResponse.data || [])
                     } catch (productError: any) {
                         console.error("Failed to fetch products:", productError)
-                        // อาจจะตั้ง error เฉพาะสำหรับสินค้า หรือปล่อยให้ error หลักจัดการ
-                        // setError("เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า")
-                        setFilteredProducts([]) // Ensure products are empty on error
+
+                        setFilteredProducts([])
                     }
                 } else {
-                    // ถ้าไม่พบร้านค้า ก็ไม่จำเป็นต้องโหลดสินค้า และ currentStore จะเป็น null
-                    // ซึ่งจะทำให้แสดง "ไม่พบข้อมูลร้านค้า" ด้านล่าง
+
                     setFilteredProducts([])
                 }
             } catch (err: any) {
                 console.error("Failed to fetch store data:", err)
                 setError(err.response?.data?.error || "เกิดข้อผิดพลาดในการโหลดข้อมูลร้านค้า กรุณาลองใหม่อีกครั้ง")
-                setCurrentStore(null) // Clear data on error
+                setCurrentStore(null)
                 setFilteredProducts([])
             } finally {
                 setIsLoading(false)
@@ -136,9 +233,8 @@ console.log("responseData:", responseData)
         }
 
         fetchStoreDataAndThenProducts()
-    }, [storeId]) // ทำงานเมื่อ storeId (ที่เป็น number) เปลี่ยน
+    }, [storeId])
 
-    // ส่วนการแสดงผล (Error, Not Found, Content)
     if (error) {
         return (
             <div className="container flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center">
@@ -148,7 +244,6 @@ console.log("responseData:", responseData)
         )
     }
 
-    // แสดง "Not Found" เฉพาะเมื่อ isLoading เสร็จสิ้น และยังไม่มี currentStore
     if (!isLoading && !currentStore) {
         return (
             <div className="container flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center">
@@ -157,11 +252,9 @@ console.log("responseData:", responseData)
         )
     }
 
-
-
     return (
         <>
-            <div className="container pb-10 px-4 sm:px-6 lg:px-8">
+            <div className="mx-4 md:mx-auto md:container lg:container lg:mx-auto">
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
                     <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]"></div>
                 </div>
@@ -170,8 +263,12 @@ console.log("responseData:", responseData)
                 </div>
 
                 <main className="pt-12 md:pt-[68px] relative z-10">
-                    <StoreDetailComponent store={currentStore} isLoading={isLoading} />
-                    <OwnerProduct products={filteredProducts} isLoading={isLoading /* หรือ isLoadingProducts ถ้าแยก state */} />
+                    <StoreDetailComponent 
+                    store={currentStore} 
+                    isLoading={isLoading} 
+                    videos={sampleYoutubeVideos}
+                    />
+                    <OwnerProduct products={filteredProducts} isLoading={isLoading} />
                 </main>
             </div>
             <Footer />
