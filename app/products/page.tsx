@@ -374,7 +374,7 @@ export default function ProductList() {
               </div>
             </div>
           )}
-
+ 
           {!isLoading ? (
             <div className=" sticky bottom-0 w-full bg-white px-4">
               <Pagination
