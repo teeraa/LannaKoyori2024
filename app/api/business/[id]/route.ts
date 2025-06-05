@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for server-side operations
+);
 
 // export async function GET(
 //   request: NextRequest,
@@ -167,10 +173,8 @@ export async function PUT(req: NextRequest) {
   const Longtitude = formData.get("Longtitude");
   const url = new URL(req.url);
   const id = url.pathname.split("/").pop();
-  const cleanedBusinessName = BussinessNameEng?.toString().replace(/[^\w\-]/g, "").replace(/\s+/g, "")
 
   let imagePath;
-  const uploadDir = path.join(process.cwd(), 'public', 'images', 'entreprenuer', `Koyori_${DataYear}`, 'LogoBusiness');
   
   if (imageFile && imageFile instanceof Blob) {
     const currentDate = new Date();
@@ -181,13 +185,59 @@ export async function PUT(req: NextRequest) {
       .toString()
       .padStart(2, "0")}`;
     
-    // Create the directory structure if it doesn't exist
-    await fs.mkdir(uploadDir, { recursive: true });
+    const filename = `${formattedDate}-${imageFile.name}`;
+    const filePath = `entreprenuer/Koyori_${DataYear}/LogoBusiness/${filename}`;
     
-    const filePath = path.join(uploadDir, `${formattedDate}-${imageFile.name}`);
-    const fileBuffer = Buffer.from(await imageFile.arrayBuffer());
-    await fs.writeFile(filePath, fileBuffer);
-    imagePath = `/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/${formattedDate}-${imageFile.name}`;
+    try {
+      // Optional: Delete old image if updating
+      const existingBusiness = await prisma.businessinfo.findUnique({
+        where: { ID: Number(id) },
+        select: { picture: true }
+      });
+      
+      if (existingBusiness?.picture) {
+        // Extract path from existing URL
+        const oldPath = existingBusiness.picture.split('/').pop();
+        if (oldPath) {
+          await supabase.storage
+            .from('koyori-image')
+            .remove([`entreprenuer/Koyori_${DataYear}/LogoBusiness/${oldPath}`]);
+        }
+      }
+
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('koyori-image') // Your bucket name
+        .upload(filePath, imageFile, {
+          cacheControl: '3600',
+          upsert: true // This will overwrite if file exists
+        });
+
+      if (error) {
+        console.error('Supabase upload error:', error);
+        return NextResponse.json(
+          { error: "Failed to upload image" },
+          { status: 500 }
+        );
+      }
+
+      // Option 1: Store full URL (easier for client)
+      const { data: publicUrlData } = supabase.storage
+        .from('koyori-image')
+        .getPublicUrl(filePath);
+
+      imagePath = publicUrlData.publicUrl;
+      
+      // Option 2: Store only the path (more flexible)
+      // imagePath = filePath;
+      
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      return NextResponse.json(
+        { error: "Failed to upload image" },
+        { status: 500 }
+      );
+    }
   }
 
   if (
@@ -238,5 +288,5 @@ export async function PUT(req: NextRequest) {
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       }
     }
-  )
+  );
 }
