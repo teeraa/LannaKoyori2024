@@ -158,6 +158,17 @@ export async function GET(
   }
 }
 
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
   const imageFile = formData.get("image");
@@ -174,9 +185,16 @@ export async function PUT(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.pathname.split("/").pop();
 
+  // Add CORS headers to all responses
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+
   let imagePath;
   
-  if (imageFile && imageFile instanceof Blob) {
+  if (imageFile && imageFile instanceof File) { // Changed from Blob to File
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
@@ -207,35 +225,31 @@ export async function PUT(req: NextRequest) {
 
       // Upload to Supabase Storage
       const { data, error } = await supabase.storage
-        .from('koyori-image') // Your bucket name
+        .from('koyori-image')
         .upload(filePath, imageFile, {
           cacheControl: '3600',
-          upsert: true // This will overwrite if file exists
+          upsert: true
         });
 
       if (error) {
         console.error('Supabase upload error:', error);
         return NextResponse.json(
           { error: "Failed to upload image" },
-          { status: 500 }
+          { status: 500, headers: corsHeaders }
         );
       }
 
-      // Option 1: Store full URL (easier for client)
       const { data: publicUrlData } = supabase.storage
         .from('koyori-image')
         .getPublicUrl(filePath);
 
       imagePath = publicUrlData.publicUrl;
       
-      // Option 2: Store only the path (more flexible)
-      // imagePath = filePath;
-      
     } catch (error) {
       console.error('Failed to upload image:', error);
       return NextResponse.json(
         { error: "Failed to upload image" },
-        { status: 500 }
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -253,7 +267,7 @@ export async function PUT(req: NextRequest) {
     console.log(BussinessName, AddressT, TumbolT, AmphurT, ProvinceT, ZipCodeT, Latitude, Longtitude);
     return NextResponse.json(
       { error: "All fields are required" },
-      { status: 400 }
+      { status: 400, headers: corsHeaders }
     );
   }
 
@@ -268,25 +282,29 @@ export async function PUT(req: NextRequest) {
     Longtitude: Longtitude?.toString(),
   };
 
+  // Add optional fields
+  if (BussinessNameEng) {
+    updateData.BussinessNameEng = BussinessNameEng.toString();
+  }
+
   if (imagePath) {
     updateData.picture = imagePath;
   }
 
-  const updateBusiness = await prisma.businessinfo.update({
-    where: {
-      ID: Number(id),
-    },
-    data: updateData,
-  });
+  try {
+    const updateBusiness = await prisma.businessinfo.update({
+      where: {
+        ID: Number(id),
+      },
+      data: updateData,
+    });
 
-  return NextResponse.json(
-    updateBusiness,
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
-    }
-  );
+    return NextResponse.json(updateBusiness, { headers: corsHeaders });
+  } catch (error) {
+    console.error('Database update error:', error);
+    return NextResponse.json(
+      { error: "Failed to update business" },
+      { status: 500, headers: corsHeaders }
+    );
+  }
 }
