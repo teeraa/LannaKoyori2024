@@ -11,15 +11,15 @@ import axios from "axios"
 import { GrLocation } from "react-icons/gr"
 
 interface Business {
-  BusinessID: number;
-  BussinessName: string;
-  BussinessNameEng: string;
-  AddressThai: string;
-  Latitude: string;
-  Longtitude: string;
-  Year: number;
-  picture: string;
-  ProvinceT: string;
+    BusinessID: number;
+    BussinessName: string;
+    BussinessNameEng: string;
+    AddressThai: string;
+    Latitude: string;
+    Longtitude: string;
+    Year: number;
+    picture: string;
+    ProvinceT: string;
 }
 
 export default function StoresList() {
@@ -131,6 +131,16 @@ export default function StoresList() {
     // ตรวจสอบว่าควรแสดง loading หรือไม่
     const shouldShowFilterLoading = isInitialLoading
     const shouldShowContentLoading = isInitialLoading || isContentLoading
+
+    function isValidUrl(str: string) {
+        try {
+            new URL(str);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
 
     return (
         <>
@@ -290,8 +300,9 @@ export default function StoresList() {
                                                     location={`(${business.Latitude}, ${business.Longtitude})` || "-"}
                                                     ProvinceT={business.ProvinceT || "-"}
                                                     image={
-                                                        `/images/entreprenuer/Koyori_${business?.Year}/LogoBusiness/${business.picture}` ||
-                                                        "/images/default.png"
+                                                        isValidUrl(business?.picture)
+                                                            ? business.picture
+                                                            : "/images/default.png"
                                                     }
                                                 />
                                             ))

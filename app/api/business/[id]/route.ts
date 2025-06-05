@@ -2,6 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for server-side operations
+);
 
 // export async function GET(
 //   request: NextRequest,
@@ -152,6 +158,17 @@ export async function GET(
   }
 }
 
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
   const imageFile = formData.get("image");
@@ -167,24 +184,74 @@ export async function PUT(req: NextRequest) {
   const Longtitude = formData.get("Longtitude");
   const url = new URL(req.url);
   const id = url.pathname.split("/").pop();
-  const cleanedBusinessName = BussinessNameEng?.toString().replace(/[^\w\-]/g, "").replace(/\s+/g, "")
+
+  // Add CORS headers to all responses
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
 
   let imagePath;
-  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/public/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/`);
-
-  if (imageFile && imageFile instanceof Blob) {
+  
+  if (imageFile && imageFile instanceof File) { // Changed from Blob to File
     const currentDate = new Date();
-    const year = currentDate.getFullYear(); // ปี
-    const month = currentDate.getMonth() + 1; // เดือน (เริ่มจาก 0 ดังนั้นต้อง +1)
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
     const date = currentDate.getDate();
     const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
       .toString()
       .padStart(2, "0")}`;
-    // await fs.mkdir(uploadDir, { recursive: true });
-    const filePath = path.join(uploadDir, `${formattedDate}-${imageFile.name}`);
-    const fileBuffer = Buffer.from(await imageFile.arrayBuffer());
-    await fs.writeFile(filePath, fileBuffer);
-    imagePath = `${formattedDate}-${imageFile.name}`; // เก็บ path สำหรับอัปเดต
+    
+    const filename = `${formattedDate}-${imageFile.name}`;
+    const filePath = `entreprenuer/Koyori_${DataYear}/LogoBusiness/${filename}`;
+    
+    try {
+      // Optional: Delete old image if updating
+      const existingBusiness = await prisma.businessinfo.findUnique({
+        where: { ID: Number(id) },
+        select: { picture: true }
+      });
+      
+      if (existingBusiness?.picture) {
+        // Extract path from existing URL
+        const oldPath = existingBusiness.picture.split('/').pop();
+        if (oldPath) {
+          await supabase.storage
+            .from('koyori-image')
+            .remove([`entreprenuer/Koyori_${DataYear}/LogoBusiness/${oldPath}`]);
+        }
+      }
+
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('koyori-image')
+        .upload(filePath, imageFile, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) {
+        console.error('Supabase upload error:', error);
+        return NextResponse.json(
+          { error: "Failed to upload image" },
+          { status: 500, headers: corsHeaders }
+        );
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('koyori-image')
+        .getPublicUrl(filePath);
+
+      imagePath = publicUrlData.publicUrl;
+      
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      return NextResponse.json(
+        { error: "Failed to upload image" },
+        { status: 500, headers: corsHeaders }
+      );
+    }
   }
 
   if (
@@ -200,7 +267,7 @@ export async function PUT(req: NextRequest) {
     console.log(BussinessName, AddressT, TumbolT, AmphurT, ProvinceT, ZipCodeT, Latitude, Longtitude);
     return NextResponse.json(
       { error: "All fields are required" },
-      { status: 400 }
+      { status: 400, headers: corsHeaders }
     );
   }
 
@@ -215,26 +282,29 @@ export async function PUT(req: NextRequest) {
     Longtitude: Longtitude?.toString(),
   };
 
+  // Add optional fields
+  if (BussinessNameEng) {
+    updateData.BussinessNameEng = BussinessNameEng.toString();
+  }
+
   if (imagePath) {
     updateData.picture = imagePath;
   }
 
-  const updateBusiness = await prisma.businessinfo.update({
-    where: {
-      ID: Number(id),
-    },
-    data: updateData,
-  });
+  try {
+    const updateBusiness = await prisma.businessinfo.update({
+      where: {
+        ID: Number(id),
+      },
+      data: updateData,
+    });
 
-  return NextResponse.json(
-    updateBusiness,
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
-    }
-  )
-
+    return NextResponse.json(updateBusiness, { headers: corsHeaders });
+  } catch (error) {
+    console.error('Database update error:', error);
+    return NextResponse.json(
+      { error: "Failed to update business" },
+      { status: 500, headers: corsHeaders }
+    );
+  }
 }

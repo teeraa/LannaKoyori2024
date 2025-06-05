@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
   }
 
   const newProductId = Number(DataYear) * 10000 + newSuffix;
-  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/public/entrpenuer/Koyori_${DataYear}/Products/`);
+  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/images/entrpenuer/Koyori_${DataYear}/Products/`);
 
   const images = formData.getAll("images") as File[];
   const uploadedImageNames: string[] = [];
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const filename = `${Date.now()}-${image.name}`;
-    const filepath = path.join(process.cwd(), `https://lannakoyori.org/public/entrpenuer/Koyori_${DataYear}/Products/`, filename);
+    const filepath = path.join(process.cwd(), `https://lannakoyori.org/images/entrpenuer/Koyori_${DataYear}/Products/`, filename);
 
     await writeFile(filepath, buffer);
     uploadedImageNames.push(filename);

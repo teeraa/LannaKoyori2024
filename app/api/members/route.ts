@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   let imagePath;
   const uploadDir = path.join(
     process.cwd(),
-    `https://lannakoyori.org/public/entrpenuer/Koyori_${Year}/Profile/`
+    `https://lannakoyori.org/images/entrpenuer/Koyori_${Year}/Profile/`
   );
 
   if (!imageFile || !(imageFile instanceof Blob)) {
