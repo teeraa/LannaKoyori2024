@@ -170,8 +170,7 @@ export async function PUT(req: NextRequest) {
   const cleanedBusinessName = BussinessNameEng?.toString().replace(/[^\w\-]/g, "").replace(/\s+/g, "")
 
   let imagePath;
-  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/`);
-
+  const uploadDir = path.join(process.cwd(), 'public', 'images', 'entreprenuer', `Koyori_${DataYear}`, 'LogoBusiness');
   if (imageFile && imageFile instanceof Blob) {
     const currentDate = new Date();
     const year = currentDate.getFullYear(); // ปี
@@ -184,7 +183,7 @@ export async function PUT(req: NextRequest) {
     const filePath = path.join(uploadDir, `${formattedDate}-${imageFile.name}`);
     const fileBuffer = Buffer.from(await imageFile.arrayBuffer());
     await fs.writeFile(filePath, fileBuffer);
-    imagePath = `${formattedDate}-${imageFile.name}`; // เก็บ path สำหรับอัปเดต
+    imagePath = `/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/${formattedDate}-${imageFile.name}`; // เก็บ path สำหรับอัปเดต
   }
 
   if (
