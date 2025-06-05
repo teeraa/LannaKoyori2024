@@ -67,7 +67,7 @@ export async function PUT(req: NextRequest) {
   let imagePath;
   const uploadDir = path.join(
     process.cwd(),
-    `https://lannakoyori.org/public/entrpenuer/Koyori_${DataYear}/Products/`
+    `https://lannakoyori.org/images/entrpenuer/Koyori_${DataYear}/Products/`
   );
 
   if (imageFile && imageFile instanceof Blob) {

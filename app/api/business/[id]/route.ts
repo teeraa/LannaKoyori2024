@@ -170,7 +170,7 @@ export async function PUT(req: NextRequest) {
   const cleanedBusinessName = BussinessNameEng?.toString().replace(/[^\w\-]/g, "").replace(/\s+/g, "")
 
   let imagePath;
-  const uploadDir = path.join(process.cwd(), `/public/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/`);
+  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/images/entreprenuer/Koyori_${DataYear}/LogoBusiness/`);
 
   if (imageFile && imageFile instanceof Blob) {
     const currentDate = new Date();
