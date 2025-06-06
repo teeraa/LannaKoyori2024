@@ -33,56 +33,46 @@ export interface Material {
   Material: string;
 }
 
-
-export interface Member {
-  ProvinceT: string
-  BussinessNameEng: any
-  DataYear: string
-  ID: number;
-  BusinessID: number;
-  NameThai: string;
-  NameEng: string;
-  RoleThai: string;
-  RoleEng: string;
-  Position: string;
-  nationality: string;
-  gender: string;
-  Institute: string;
-  Contact: string;
-  Year: number;
-  picture: string;
-  businessinfo: BusinessInfo;
-  description?: string
+export interface ContactUs {
+  facebook_name: string;
+  facebook_url: string;
+  instagram_name: string;
+  instagram_url: string;
+  lineId_name: string;
+  line_url: string;
+  email: string;
+  phone: string;
+  website_name: string;
+  website_url: string;
 }
 
-
-interface BusinessInfo {
-  banner_image_url: string
-  ID: number;
-  DataYear: number;
-  BusiTypeId: string;
+export interface Member {
+  memberID: number;
+  memberNameThai: string;
+  memberNameEng: string;
+  memberRoleThai: string;
+  memberRoleEng: string;
+  memberPosition: string;
+  memberNationality: string;
+  memberGender: string;
+  memberContact: string;
+  memberDescription: string | null;
+  memberpicture: string;
+  contactUs: ContactUs;
+  BusinessID: number;
   BussinessName: string;
   BussinessNameEng: string;
   AddressThai: string;
-  AddressT: string;
-  TumbolT: string;
-  AmphurT: string;
-  ProvinceT: string;
-  ZipCodeT: string;
-  CountryT: string;
-  AddressEng: string;
-  AddressE: string;
-  TumbolE: string;
-  AmphurE: string;
-  ProvinceE: string;
-  ZipCodeE: string;
-  CountryE: string;
   Latitude: string;
   Longtitude: string;
+  Year: number;
   picture: string;
-  username: string;
-  password: string;
+
+  //  เพิ่ม
+  memberBanner?: string
+  BussinessPicture?: string
 }
+
 
 export default function MemberDetailPage() {
   const params = useParams()
@@ -94,14 +84,14 @@ export default function MemberDetailPage() {
   const [products, setProducts] = useState<Product[]>([])
 
   // หา member ที่ ID ตรงกัน
-  const member = members.flat().find((m: any) => m.ID === ID)
-  const businessID = member?.businessinfo?.ID
+  const member = members.find((member: Member) => member.memberID === ID)
+  const businessID = member?.BusinessID
 
-  const fetchMembers = async (id: number) => {
+  const fetchMembers = async (memberID: number) => {
     try {
       setIsMemberLoading(true)
-      const response = await axios.get(`/api/members/${id}`)
-      setMembers(response.data)
+      const response = await axios.get(`/api/members/${memberID}`)
+      setMembers(Array.isArray(response.data) ? response.data : [response.data])
       console.log("Fetched Member Data:", response.data) // <--- ตรวจสอบตรงนี้ใน console ของเบราว์เซอร์
     } catch (error: any) {
       setError(error.response?.data?.error || "Failed to fetch members")
@@ -110,13 +100,10 @@ export default function MemberDetailPage() {
     }
   }
   // กรองผลิตภัณฑ์ตามผู้ประกอบการ
-  const fetchProducts = async (id: number | null = null) => {
+  const fetchProducts = async (businessID: number) => {
     try {
       setIsProductLoading(true)
-      const params: Record<string, any> = {}
-      if (id) params.businessID = id
-
-      const response = await axios.get("/api/productByBus", { params })
+      const response = await axios.get("/api/productByBus", { params: { businessID } })
       setProducts(response.data)
     } catch (error: any) {
       setError(error.response?.data?.error || "Failed to fetch products")
@@ -167,10 +154,10 @@ export default function MemberDetailPage() {
         <main className="pt-12 md:pt-[68px]">
           <div>
             {(isMemberLoading || member) && (
-              <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.RoleThai} />
+              <MemberDetail member={member} isLoading={isMemberLoading} roleThai={member?.memberRoleThai} />
             )}
           </div>
-          <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.RoleThai} />
+          <OwnerProduct products={products} isLoading={isProductLoading} roleThai={member?.memberRoleThai} />
         </main>
       </div>
       <Footer />

@@ -5,21 +5,21 @@ import { useRouter } from "next/navigation"
 import { VscTools } from "react-icons/vsc";
 
 interface MemberCardProps {
-  ID: number
+  memberID: number
   NameThai: string
   Role: string
-  img?: string
+  image?: string
   Gender: string 
 }
 
-export default function MemberCard({ NameThai, Role, img, ID }: MemberCardProps) {
+export default function MemberCard({ NameThai, Role, image, memberID }: MemberCardProps) {
   const router = useRouter()
 
   const handleMemberLink = () => {
-    if (ID) router.push(`/members/${ID}`)
+    if (memberID) router.push(`/members/${memberID}`)
   }
 
-  const imageSrc = img || "/placeholder.svg?width=200&height=200"
+  const imageSrc = image || "/placeholder.svg?width=200&height=200"
   const blurSrc = "/placeholder.svg?width=20&height=20"
 
   return (

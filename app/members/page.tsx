@@ -221,6 +221,16 @@ export default function MembersList() {
   const shouldShowFilterLoading = isInitialLoading
   const shouldShowContentLoading = isInitialLoading || isContentLoading
 
+  function isValidUrl(str: string) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+
   return (
     <div className="md:container">
       {/* Background gradients */}
@@ -262,24 +272,23 @@ export default function MembersList() {
                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
                   {shouldShowFilterLoading
                     ? Array.from({ length: 2 }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : Gender.map((items) => (
-                        <li key={items}>
-                          <button
-                            onClick={() => GenderFilter(items)}
-                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${
-                              selectedGender === items
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-200 text-gray-800"
+                      <li key={items}>
+                        <button
+                          onClick={() => GenderFilter(items)}
+                          className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedGender === items
+                              ? "bg-blue-500 text-white"
+                              : "bg-white hover:bg-gray-200 text-gray-800"
                             }`}
-                          >
-                            {items}
-                          </button>
-                        </li>
-                      ))}
+                        >
+                          {items}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -301,24 +310,23 @@ export default function MembersList() {
                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
                   {shouldShowFilterLoading
                     ? Array.from({ length: 6 }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : RoleThai.map((items) => (
-                        <li key={items}>
-                          <button
-                            onClick={() => RoleFilter(items)}
-                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${
-                              selectedRole === items
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-200 text-gray-800"
+                      <li key={items}>
+                        <button
+                          onClick={() => RoleFilter(items)}
+                          className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedRole === items
+                              ? "bg-blue-500 text-white"
+                              : "bg-white hover:bg-gray-200 text-gray-800"
                             }`}
-                          >
-                            {items}
-                          </button>
-                        </li>
-                      ))}
+                        >
+                          {items}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -341,24 +349,23 @@ export default function MembersList() {
                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
                   {shouldShowFilterLoading
                     ? Array.from({ length: 5 }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : Nation.map((items) => (
-                        <li key={items}>
-                          <button
-                            onClick={() => NationFilter(items)}
-                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${
-                              selectedNation === items
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-200 text-gray-800"
+                      <li key={items}>
+                        <button
+                          onClick={() => NationFilter(items)}
+                          className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedNation === items
+                              ? "bg-blue-500 text-white"
+                              : "bg-white hover:bg-gray-200 text-gray-800"
                             }`}
-                          >
-                            {items}
-                          </button>
-                        </li>
-                      ))}
+                        >
+                          {items}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -380,24 +387,23 @@ export default function MembersList() {
                 <ul className="overflow-y-auto mt-2 flex flex-wrap gap-4 justify-start mx-4">
                   {shouldShowFilterLoading
                     ? Array.from({ length: 3 }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : Year.map((items: any) => (
-                        <li key={items}>
-                          <button
-                            onClick={() => YearFilter(items)}
-                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${
-                              selectedYear === items
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-200 text-gray-800"
+                      <li key={items}>
+                        <button
+                          onClick={() => YearFilter(items)}
+                          className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedYear === items
+                              ? "bg-blue-500 text-white"
+                              : "bg-white hover:bg-gray-200 text-gray-800"
                             }`}
-                          >
-                            {items}
-                          </button>
-                        </li>
-                      ))}
+                        >
+                          {items}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -486,12 +492,13 @@ export default function MembersList() {
                     currentMembersFiltered.map((member: Member) => (
                       <MemberCard
                         key={member.ID || "-"}
-                        ID={member.ID}
+                        memberID={member.ID}
                         NameThai={member.NameThai || member.NameEng || "-"}
                         Role={member.RoleThai || "-"}
-                        img={
-                          `/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/Profile/${member.picture}` ||
-                          ""
+                        image={
+                          isValidUrl(member?.picture)
+                            ? member.picture
+                            : "/images/default.png"
                         }
                         Gender={member.gender || "-"}
                       />

@@ -34,7 +34,7 @@ import type { Member } from "./_client"
 // }
 
 interface MemberDetailProps {
-  member?: Member
+  member?: Member | null
   isLoading: boolean
   roleThai?: string
 }
@@ -67,33 +67,43 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
     setImageLoadingStates((prev) => ({ ...prev, [imageKey]: false }))
   }
 
+  function isValidUrl(str: string) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+
+
   const memberData = isLoading ? null : member
 
-  const mainBannerImageSrc = memberData?.businessinfo?.banner_image_url
-    ? memberData.businessinfo.banner_image_url
-    : memberData?.businessinfo?.picture
-      ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/Banner/${memberData.businessinfo.picture}`
-      : ""
+  const mainBannerImageSrc = isValidUrl(memberData?.memberBanner || "/")
+    ? memberData?.memberBanner
+    : "/";
 
-  const profileImageSrc = memberData?.picture
-    ? `/images/entreprenuer/Koyori_${memberData?.Year || ""}/Profile/${memberData.picture}`
-    : ""
+  const profileImageSrc = isValidUrl(memberData?.memberpicture || "/")
+    ? memberData?.memberpicture
+    : "/";
 
-  const storeProfileImageSrc = memberData?.businessinfo?.picture
-    ? `/images/entreprenuer/Koyori_${memberData.Year}/LogoBusiness/${memberData.businessinfo.picture}`
-    : ""
-  console.log(storeProfileImageSrc)
-  const shopImageKey = memberData?.businessinfo?.ID
-    ? `businessShopImage_${memberData.businessinfo.ID}`
+  const storeProfileImageSrc = isValidUrl(memberData?.picture || "/")
+    ? memberData?.picture
+    : "/";
+
+
+  const shopImageKey = memberData?.BusinessID
+    ? `businessShopImage_${memberData.BusinessID}`
     : "businessShopImage_default"
 
   useEffect(() => {
-    const currentMemberId = memberData?.ID
+    const currentMemberId = memberData?.memberID
     const currentProfilePictureName = memberData?.picture
     const currentBannerSrc = mainBannerImageSrc
     const currentShopImageSrc = storeProfileImageSrc
-    const currentShopImageKey = memberData?.businessinfo?.ID
-      ? `businessShopImage_${memberData.businessinfo.ID}`
+    const currentShopImageKey = memberData?.BusinessID
+      ? `businessShopImage_${memberData.BusinessID}`
       : "businessShopImage_default"
 
     setImageLoadingStates((prevLoadingStates) => {
@@ -140,11 +150,11 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
         newLoadingStates[prevShopImageKeyRef.current] = false
       }
 
-      if (memberData?.businessinfo?.ID !== undefined) {
+      if (memberData?.BusinessID !== undefined) {
         if (currentShopImageSrc) {
           if (
             currentShopImageSrc !== prevShopImageSrcRef.current ||
-            memberData.businessinfo.ID.toString() !== prevMemberIdRef.current?.toString()
+            memberData.BusinessID.toString() !== prevMemberIdRef.current?.toString()
           ) {
             newLoadingStates[currentShopImageKey] = true
             setImageErrors((prev) => ({ ...prev, [currentShopImageKey]: false }))
@@ -191,15 +201,15 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
     }
   }, [isLoading, memberData, isExpanded])
 
-  const shopInitialLetter = memberData?.businessinfo?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""
-  const profileInitialLetter = memberData?.NameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
+  const shopInitialLetter = memberData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""
+  const profileInitialLetter = memberData?.memberNameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
 
   const mapEmbedUrl =
-    memberData?.businessinfo?.Latitude &&
-      memberData?.businessinfo?.Longtitude &&
-      Number.parseFloat(memberData.businessinfo.Latitude) !== 0 &&
-      Number.parseFloat(memberData.businessinfo.Longtitude) !== 0
-      ? `https://maps.google.com/maps?q=${memberData.businessinfo.Latitude},${memberData.businessinfo.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
+    memberData?.Latitude &&
+      memberData?.Longtitude &&
+      Number.parseFloat(memberData?.Latitude) !== 0 &&
+      Number.parseFloat(memberData?.Longtitude) !== 0
+      ? `https://maps.google.com/maps?q=${memberData.Latitude},${memberData.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
       : ""
 
   const showProfileLoadingAnimation = imageLoadingStates.profile && !isLoading && memberData?.picture
@@ -228,10 +238,10 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
               <div className="absolute inset-0 w-full h-full bg-gray-300 animate-pulse z-10"></div>
             )}
             <Image
-              key={mainBannerImageSrc || "banner-placeholder"}
-              src={mainBannerImageSrc || "/placeholder.svg?width=800&height=320&query=banner+image"}
+              key={mainBannerImageSrc || "/"}
+              src={mainBannerImageSrc || "/"}
               layout="fill"
-              alt={memberData?.businessinfo?.BussinessName || "แบนเนอร์"}
+              alt={``}
               priority={true}
               quality={90}
               style={{ objectFit: "cover", objectPosition: "center" }}
@@ -272,7 +282,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                     className="rounded-lg border-4 sm:border-[6px] border-white "
                     layout="fill"
                     objectFit="cover"
-                    alt={memberData?.NameThai || "รูปโปรไฟล์"}
+                    alt={``}
                     onError={() => handleImageError("profile")}
                     onLoad={() => handleImageLoad("profile")}
                   />
@@ -293,9 +303,9 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
               ) : (
                 <>
                   <h1 className="text-[24px] sm:text-2xl lg:text-2xl font-light text-blue-950 text-wrap">
-                    {memberData?.NameThai || "-"}
+                    {memberData?.memberNameThai || "-"}
                   </h1>
-                  <h2 className="text-[20px] text-gray-600 text-wrap mb-2">{memberData?.NameEng || "-"}</h2>
+                  <h2 className="text-[20px] text-gray-600 text-wrap mb-2">{memberData?.memberNameEng || "-"}</h2>
                 </>
               )}
             </div>
@@ -313,10 +323,10 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                 ) : (
                   <>
                     {[
-                      { icon: <BsTools className="text-gray-500" size={15} />, value: memberData?.RoleThai },
-                      { icon: <HiPhone className="text-gray-500" size={15} />, value: memberData?.Contact },
+                      { icon: <BsTools className="text-gray-500" size={15} />, value: memberData?.memberRoleThai },
+                      { icon: <HiPhone className="text-gray-500" size={15} />, value: memberData?.contactUs.phone },
                       { icon: <FaCalendarAlt className="text-gray-500" size={15} />, value: memberData?.Year },
-                      { icon: <PiGenderIntersexFill className="text-gray-500" size={15} />, value: memberData?.gender },
+                      { icon: <PiGenderIntersexFill className="text-gray-500" size={15} />, value: memberData?.memberGender },
                     ].map(({ icon, value }, index) =>
                       value ? (
                         <div key={index} className="flex items-center gap-2 my-1 sm:my-0">
@@ -334,10 +344,10 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                   <div className="h-4 w-full bg-gray-300 animate-pulse rounded"></div>
                 </div>
               ) : (
-                memberData?.businessinfo?.AddressThai && (
+                memberData?.AddressThai && (
                   <div className="flex items-start gap-2 text-gray-500 text-[14px] pt-2">
                     <HiLocationMarker className="text-gray-600 flex-shrink-0 mt-0.5" size={16} />
-                    <span className="text-gray-400">{memberData.businessinfo.AddressThai}</span>
+                    <span className="text-gray-400">{memberData?.AddressThai}</span>
                   </div>
                 )
               )}
@@ -375,7 +385,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                         className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line"
                         id="member-description-content"
                       >
-                        {memberData?.description || "ไม่มีข้อมูลรายละเอียด"}
+                        {memberData?.memberDescription || "ไม่มีข้อมูลรายละเอียด"}
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo neque libero hic, magni dicta
                         fugiat excepturi repudiandae earum delectus nam, maiores quo quasi reprehenderit non molestiae
                         temporibus? Quasi illum sit, amet illo explicabo laborum voluptas voluptates culpa repudiandae a
@@ -411,7 +421,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
             </div>
           </div>
 
-          {roleThai === "ครูช่าง" && !isLoading && memberData?.businessinfo && (
+          {roleThai === "ครูช่าง" && !isLoading && (
             <div className="col-span-1 md:col-span-3 mt-4">
               <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md overflow-hidden w-full transition-all duration-300 ease-in-out">
                 <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
@@ -439,7 +449,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                           <Image
                             key={storeProfileImageSrc}
                             src={storeProfileImageSrc || "/placeholder.svg"}
-                            alt={`โลโก้ ${memberData.businessinfo.BussinessName || "ร้านค้า"}`}
+                            alt={`โลโก้ ${memberData?.BussinessName || "ร้านค้า"}`}
                             layout="fill"
                             objectFit="cover"
                             className="rounded-md"
@@ -455,26 +465,26 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                         className="text-[20px] sm:text-xl font-light text-blue-950 hover:underline underline-offset-4 "
                       >
                         <p className="flex items-center gap-2 m-0">
-                          {memberData.businessinfo.BussinessName || "-"}
+                          {memberData?.BussinessName || "-"}
                           <HiOutlineExternalLink size={18} />
                         </p>
                       </Link>
-                      {memberData.businessinfo.BussinessNameEng && (
-                        <p className="text-[16px] text-gray-500">({memberData.businessinfo.BussinessNameEng})</p>
+                      {memberData?.BussinessNameEng && (
+                        <p className="text-[16px] text-gray-500">({memberData?.BussinessNameEng})</p>
                       )}
-                      {memberData.businessinfo.DataYear && (
-                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5"><FaCalendarAlt size={16} className="text-gray-600" /> {memberData.businessinfo.DataYear}</p>
+                      {memberData?.Year && (
+                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5"><FaCalendarAlt size={16} className="text-gray-600" /> {memberData?.Year}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-start space-x-2 text-sm">
                     <HiLocationMarker className="w-4 h-4 text-gray-600 flex-shrink-0 mt-1" />
-                    <p className="text-gray-400 leading-relaxed">{memberData.businessinfo.AddressThai || "-"}</p>
+                    <p className="text-gray-400 leading-relaxed">{memberData?.AddressThai || "-"}</p>
                   </div>
-                  {memberData.Contact && (
+                  {memberData?.contactUs && (
                     <div className="flex items-start space-x-2 text-sm">
                       <HiPhone className="w-4 h-4 text-gray-600 flex-shrink-0 mt-1" />
-                      <p className="text-gray-400 break-all">{memberData.Contact}</p>
+                      <p className="text-gray-400 break-all">{memberData.contactUs?.phone}</p>
                     </div>
                   )}
                 </div>
@@ -490,7 +500,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                         allowFullScreen={false}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        title={`แผนที่ร้าน ${memberData.businessinfo.BussinessName || ""}`}
+                        title={`แผนที่ร้าน ${memberData?.BussinessName || ""}`}
                       ></iframe>
                     </div>
                   ) : (
@@ -502,12 +512,12 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
 
                   {mapEmbedUrl ? (
                     <div className="flex items-center justify-end border-t border-gray-200 pt-1 mt-4">
-                      {memberData.businessinfo.Latitude &&
-                        memberData.businessinfo.Longtitude &&
-                        Number.parseFloat(memberData.businessinfo.Latitude) !== 0 &&
-                        Number.parseFloat(memberData.businessinfo.Longtitude) !== 0 && (
+                      {memberData?.Latitude &&
+                        memberData?.Longtitude &&
+                        Number.parseFloat(memberData?.Latitude) !== 0 &&
+                        Number.parseFloat(memberData?.Longtitude) !== 0 && (
                           <a
-                            href={`https://www.google.com/maps/search/?api=1&query=${memberData.businessinfo.Latitude},${memberData.businessinfo.Longtitude}`}
+                            href={`https://www.google.com/maps/search/?api=1&query=${memberData?.Latitude},${memberData?.Longtitude}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-3 inline-flex items-center justify-center w-full sm:w-auto px-6 py-2 bg-blue-950 hover:bg-blue-950/80 text-white rounded-md transition-colors duration-300 group text-[14px] font-light"
