@@ -222,6 +222,7 @@ export default function MembersList() {
   const shouldShowContentLoading = isInitialLoading || isContentLoading
 
   function isValidUrl(str: string) {
+<<<<<<< HEAD
     try {
       new URL(str);
       return true;
@@ -230,6 +231,15 @@ export default function MembersList() {
     }
   }
 
+=======
+        try {
+            new URL(str);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+>>>>>>> 32637eb00dd0b20249cf18a61a2d2d8bb5f5d27f
 
   return (
     <div className="md:container">
@@ -495,7 +505,11 @@ export default function MembersList() {
                         memberID={member.ID}
                         NameThai={member.NameThai || member.NameEng || "-"}
                         Role={member.RoleThai || "-"}
+<<<<<<< HEAD
                         image={
+=======
+                        img={
+>>>>>>> 32637eb00dd0b20249cf18a61a2d2d8bb5f5d27f
                           isValidUrl(member?.picture)
                             ? member.picture
                             : "/images/default.png"
