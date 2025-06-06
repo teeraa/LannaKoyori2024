@@ -114,6 +114,7 @@ model products {
   image        String?   @db.VarChar(255)
   sketch       String?   @db.VarChar(255)
   description String? @db.Text
+  design      String? @db.Text
   color       String? @db.Text
   size        String? @db.Text
 

@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
   const imageFile = formData.get("image"); // Main product image
   const productName = formData.get("productName");
   const description = formData.get("description");
+  const design = formData.get("design");
   const color = formData.get("color");
   const size = formData.get("size");
   const price = formData.get("price");
@@ -232,6 +233,9 @@ export async function POST(req: NextRequest) {
   // Add optional fields if they exist
   if (description) {
     productData.description = description.toString();
+  }
+  if (design) {
+    productData.design = design.toString();
   }
   if (color) {
     productData.color = color.toString();
