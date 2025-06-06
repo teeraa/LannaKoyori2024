@@ -105,6 +105,7 @@ export async function GET(
       Longtitude: business.Longtitude,
       Year: business.DataYear,
       picture: business.picture,
+      banner: business.banner,
 
       memberID: firstPerson?.ID,
       memberNameThai: firstPerson?.NameThai,
@@ -116,6 +117,7 @@ export async function GET(
       memberGender: firstPerson?.gender,
       memberContact: firstPerson?.Contact,
       memberpicture: firstPerson?.picture,
+      memberbanner: firstPerson?.banner,
 
       contactUs: {
         facebook_name: business.contacts?.[0]?.facebook_name || "ไม่ระบุ",

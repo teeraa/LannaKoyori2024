@@ -38,6 +38,7 @@ export async function GET(
         memberContact: personinfoData?.Contact,
         memberDescription: personinfoData?.description,
         memberpicture: personinfoData?.picture,
+        memberBanner: personinfoData?.banner,
 
         contactUs: {
           facebook_name: contact?.facebook_name || "ไม่ระบุm",

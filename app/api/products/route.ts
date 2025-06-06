@@ -3,6 +3,12 @@ import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { writeFile } from "fs/promises";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for server-side operations
+);
 
 export async function GET(req: NextRequest) {
   try {
@@ -68,9 +74,20 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
-  const imageFile = formData.get("image");
+  const imageFile = formData.get("image"); // Main product image
   const productName = formData.get("productName");
   const description = formData.get("description");
   const color = formData.get("color");
@@ -80,13 +97,20 @@ export async function POST(req: NextRequest) {
   const subMaterial1 = formData.get("subMaterial1");
   const subMaterial2 = formData.get("subMaterial2");
   const DataYear = formData.get("DataYear");
-  const url = new URL(req.url);
   const BussinessNameEng = formData.get("BussinessNameEng");
+
+  // Add CORS headers to all responses
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+
   const cleanedBusinessName = BussinessNameEng?.toString()
     .replace(/[^\w\-]/g, "")
     .replace(/\s+/g, "");
 
-  let imagePath;
+  // Generate new product ID
   const minId = Number(DataYear) * 10000; // 20250000
   const maxId = (Number(DataYear) + 1) * 10000; // 20260000
 
@@ -108,113 +132,155 @@ export async function POST(req: NextRequest) {
   }
 
   const newProductId = Number(DataYear) * 10000 + newSuffix;
-  const uploadDir = path.join(process.cwd(), `https://lannakoyori.org/images/entrpenuer/Koyori_${DataYear}/Products/`);
 
-  const images = formData.getAll("images") as File[];
-  const uploadedImageNames: string[] = [];
+  let imagePath;
+  const uploadedImageUrls: string[] = [];
 
-  for (const image of images) {
-    const bytes = await image.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filename = `${Date.now()}-${image.name}`;
-    const filepath = path.join(process.cwd(), `https://lannakoyori.org/images/entrpenuer/Koyori_${DataYear}/Products/`, filename);
+  // Current date for filename
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const date = currentDate.getDate();
+  const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
+    .toString()
+    .padStart(2, "0")}`;
 
-    await writeFile(filepath, buffer);
-    uploadedImageNames.push(filename);
-  }
+  try {
+    // Upload main product image
+    if (imageFile && imageFile instanceof File) {
+      const mainFilename = `${formattedDate}-${imageFile.name}`;
+      const mainFilePath = `entreprenuer/Koyori_${DataYear}/Products/${mainFilename}`;
 
-  if (imageFile && imageFile instanceof Blob) {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear(); // ปี
-    const month = currentDate.getMonth() + 1; // เดือน (เริ่มจาก 0 ดังนั้นต้อง +1)
-    const date = currentDate.getDate();
-    const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
-      .toString()
-      .padStart(2, "0")}`;
-    // await fs.mkdir(uploadDir, { recursive: true });
-    const filePath = path.join(uploadDir, `${formattedDate}-${imageFile.name}`);
-    const fileBuffer = Buffer.from(await imageFile.arrayBuffer());
-    await fs.writeFile(filePath, fileBuffer);
-    imagePath = `${formattedDate}-${imageFile.name}`; // เก็บ path สำหรับอัปเดต
-  }
+      const { data: mainData, error: mainError } = await supabase.storage
+        .from('koyori-image')
+        .upload(mainFilePath, imageFile, {
+          cacheControl: '3600',
+          upsert: true
+        });
 
-  if (!productName || !price) {
+      if (mainError) {
+        console.error('Supabase main image upload error:', mainError);
+        return NextResponse.json(
+          { error: "Failed to upload main image" },
+          { status: 500, headers: corsHeaders }
+        );
+      }
+
+      // Get public URL for main image
+      const { data: mainUrlData } = supabase.storage
+        .from('koyori-image')
+        .getPublicUrl(mainFilePath);
+
+      imagePath = mainUrlData.publicUrl;
+    }
+
+    // Upload additional images
+    const images = formData.getAll("images") as File[];
+    
+    if (images.length > 0) {
+      for (const image of images) {
+        if (image instanceof File) {
+          const timestamp = Date.now();
+          const additionalFilename = `${timestamp}-${image.name}`;
+          const additionalFilePath = `entreprenuer/Koyori_${DataYear}/Products/${additionalFilename}`;
+
+          const { data: additionalData, error: additionalError } = await supabase.storage
+            .from('koyori-image')
+            .upload(additionalFilePath, image, {
+              cacheControl: '3600',
+              upsert: true
+            });
+
+          if (additionalError) {
+            console.error('Supabase additional image upload error:', additionalError);
+            // Continue with other images even if one fails
+            continue;
+          }
+
+          // Get public URL for additional image
+          const { data: additionalUrlData } = supabase.storage
+            .from('koyori-image')
+            .getPublicUrl(additionalFilePath);
+
+          uploadedImageUrls.push(additionalUrlData.publicUrl);
+        }
+      }
+    }
+
+  } catch (error) {
+    console.error('Failed to upload images:', error);
     return NextResponse.json(
-      { error: "All fields are required" },
-      { status: 400 }
+      { error: "Failed to upload images" },
+      { status: 500, headers: corsHeaders }
     );
   }
 
-  const updateProductData: any = {
+  // Validate required fields
+  if (!productName || !price) {
+    return NextResponse.json(
+      { error: "Product name and price are required" },
+      { status: 400, headers: corsHeaders }
+    );
+  }
+
+  const productData: any = {
     ID: newProductId,
     productName: productName.toString(),
-    description: description?.toString(),
-    color: color?.toString(),
-    size: size?.toString(),
     price: Number(price),
-    mainMaterial: Number(mainMaterial),
-    subMaterial1: Number(subMaterial1),
-    subMaterial2: Number(subMaterial2),
   };
 
+  // Add optional fields if they exist
+  if (description) {
+    productData.description = description.toString();
+  }
+  if (color) {
+    productData.color = color.toString();
+  }
+  if (size) {
+    productData.size = size.toString();
+  }
+  if (mainMaterial) {
+    productData.mainMaterial = Number(mainMaterial);
+  }
+  if (subMaterial1) {
+    productData.subMaterial1 = Number(subMaterial1);
+  }
+  if (subMaterial2) {
+    productData.subMaterial2 = Number(subMaterial2);
+  }
+
+  // Add main image if uploaded
   if (imagePath) {
-    updateProductData.image = imagePath;
+    productData.image = imagePath;
   }
 
-  const updateProduct = await prisma.products.create({
-    data: updateProductData,
-  });
-
-  if (uploadedImageNames.length > 0) {
-    await prisma.product_image.createMany({
-      data: uploadedImageNames.map((filename) => ({
-        product_id: Number(newProductId),
-        image: filename,
-      })),
+  try {
+    // Create the product
+    const newProduct = await prisma.products.create({
+      data: productData,
     });
-  }
-  // for (const mat of materialList) {
-  //   console.log("Processing material:", mat); // Debug what's being processed
 
-  //   if (!mat.id) {
-  //     console.log("Skipping material with no ID:", mat);
-  //     continue;
-  //   }
-
-  //   if (!mat.name) {
-  //     console.log("Skipping material with no name:", mat);
-  //     continue;
-  //   }
-
-  //   try {
-  //     const result = await prisma.materials.create({
-  //       data: {
-  //         Material: mat.name.toString(),
-  //       },
-  //     });
-  //     console.log(`Successfully updated material ID ${mat.id}:`, result);
-  //   } catch (error: any) {
-  //     console.error(`Error updating material ID ${mat.id}:`, error);
-  //     // Return the error in the response for debugging
-  //     return NextResponse.json(
-  //       {
-  //         message: "Error updating materials",
-  //         error: error.message,
-  //         materialId: mat.id,
-  //       },
-  //       { status: 500 }
-  //     );
-  //   }
-  // }
-
-  return NextResponse.json({
-    message: "บันทึกข้อมูลเรียบร้อยแล้ว",
-    updateProduct,
-  }, {
-    headers: {
-      'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    // Create additional product images if any were uploaded
+    if (uploadedImageUrls.length > 0) {
+      await prisma.product_image.createMany({
+        data: uploadedImageUrls.map((imageUrl) => ({
+          product_id: Number(newProductId),
+          image: imageUrl, // Store full URL or just filename based on your needs
+        })),
+      });
     }
-  });
+
+    return NextResponse.json({
+      message: "บันทึกข้อมูลเรียบร้อยแล้ว",
+      product: newProduct,
+      additionalImages: uploadedImageUrls.length,
+    }, { headers: corsHeaders });
+
+  } catch (error) {
+    console.error('Database creation error:', error);
+    return NextResponse.json(
+      { error: "Failed to create product" },
+      { status: 500, headers: corsHeaders }
+    );
+  }
 }
