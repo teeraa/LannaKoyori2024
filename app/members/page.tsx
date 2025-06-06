@@ -221,6 +221,15 @@ export default function MembersList() {
   const shouldShowFilterLoading = isInitialLoading
   const shouldShowContentLoading = isInitialLoading || isContentLoading
 
+  function isValidUrl(str: string) {
+        try {
+            new URL(str);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
   return (
     <div className="md:container">
       {/* Background gradients */}
@@ -490,8 +499,9 @@ export default function MembersList() {
                         NameThai={member.NameThai || member.NameEng || "-"}
                         Role={member.RoleThai || "-"}
                         img={
-                          `/images/entreprenuer/Koyori_${member.businessinfo?.DataYear}/Profile/${member.picture}` ||
-                          ""
+                          isValidUrl(member?.picture)
+                            ? member.picture
+                            : "/images/default.png"
                         }
                         Gender={member.gender || "-"}
                       />
