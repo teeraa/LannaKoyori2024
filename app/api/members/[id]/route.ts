@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+
+
 export async function GET(
   request: NextRequest,
   context: any // ใช้ context ที่มี params
