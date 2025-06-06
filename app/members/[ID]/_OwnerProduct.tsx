@@ -121,6 +121,17 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
   const visibleMaterials = materials.slice(0, visibleCount)
   const totalHiddenCount = getTotalHiddenCount()
 
+
+    function isValidUrl(str: string) {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+
   return (
     <div
       className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md group w-fit md:w-full lg:w-full"
@@ -134,7 +145,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             </div>
           ) : (
             <Image
-             src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
+             src={isValidUrl(product?.image) ? product?.image : "/"}
               alt={``}
               width={200}
               height={200}
@@ -157,7 +168,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
           </div>
           <div className="flex items-center text-gray-500 text-sm">
             <GrLocation className="w-4 h-4 mr-1" />
-            <span className="truncate">{product?.businessinfo?.ProvinceT || "ไม่ระบุ"}</span>
+            <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
           </div>
 
           <div 
