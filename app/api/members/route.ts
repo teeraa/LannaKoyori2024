@@ -225,7 +225,7 @@ export async function POST(req: NextRequest) {
         Contact: Contact.toString(),
         Year: Number(Year),
         picture: imagePath,
-        banner: bannerPath || imagePath, // Use banner if provided, otherwise use profile image
+        banner: bannerPath,
       },
     });
 

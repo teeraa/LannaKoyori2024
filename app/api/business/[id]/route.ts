@@ -174,6 +174,7 @@ export async function OPTIONS(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
   const imageFile = formData.get("image");
+  const bannerFile = formData.get("banner");
   const BussinessName = formData.get("BussinessName");
   const BussinessNameEng = formData.get("BussinessNameEng");
   const DataYear = formData.get("DataYear");
@@ -186,6 +187,13 @@ export async function PUT(req: NextRequest) {
   const Longtitude = formData.get("Longtitude");
   const url = new URL(req.url);
   const id = url.pathname.split("/").pop();
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const date = currentDate.getDate();
+  const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
+    .toString()
+    .padStart(2, "0")}`;
 
   // Add CORS headers to all responses
   const corsHeaders = {
@@ -195,26 +203,21 @@ export async function PUT(req: NextRequest) {
   };
 
   let imagePath;
-  
+  let bannerPath;
+
   if (imageFile && imageFile instanceof File) { // Changed from Blob to File
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
-    const date = currentDate.getDate();
-    const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
-      .toString()
-      .padStart(2, "0")}`;
-    
+
+
     const filename = `${formattedDate}-${imageFile.name}`;
     const filePath = `entreprenuer/Koyori_${DataYear}/LogoBusiness/${filename}`;
-    
+
     try {
       // Optional: Delete old image if updating
       const existingBusiness = await prisma.businessinfo.findUnique({
         where: { ID: Number(id) },
         select: { picture: true }
       });
-      
+
       if (existingBusiness?.picture) {
         // Extract path from existing URL
         const oldPath = existingBusiness.picture.split('/').pop();
@@ -246,7 +249,7 @@ export async function PUT(req: NextRequest) {
         .getPublicUrl(filePath);
 
       imagePath = publicUrlData.publicUrl;
-      
+
     } catch (error) {
       console.error('Failed to upload image:', error);
       return NextResponse.json(
@@ -254,6 +257,33 @@ export async function PUT(req: NextRequest) {
         { status: 500, headers: corsHeaders }
       );
     }
+  }
+
+  if (bannerFile && bannerFile instanceof File) {
+    const bannerFilename = `${formattedDate}-banner-${bannerFile.name}`;
+    const bannerFilePath = `entreprenuer/Koyori_${DataYear}/Banner/${bannerFilename}`;
+
+    const { data: bannerData, error: bannerError } = await supabase.storage
+      .from('koyori-image')
+      .upload(bannerFilePath, bannerFile, {
+        cacheControl: '3600',
+        upsert: true
+      });
+
+    if (bannerError) {
+      console.error('Supabase banner upload error:', bannerError);
+      return NextResponse.json(
+        { error: "Failed to upload banner image" },
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    // Get public URL for banner image
+    const { data: bannerUrlData } = supabase.storage
+      .from('koyori-image')
+      .getPublicUrl(bannerFilePath);
+
+    bannerPath = bannerUrlData.publicUrl;
   }
 
   if (
@@ -291,6 +321,10 @@ export async function PUT(req: NextRequest) {
 
   if (imagePath) {
     updateData.picture = imagePath;
+  }
+
+  if (bannerPath) {
+    updateData.picture = bannerPath;
   }
 
   try {
