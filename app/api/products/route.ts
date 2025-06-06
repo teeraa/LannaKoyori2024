@@ -88,6 +88,7 @@ export async function OPTIONS(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const imageFile = formData.get("image"); // Main product image
+  const sketchFile = formData.get("sketch"); // Sketch product image
   const productName = formData.get("productName");
   const description = formData.get("description");
   const design = formData.get("design");
@@ -99,6 +100,7 @@ export async function POST(req: NextRequest) {
   const subMaterial2 = formData.get("subMaterial2");
   const DataYear = formData.get("DataYear");
   const BussinessNameEng = formData.get("BussinessNameEng");
+  const BussinessID = formData.get("BussinessID");
 
   // Add CORS headers to all responses
   const corsHeaders = {
@@ -135,6 +137,7 @@ export async function POST(req: NextRequest) {
   const newProductId = Number(DataYear) * 10000 + newSuffix;
 
   let imagePath;
+  let sketchPath;
   const uploadedImageUrls: string[] = [];
 
   // Current date for filename
@@ -173,6 +176,33 @@ export async function POST(req: NextRequest) {
         .getPublicUrl(mainFilePath);
 
       imagePath = mainUrlData.publicUrl;
+    }
+
+    if (sketchFile && sketchFile instanceof File) {
+      const mainFilename = `${formattedDate}-${sketchFile.name}`;
+      const mainFilePath = `entreprenuer/Koyori_${DataYear}/Sketch/${mainFilename}`;
+
+      const { data: mainData, error: mainError } = await supabase.storage
+        .from('koyori-image')
+        .upload(mainFilePath, sketchFile, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (mainError) {
+        console.error('Supabase main image upload error:', mainError);
+        return NextResponse.json(
+          { error: "Failed to upload main image" },
+          { status: 500, headers: corsHeaders }
+        );
+      }
+
+      // Get public URL for main image
+      const { data: mainUrlData } = supabase.storage
+        .from('koyori-image')
+        .getPublicUrl(mainFilePath);
+
+      sketchPath = mainUrlData.publicUrl;
     }
 
     // Upload additional images
@@ -228,6 +258,7 @@ export async function POST(req: NextRequest) {
     ID: newProductId,
     productName: productName.toString(),
     price: Number(price),
+    bussinessID: BussinessID,
   };
 
   // Add optional fields if they exist
@@ -256,6 +287,10 @@ export async function POST(req: NextRequest) {
   // Add main image if uploaded
   if (imagePath) {
     productData.image = imagePath;
+  }
+
+  if (sketchPath) {
+    productData.sketch = sketchPath;
   }
 
   try {
