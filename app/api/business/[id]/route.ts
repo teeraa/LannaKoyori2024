@@ -324,7 +324,7 @@ export async function PUT(req: NextRequest) {
   }
 
   if (bannerPath) {
-    updateData.picture = bannerPath;
+    updateData.banner = bannerPath;
   }
 
   try {
