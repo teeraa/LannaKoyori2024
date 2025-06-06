@@ -258,7 +258,7 @@ export async function POST(req: NextRequest) {
     ID: newProductId,
     productName: productName.toString(),
     price: Number(price),
-    bussinessID: BussinessID,
+    bussinessID: Number(BussinessID),
   };
 
   // Add optional fields if they exist
