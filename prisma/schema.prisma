@@ -30,7 +30,7 @@ model businessinfo {
   Latitude         Decimal?
   Longtitude       Decimal?
   picture          String  @db.VarChar(255)
-  banner           String  @db.VarChar(255)
+  banner           String?  @db.VarChar(255)
   username         String?  @db.VarChar(255)
   password         String?  @db.VarChar(255)
   products         products[]
@@ -96,7 +96,7 @@ model personinfo {
   Year        Int     @db.Integer
   description String? @db.Text
   picture     String? @db.VarChar(255)
-  banner           String  @db.VarChar(255)
+  banner      String?  @db.VarChar(255)
 
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
   
