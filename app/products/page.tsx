@@ -193,15 +193,6 @@ export default function ProductList() {
     "อุปกรณ์อื่นๆ",
   ];
 
-  function isValidUrl(str: string) {
-    try {
-      new URL(str);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   return (
     <div className="md:container">
       <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
@@ -373,11 +364,7 @@ export default function ProductList() {
                         ID={product.ID}
                         productName={product.productName || "-"}
                         BusinessName={product.businessinfo.BussinessName || "-"}
-                        image={
-                          isValidUrl(product?.image)
-                            ? product.image
-                            : "/images/default.png"
-                        }
+                        image={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product.image}`}
                       />
                     ))
                   ) : (
