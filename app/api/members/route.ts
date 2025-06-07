@@ -16,6 +16,10 @@ export async function GET(req: NextRequest) {
   const nationality = searchParams.get('nationality');
   const gender = searchParams.get('gender');
   const search = searchParams.get('search');
+  const limit = searchParams.get('limit');
+  const page = searchParams.get('page');
+
+  const offset = (Number(page)-1)*Number(limit)
 
   try {
 
@@ -37,11 +41,21 @@ export async function GET(req: NextRequest) {
     // console.log('Where Clause:', whereClause);
     const personinfoData = await prisma.personinfo.findMany({
       where: whereClause,
+      orderBy: {
+        ID: 'asc',
+      },
+      take: Number(limit),
+      skip: offset
     });
 
     // ดึงข้อมูลจาก consultantinfo
     const consultantinfoData = await prisma.consultantinfo.findMany({
       where: whereClause,
+      orderBy: {
+        ID: 'asc'
+      },
+      take: Number(limit),
+      skip: offset
     });
 
     // รวมข้อมูลจากทั้งสองตาราง

@@ -7,6 +7,14 @@ export async function GET(req: NextRequest) {
     try {
         let province = req.nextUrl.searchParams.get("province");
         const search = req.nextUrl.searchParams.get("search");
+        const limit = req.nextUrl.searchParams.get("limit");
+        const page = req.nextUrl.searchParams.get("page");
+        const type = req.nextUrl.searchParams.get("type");
+        const order = req.nextUrl.searchParams.get("orderBy");
+
+        const orderBy = order === 'desc' ? 'desc' : 'asc';
+
+        const offset = (Number(page) - 1)*Number(limit);
 
         if (province == "เชียงใหม่") {
             province = "Chiang Mai";
@@ -36,14 +44,36 @@ export async function GET(req: NextRequest) {
                 { ProvinceE: province }
             ]
         }
+        if (type) {
+            whereClause.OR = [
+                { BusiTypeId: type }
+            ]
+        }
         if (search) {
             whereClause.OR = [
                 { BussinessName: { contains: search } }
             ]
         }
         const data = await prisma.businessinfo.findMany({
-            where: whereClause
+            where: whereClause,
+            orderBy: {
+                ID: orderBy,
+            },
+            take: Number(limit),
+            skip: offset,
         });
+
+        const totalCount = await prisma.businessinfo.count({
+            where: whereClause,
+            orderBy: {
+                ID: orderBy,
+            },
+            take: Number(limit),
+            skip: offset,
+        })
+
+        const allData = await prisma.businessinfo.count();
+        const totalPages = Math.ceil(allData / Number(limit));
 
         const result = data.map((business) => ({
             BusinessID: business.ID,
@@ -54,7 +84,13 @@ export async function GET(req: NextRequest) {
             Longtitude: business.Longtitude,
             Year: business.DataYear,
             picture: business.picture,
-            ProvinceT: business.ProvinceT
+            ProvinceT: business.ProvinceT,
+            meta: {
+                page: Number(page),
+                limit: Number(limit),
+                total_rows: totalCount,
+                total_pages: totalPages,
+            }
         }))
 
         return NextResponse.json(result, {

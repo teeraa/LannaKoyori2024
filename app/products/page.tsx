@@ -340,7 +340,7 @@ export default function ProductList() {
               <h1 className="font-light text-gray-600">
                 แสดงผลลัพธ์สำหรับ&nbsp;"
                 <span className="font-medium text-blue-950">
-                  {search ? search : "ค้นหาบุคคล"}
+                  {search ? search : "ค้นหาสินค้า"}
                 </span>
                 "
               </h1>
@@ -381,7 +381,7 @@ export default function ProductList() {
                       />
                     ))
                   ) : (
-                    <p>ไม่พบสมาชิก</p>
+                    <p>ไม่พบสินค้า</p>
                   )}
                 </div>
               </div>

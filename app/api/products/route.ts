@@ -15,6 +15,10 @@ export async function GET(req: NextRequest) {
     // รับ query parameter 'material'
     const material = req.nextUrl.searchParams.get("material");
     const search = req.nextUrl.searchParams.get("search");
+    const limit = req.nextUrl.searchParams.get("limit");
+    const page = req.nextUrl.searchParams.get("page")
+
+    const offset = (Number(page)-1)*Number(limit);
 
     const whereClause: any = {};
 
@@ -37,14 +41,6 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    // if (!material) {
-    //   return NextResponse.json(
-    //     { error: "Missing 'material' parameter" },
-    //     { status: 400 }
-    //   );
-    // }
-
-    // Query ข้อมูลจาก Prisma โดย Join ทั้ง 3 ตาราง
     const data = await prisma.products.findMany({
       where: whereClause,
       include: {
@@ -54,6 +50,11 @@ export async function GET(req: NextRequest) {
         materialSub3: true, // Join ตาราง materials สำหรับ subMaterial3
         businessinfo: true, // Join ตาราง businessinfo
       },
+      orderBy: {
+        ID: 'asc'
+      },
+      take: Number(limit),
+      skip: offset,
     });
 
     return NextResponse.json(data, {
