@@ -96,6 +96,9 @@ export interface Business {
     Contact?: string
     memberID?: number
     vedio: YouTubeVideo[]
+
+    banner?: string
+    memberpicture?: string
 }
 
 

@@ -105,17 +105,19 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
     setImageLoadingStates((prev) => ({ ...prev, [imageKey]: false }))
   }
 
-  const bannerImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData?.Year}/Banner/${storeData.picture}`
-    : ""
+  function isValidUrl(str: string) {
+    try {
+      new URL(str)
+      return true
+    } catch {
+      return false
+    }
+  }
+  
 
-  const profileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData?.Year || ""}/Profile/${storeData?.picture}`
-    : ""
-
-  const storeProfileImageSrc = storeData?.picture
-    ? `/images/entreprenuer/Koyori_${storeData.Year}/LogoBusiness/${storeData.picture}`
-    : ""
+  const bannerImageSrc = isValidUrl(storeData?.banner || "/") ? storeData?.banner : "/"
+  const storeProfileImageSrc = isValidUrl(storeData?.picture || "/") ? storeData?.picture : "/"
+  const profileImageSrc = isValidUrl(storeData?.memberpicture || "/") ? storeData?.memberpicture : "/"
 
   const storeInitialLetter = storeData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""
   const personInitialLetter = storeData?.memberNameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
