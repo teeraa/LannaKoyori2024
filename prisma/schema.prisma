@@ -97,6 +97,7 @@ model personinfo {
   description String? @db.Text
   picture     String? @db.VarChar(255)
   banner      String?  @db.VarChar(255)
+  member_description  member_description[]
 
   businessinfo businessinfo? @relation(fields: [BusinessID], references: [ID])
   
@@ -156,6 +157,16 @@ model topic_detail {
   Second_DescriptionJP String? @db.Text
 
   businessinfo  businessinfo? @relation(fields: [BusinessID], references: [ID])
+}
+
+model member_description {
+  id              Int  @id @default(autoincrement())
+  personID        Int
+  descriptionTH   String? @db.Text
+  descriptionEN   String? @db.Text
+  descriptionJP   String? @db.Text
+
+  personinfo    personinfo? @relation(fields: [personID], references: [ID])
 }
 
 model contacts {

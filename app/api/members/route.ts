@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { createClient } from '@supabase/supabase-js';
+import { count } from 'console';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,6 +19,9 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search');
   let limit = searchParams.get('limit');
   let page = searchParams.get('page');
+  const order = req.nextUrl.searchParams.get("orderBy");
+
+  const orderBy = order === 'desc' ? 'desc' : 'asc';
 
   if (!page) {
     page = "1"
@@ -49,7 +53,7 @@ export async function GET(req: NextRequest) {
     const personinfoData = await prisma.personinfo.findMany({
       where: whereClause,
       orderBy: {
-        ID: 'asc',
+        ID: orderBy,
       },
       take: Number(limit),
       skip: offset
@@ -59,7 +63,7 @@ export async function GET(req: NextRequest) {
     const consultantinfoData = await prisma.consultantinfo.findMany({
       where: whereClause,
       orderBy: {
-        ID: 'asc'
+        ID: orderBy
       },
       take: Number(limit),
       skip: offset
@@ -73,11 +77,39 @@ export async function GET(req: NextRequest) {
       new Map(combinedData.map(item => [`${item.NameThai}-${item.NameEng}`, item])).values()
     );
 
+    const totalCount = uniqueData.length
+
+    const allData = await prisma.businessinfo.count();
+    const totalPages = Math.ceil(allData / Number(limit));
+
+    const result = uniqueData.map((member) => ({
+      ID: member.ID,
+      BusinessID: member.BusinessID,
+      NameThai: member.NameThai,
+      NameEng: member.NameEng,
+      RoleThai: member.RoleThai,
+      RoleEng: member.RoleEng,
+      Position: 'Position' in member ? member.Position : '',
+      nationality: member.nationality,
+      gender: member.gender,
+      Institute: 'Institute' in member ? member.Institute : '',
+      Contact: 'Contact' in member ? member.Contact : '',
+      Year: member.Year,
+      picture: member.picture,
+      banner: 'banner' in member ? member.banner : null,
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total_rows: totalCount,
+        total_pages: totalPages,
+      }
+    }));
+
     // const members = await prisma.personinfo.findMany({
     //     where: whereClause,
     // });
 
-    return NextResponse.json(uniqueData, {
+    return NextResponse.json(result, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -242,13 +274,17 @@ export async function POST(req: NextRequest) {
         RoleThai: RoleThai.toString(),
         RoleEng: RoleEng.toString(),
         gender: gender.toString(),
-        description: description.toString(),
         Contact: Contact.toString(),
         Year: Number(Year),
         picture: imagePath,
         banner: bannerPath,
       },
     });
+    const newDescription = await prisma.member_description.create({
+      data: {
+        descriptionTH: description.toString(),
+      },
+    })
 
     return NextResponse.json(
       { message: "Added member successfully", newMember },

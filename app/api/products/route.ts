@@ -17,6 +17,9 @@ export async function GET(req: NextRequest) {
     const search = req.nextUrl.searchParams.get("search");
     let limit = req.nextUrl.searchParams.get("limit");
     let page = req.nextUrl.searchParams.get("page");
+    const order = req.nextUrl.searchParams.get("orderBy");
+
+    const orderBy = order === 'desc' ? 'desc' : 'asc';
 
     if (!page) {
       page = "1"
@@ -58,13 +61,62 @@ export async function GET(req: NextRequest) {
         businessinfo: true, // Join ตาราง businessinfo
       },
       orderBy: {
-        ID: 'asc'
+        ID: orderBy
       },
       take: Number(limit),
       skip: offset,
     });
 
-    return NextResponse.json(data, {
+    const totalCount = await prisma.businessinfo.count({
+      where: whereClause,
+      orderBy: {
+        ID: orderBy,
+      },
+      take: Number(limit),
+      skip: offset,
+    })
+
+    const allData = await prisma.businessinfo.count();
+    const totalPages = Math.ceil(allData / Number(limit));
+
+    const result = data.map((product) => ({
+      ID: product.ID,
+      productName: product.productName,
+      price: product.price,
+      material: [
+        product.materialMain,
+        product.materialSub1,
+        product.materialSub2,
+        product.materialSub3
+      ],
+      bussinessID: product.bussinessID,
+      image: product.image,
+      sketch: product.sketch,
+      description: product.description,
+      color: product.color,
+      size: product.size,
+      businessinfo: {
+        ID: product.businessinfo?.ID,
+        DataYear: product.businessinfo?.DataYear,
+        BusiTypeId: product.businessinfo?.BusiTypeId,
+        BussinessName: product.businessinfo?.BussinessName,
+        BussinessNameEng: product.businessinfo?.BussinessNameEng,
+        AddressThai: product.businessinfo?.AddressThai,
+        Latitude: product.businessinfo?.Latitude,
+        Longtitude: product.businessinfo?.Longtitude,
+        picture: product.businessinfo?.picture,
+        banner: product.businessinfo?.banner,
+      },
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total_rows: totalCount,
+        total_pages: totalPages,
+      }
+    })
+    )
+
+    return NextResponse.json(result, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
