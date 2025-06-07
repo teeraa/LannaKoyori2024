@@ -70,7 +70,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     const filePath = `entreprenure/Koyori_${DataYear}/Products/${filename}`;
     
     try {
-      // Optional: Delete old image if updating
+      // Delete old image if updating
       const existingImage = await prisma.product_image.findUnique({
         where: { image_id: Number(id) },
         select: { image: true }

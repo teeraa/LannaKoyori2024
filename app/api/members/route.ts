@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { createClient } from '@supabase/supabase-js';
+import { count } from 'console';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,6 +17,20 @@ export async function GET(req: NextRequest) {
   const nationality = searchParams.get('nationality');
   const gender = searchParams.get('gender');
   const search = searchParams.get('search');
+  let limit = searchParams.get('limit');
+  let page = searchParams.get('page');
+  const order = req.nextUrl.searchParams.get("orderBy");
+
+  const orderBy = order === 'desc' ? 'desc' : 'asc';
+
+  if (!page) {
+    page = "1"
+  }
+  if (!limit) {
+    limit = "12"
+  }
+
+  const offset = (Number(page) - 1) * Number(limit)
 
   try {
 
@@ -37,11 +52,21 @@ export async function GET(req: NextRequest) {
     // console.log('Where Clause:', whereClause);
     const personinfoData = await prisma.personinfo.findMany({
       where: whereClause,
+      orderBy: {
+        ID: orderBy,
+      },
+      take: Number(limit),
+      skip: offset
     });
 
     // ดึงข้อมูลจาก consultantinfo
     const consultantinfoData = await prisma.consultantinfo.findMany({
       where: whereClause,
+      orderBy: {
+        ID: orderBy
+      },
+      take: Number(limit),
+      skip: offset
     });
 
     // รวมข้อมูลจากทั้งสองตาราง
@@ -52,11 +77,39 @@ export async function GET(req: NextRequest) {
       new Map(combinedData.map(item => [`${item.NameThai}-${item.NameEng}`, item])).values()
     );
 
+    const totalCount = uniqueData.length
+
+    const allData = await prisma.businessinfo.count();
+    const totalPages = Math.ceil(allData / Number(limit));
+
+    const result = uniqueData.map((member) => ({
+      ID: member.ID,
+      BusinessID: member.BusinessID,
+      NameThai: member.NameThai,
+      NameEng: member.NameEng,
+      RoleThai: member.RoleThai,
+      RoleEng: member.RoleEng,
+      Position: 'Position' in member ? member.Position : '',
+      nationality: member.nationality,
+      gender: member.gender,
+      Institute: 'Institute' in member ? member.Institute : '',
+      Contact: 'Contact' in member ? member.Contact : '',
+      Year: member.Year,
+      picture: member.picture,
+      banner: 'banner' in member ? member.banner : null,
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total_rows: totalCount,
+        total_pages: totalPages,
+      }
+    }));
+
     // const members = await prisma.personinfo.findMany({
     //     where: whereClause,
     // });
 
-    return NextResponse.json(uniqueData, {
+    return NextResponse.json(result, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -123,7 +176,7 @@ export async function POST(req: NextRequest) {
   // Upload profile image
   if (!imageFile || !(imageFile instanceof File)) {
     return NextResponse.json(
-      { error: "Profile image file is required" }, 
+      { error: "Profile image file is required" },
       { status: 400, headers: corsHeaders }
     );
   }
@@ -221,16 +274,20 @@ export async function POST(req: NextRequest) {
         RoleThai: RoleThai.toString(),
         RoleEng: RoleEng.toString(),
         gender: gender.toString(),
-        description: description.toString(),
         Contact: Contact.toString(),
         Year: Number(Year),
         picture: imagePath,
         banner: bannerPath,
       },
     });
+    const newDescription = await prisma.member_description.create({
+      data: {
+        descriptionTH: description.toString(),
+      },
+    })
 
     return NextResponse.json(
-      { message: "Added member successfully", newMember }, 
+      { message: "Added member successfully", newMember },
       { headers: corsHeaders }
     );
 

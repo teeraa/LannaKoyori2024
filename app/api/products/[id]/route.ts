@@ -33,8 +33,51 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const result = productinfoData.map((product) => ({
+      ID: product.ID,
+      productName: product.productName,
+      price: product.price,
+      mainMaterial: product.mainMaterial,
+      subMaterial1: product.subMaterial1,
+      subMaterial2: product.subMaterial2,
+      subMaterial3: product.subMaterial3,
+      bussinessID: product.bussinessID,
+      image: product.image,
+      sketch: product.sketch,
+      description: product.description,
+      color: product.color,
+      size: product.size,
+      businessinfo: {
+        ID: product.businessinfo?.ID,
+        DataYear: product.businessinfo?.DataYear,
+        BusiTypeId: product.businessinfo?.BusiTypeId,
+        BussinessName: product.businessinfo?.BussinessName,
+        BussinessNameEng: product.businessinfo?.BussinessNameEng,
+        AddressThai: product.businessinfo?.AddressThai,
+        Latitude: product.businessinfo?.Latitude,
+        Longtitude: product.businessinfo?.Longtitude,
+        picture: product.businessinfo?.picture,
+        banner: product.businessinfo?.banner,
+        consultantinfo: product.businessinfo?.consultantinfo.map((consult) => ({
+          ID: consult.ID,
+          BusinessID: consult.BusinessID,
+          NameThai: consult.NameThai,
+          NameEng: consult.NameEng,
+          gender: consult.gender,
+          nationality: consult.nationality,
+          RoleThai: consult.RoleThai,
+          RoleEng: consult.RoleEng,
+          Year: consult.Year,
+          picture: consult.picture
 
-    return NextResponse.json(productinfoData, {
+        })
+        )
+      }
+    })
+    )
+
+
+    return NextResponse.json(result, {
       headers: {
         'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -99,17 +142,17 @@ export async function PUT(req: NextRequest) {
     const formattedDate = `${year}${month.toString().padStart(2, "0")}${date
       .toString()
       .padStart(2, "0")}`;
-    
+
     const filename = `${formattedDate}-${imageFile.name}`;
     const filePath = `entreprenuer/Koyori_${DataYear}/Products/${filename}`;
-    
+
     try {
       // Optional: Delete old image if updating
       const existingProduct = await prisma.products.findUnique({
         where: { ID: Number(id) },
         select: { image: true }
       });
-      
+
       if (existingProduct?.image) {
         // Extract path from existing URL if it's a full URL
         let oldPath = existingProduct.image;
@@ -124,7 +167,7 @@ export async function PUT(req: NextRequest) {
           // If it's just a filename, construct the full path
           oldPath = `entreprenuer/Koyori_${DataYear}/Products/${existingProduct.image}`;
         }
-        
+
         // Remove old image
         await supabase.storage
           .from('koyori-image')
@@ -153,7 +196,7 @@ export async function PUT(req: NextRequest) {
         .getPublicUrl(filePath);
 
       imagePath = publicUrlData.publicUrl;
-      
+
     } catch (error) {
       console.error('Failed to upload image:', error);
       return NextResponse.json(

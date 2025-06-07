@@ -27,6 +27,9 @@ export async function GET(
       const contact = await prisma.contacts.findFirst({
         where: { businessID: personinfoData?.businessinfo?.ID }
       })
+      const description = await prisma.member_description.findFirst({
+        where: { personID: personinfoData?.businessinfo?.ID }
+      })
 
       const memberResult = {
         memberID: personinfoData?.ID,
@@ -38,9 +41,11 @@ export async function GET(
         memberNationality: personinfoData?.nationality,
         memberGender: personinfoData?.gender,
         memberContact: personinfoData?.Contact,
-        memberDescription: personinfoData?.description,
         memberpicture: personinfoData?.picture,
         memberBanner: personinfoData?.banner,
+        description_TH: description?.descriptionTH || "ไม่ระบุ",
+        description_EN: description?.descriptionEN || "ไม่ระบุ",
+        description_JP: description?.descriptionJP || "ไม่ระบุ",
 
         contactUs: {
           facebook_name: contact?.facebook_name || "ไม่ระบุm",
