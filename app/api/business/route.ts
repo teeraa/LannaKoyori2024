@@ -7,14 +7,21 @@ export async function GET(req: NextRequest) {
     try {
         let province = req.nextUrl.searchParams.get("province");
         const search = req.nextUrl.searchParams.get("search");
-        const limit = req.nextUrl.searchParams.get("limit");
-        const page = req.nextUrl.searchParams.get("page");
+        let limit = req.nextUrl.searchParams.get("limit");
+        let page = req.nextUrl.searchParams.get("page");
         const type = req.nextUrl.searchParams.get("type");
         const order = req.nextUrl.searchParams.get("orderBy");
 
         const orderBy = order === 'desc' ? 'desc' : 'asc';
 
         const offset = (Number(page) - 1)*Number(limit);
+
+        if(!page){
+            page = "1"
+        }
+        if(!limit){
+            limit= "12"
+        }
 
         if (province == "เชียงใหม่") {
             province = "Chiang Mai";

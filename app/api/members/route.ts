@@ -16,10 +16,17 @@ export async function GET(req: NextRequest) {
   const nationality = searchParams.get('nationality');
   const gender = searchParams.get('gender');
   const search = searchParams.get('search');
-  const limit = searchParams.get('limit');
-  const page = searchParams.get('page');
+  let limit = searchParams.get('limit');
+  let page = searchParams.get('page');
 
-  const offset = (Number(page)-1)*Number(limit)
+  if (!page) {
+    page = "1"
+  }
+  if (!limit) {
+    limit = "12"
+  }
+
+  const offset = (Number(page) - 1) * Number(limit)
 
   try {
 
@@ -137,7 +144,7 @@ export async function POST(req: NextRequest) {
   // Upload profile image
   if (!imageFile || !(imageFile instanceof File)) {
     return NextResponse.json(
-      { error: "Profile image file is required" }, 
+      { error: "Profile image file is required" },
       { status: 400, headers: corsHeaders }
     );
   }
@@ -244,7 +251,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Added member successfully", newMember }, 
+      { message: "Added member successfully", newMember },
       { headers: corsHeaders }
     );
 

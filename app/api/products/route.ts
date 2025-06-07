@@ -15,10 +15,17 @@ export async function GET(req: NextRequest) {
     // รับ query parameter 'material'
     const material = req.nextUrl.searchParams.get("material");
     const search = req.nextUrl.searchParams.get("search");
-    const limit = req.nextUrl.searchParams.get("limit");
-    const page = req.nextUrl.searchParams.get("page")
+    let limit = req.nextUrl.searchParams.get("limit");
+    let page = req.nextUrl.searchParams.get("page");
 
-    const offset = (Number(page)-1)*Number(limit);
+    if (!page) {
+      page = "1"
+    }
+    if (!limit) {
+      limit = "12"
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
 
     const whereClause: any = {};
 
@@ -208,7 +215,7 @@ export async function POST(req: NextRequest) {
 
     // Upload additional images
     const images = formData.getAll("images") as File[];
-    
+
     if (images.length > 0) {
       for (const image of images) {
         if (image instanceof File) {
