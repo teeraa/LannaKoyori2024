@@ -7,7 +7,7 @@ export default function GoogleTranslate() {
   return (
     <>
       <div className="container w-full h-full">
-        <div id="google_translate_element" className="fixed z-50 top-14 sm:top-5 md:top-5 lg:top-5 right-2" />
+        <div id="google_translate_element" className="fixed z-50 top-3 md:top-6 lg:top-6 xl:top-6 left-4 right-auto  md:left-auto md:right-4" />
       </div>
       <Script
         src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"

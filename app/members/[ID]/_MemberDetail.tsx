@@ -9,29 +9,6 @@ import { PiGenderIntersexFill } from "react-icons/pi"
 import { MdImageNotSupported } from "react-icons/md"
 import Link from "next/link"
 import type { Member } from "./_client"
-// interface Member {
-//   ID?: number | string
-//   picture?: string
-//   NameThai?: string
-//   NameEng?: string
-//   RoleThai?: string
-//   Contact?: string
-//   Year?: string
-//   gender?: string
-//   description?: string
-//   BusinessID?: string | number
-//   businessinfo?: {
-//     ID?: number | string
-//     banner_image_url?: string
-//     picture?: string
-//     DataYear?: string | number
-//     BussinessNameEng?: string
-//     BussinessName?: string
-//     AddressThai?: string
-//     Latitude?: string
-//     Longtitude?: string
-//   }
-// }
 
 interface MemberDetailProps {
   member?: Member | null
@@ -40,22 +17,22 @@ interface MemberDetailProps {
 }
 
 export default function MemberDetail({ member, isLoading, roleThai }: MemberDetailProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({})
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({
     banner: true,
     profile: true,
     businessShopImage: true,
   })
-  const MemberInfo = roleThai === "ครูช่าง" ? "เกี่ยวกับผู้ประกอบการ" : "เกี่ยวกับผู้เชี่ยวชาญ"
-  const checkLongTextRef = useRef<HTMLParagraphElement>(null)
-  const [ReadMoreButton, setReadMoreButton] = useState(false)
-
+  const MemberInfo = roleThai === "ครูช่าง" ? "ผู้ประกอบการ" : "ผู้เชี่ยวชาญ" // No longer needed here
   const prevMemberIdRef = useRef<number | string | undefined>()
   const prevProfilePictureNameRef = useRef<string | undefined>()
   const prevBannerSrcRef = useRef<string | undefined>()
   const prevShopImageSrcRef = useRef<string | undefined>()
   const prevShopImageKeyRef = useRef<string | undefined>()
+
+  const [isThaiDescExpanded, setIsThaiDescExpanded] = useState(true)
+  const [isJapanDescExpanded, setIsJapanDescExpanded] = useState(false)
+  const [isEngDescExpanded, setIsEngDescExpanded] = useState(false)
 
   const handleImageError = (imageKey: string) => {
     setImageErrors((prev) => ({ ...prev, [imageKey]: true }))
@@ -69,30 +46,18 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
 
   function isValidUrl(str: string) {
     try {
-      new URL(str);
-      return true;
+      new URL(str)
+      return true
     } catch {
-      return false;
+      return false
     }
   }
 
-
-
   const memberData = isLoading ? null : member
 
-  const mainBannerImageSrc = isValidUrl(memberData?.memberBanner || "/")
-    ? memberData?.memberBanner
-    : "/";
-
-  const profileImageSrc = isValidUrl(memberData?.memberpicture || "/")
-    ? memberData?.memberpicture
-    : "/";
-
-  const storeProfileImageSrc = isValidUrl(memberData?.picture || "/")
-    ? memberData?.picture
-    : "/";
-
-
+  const mainBannerImageSrc = isValidUrl(memberData?.memberBanner || "/") ? memberData?.memberBanner : "/"
+  const profileImageSrc = isValidUrl(memberData?.memberpicture || "/") ? memberData?.memberpicture : "/"
+  const storeProfileImageSrc = isValidUrl(memberData?.picture || "/") ? memberData?.picture : "/"
   const shopImageKey = memberData?.BusinessID
     ? `businessShopImage_${memberData.BusinessID}`
     : "businessShopImage_default"
@@ -108,7 +73,6 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
 
     setImageLoadingStates((prevLoadingStates) => {
       const newLoadingStates = { ...prevLoadingStates }
-
       if (isLoading) {
         newLoadingStates.profile = true
         newLoadingStates.banner = true
@@ -116,7 +80,6 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
         setImageErrors({})
         return newLoadingStates
       }
-
       if (currentMemberId !== undefined) {
         if (currentProfilePictureName) {
           if (
@@ -132,7 +95,6 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
       } else {
         newLoadingStates.profile = false
       }
-
       if (currentMemberId !== undefined) {
         if (currentBannerSrc) {
           if (currentBannerSrc !== prevBannerSrcRef.current || currentMemberId !== prevMemberIdRef.current) {
@@ -145,11 +107,9 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
       } else {
         newLoadingStates.banner = false
       }
-
       if (prevShopImageKeyRef.current && prevShopImageKeyRef.current !== currentShopImageKey) {
         newLoadingStates[prevShopImageKeyRef.current] = false
       }
-
       if (memberData?.BusinessID !== undefined) {
         if (currentShopImageSrc) {
           if (
@@ -165,7 +125,6 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
       } else {
         newLoadingStates[currentShopImageKey] = false
       }
-
       return newLoadingStates
     })
 
@@ -176,39 +135,14 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
     prevShopImageKeyRef.current = currentShopImageKey
   }, [memberData, isLoading, profileImageSrc, mainBannerImageSrc, storeProfileImageSrc])
 
-  useEffect(() => {
-    if (!isLoading && memberData && checkLongTextRef.current) {
-      const pElement = checkLongTextRef.current
-      const styles = window.getComputedStyle(pElement)
-      const lineHeightStyle = styles.lineHeight
-      const fontSizeStyle = styles.fontSize
-      let lineHeightPx: number
-
-      if (lineHeightStyle === "normal") {
-        lineHeightPx = Number.parseFloat(fontSizeStyle) * 1.625
-      } else {
-        lineHeightPx = Number.parseFloat(lineHeightStyle)
-      }
-
-      if (pElement.scrollHeight > 0 && lineHeightPx > 0) {
-        const numberOfLines = Math.ceil(pElement.scrollHeight / lineHeightPx)
-        setReadMoreButton(numberOfLines > 5)
-      } else {
-        setReadMoreButton(false)
-      }
-    } else {
-      setReadMoreButton(false)
-    }
-  }, [isLoading, memberData, isExpanded])
-
   const shopInitialLetter = memberData?.BussinessName?.charAt(0)?.toLocaleUpperCase("th") || ""
   const profileInitialLetter = memberData?.memberNameThai?.charAt(0)?.toLocaleUpperCase("th") || ""
 
   const mapEmbedUrl =
     memberData?.Latitude &&
-      memberData?.Longtitude &&
-      Number.parseFloat(memberData?.Latitude) !== 0 &&
-      Number.parseFloat(memberData?.Longtitude) !== 0
+    memberData?.Longtitude &&
+    Number.parseFloat(memberData?.Latitude) !== 0 &&
+    Number.parseFloat(memberData?.Longtitude) !== 0
       ? `https://maps.google.com/maps?q=${memberData.Latitude},${memberData.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
       : ""
 
@@ -292,13 +226,10 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
           </div>
           <div className="flex-1 flex flex-col justify-start items-center sm:items-start">
             <div className="text-center sm:text-left w-full">
-              {" "}
-              {/* Ensure this div takes full width */}
               {isLoading ? (
                 <div className="space-y-3 w-full mb-4">
-                  {" "}
-                  <div className="h-7 w-3/4 bg-gray-300 animate-pulse rounded-md sm:mx-0 mx-auto"></div>{" "}
-                  <div className="h-5 w-1/2 bg-gray-300 animate-pulse rounded-md sm:mx-0 mx-auto"></div>{" "}
+                  <div className="h-7 w-3/4 bg-gray-300 animate-pulse rounded-md sm:mx-0 mx-auto"></div>
+                  <div className="h-5 w-1/2 bg-gray-300 animate-pulse rounded-md sm:mx-0 mx-auto"></div>
                 </div>
               ) : (
                 <>
@@ -326,7 +257,10 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                       { icon: <BsTools className="text-gray-500" size={15} />, value: memberData?.memberRoleThai },
                       { icon: <HiPhone className="text-gray-500" size={15} />, value: memberData?.contactUs.phone },
                       { icon: <FaCalendarAlt className="text-gray-500" size={15} />, value: memberData?.Year },
-                      { icon: <PiGenderIntersexFill className="text-gray-500" size={15} />, value: memberData?.memberGender },
+                      {
+                        icon: <PiGenderIntersexFill className="text-gray-500" size={15} />,
+                        value: memberData?.memberGender,
+                      },
                     ].map(({ icon, value }, index) =>
                       value ? (
                         <div key={index} className="flex items-center gap-2 my-1 sm:my-0">
@@ -356,69 +290,113 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5 gap-4">
           <div className={`col-span-1 ${roleThai === "ครูช่าง" ? "md:col-span-2" : "md:col-span-5"} mt-4 space-y-4`}>
-            <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
-              <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
-                {isLoading ? (
-                  <div className="h-8 w-3/5 bg-gray-300 animate-pulse rounded"></div>
-                ) : (
-                  <h1 className="text-xl sm:text-2xl font-light text-blue-950">{MemberInfo}</h1>
-                )}
-              </div>
-              <div className="p-4">
-                {isLoading ? (
-                  <div className="space-y-3">
-                    {[1, 2, 3, 4, 5].map((index) => (
-                      <div
-                        key={index}
-                        className={`h-4 bg-gray-300 animate-pulse rounded ${index === 5 ? "w-3/4" : "w-full"}`}
-                      ></div>
-                    ))}
-                  </div>
-                ) : (
+            {isLoading ? (
+              <>
+                {[1, 2, 3].map((index) => (
                   <div
-                    className={`transition-all duration-700 ease-in-out overflow-hidden relative ${isExpanded ? "max-h-[1000px]" : ReadMoreButton ? "max-h-36" : "max-h-none"
-                      } opacity-100`}
+                    key={index}
+                    className="bg-white/70 backdrop-blur-xl border border-gray-300/70 rounded-md z-10 relative overflow-hidden animate-pulse"
                   >
-                    <div className="transition-opacity duration-500 ease-in-out opacity-100">
-                      <p
-                        ref={checkLongTextRef}
-                        className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line"
-                        id="member-description-content"
-                      >
-                        {memberData?.memberDescription || "ไม่มีข้อมูลรายละเอียด"}
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo neque libero hic, magni dicta
-                        fugiat excepturi repudiandae earum delectus nam, maiores quo quasi reprehenderit non molestiae
-                        temporibus? Quasi illum sit, amet illo explicabo laborum voluptas voluptates culpa repudiandae a
-                        quisquam alias, labore ducimus perspiciatis facere consequuntur molestiae nam nesciunt.
-                        Voluptatem quam ut velit tempore placeat dolorum possimus ipsum culpa nobis cum, facilis nostrum
-                        eius excepturi rerum dolorem exercitationem est, nihil molestias dolor. Maiores praesentium in,
-                        voluptatum igendi veritatis facilis delectus sunt amet repudiandae eaque dolore. Doloremque
-                        minima, po imus totam ipsa dolorem nemo, mollitia quo exercitationem perspiciatis, ad
-                        repellendus eligendi est necessitatibus.
-                      </p>
+                    <div className="p-4 bg-gray-200/50 border-b border-gray-300/70">
+                      <div className="h-6 w-2/3 bg-gray-300/70 rounded"></div>
                     </div>
-                    {!isExpanded && ReadMoreButton && (
-                      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/70 via-white/50 to-transparent pointer-events-none"></div>
-                    )}
+                    <div className="p-4">
+                      <div className="h-4 w-full bg-gray-300/70 rounded"></div>
+                      <div className="h-4 w-5/6 bg-gray-300/70 rounded mt-2"></div>
+                    </div>
                   </div>
-                )}
-                {!isLoading && ReadMoreButton && !isExpanded && (
-                  <div className="flex justify-center mt-4">
+                ))}
+              </>
+            ) : (
+              <>
+                {/* เกี่ยวกับผู้ประกอบการ ไทย */}
+                <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                  <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
                     <button
-                      onClick={() => {
-                        setIsExpanded(true)
-                      }}
-                      className="group relative text-blue-950  flex items-center gap-2 font-light transition-colors duration-300 hover:text-blue-700"
-                      aria-expanded={isExpanded}
-                      aria-controls="member-description-content"
+                      onClick={() => setIsThaiDescExpanded(!isThaiDescExpanded)}
+                      className="flex items-center justify-between w-full text-left group"
+                      aria-expanded={isThaiDescExpanded}
+                      aria-controls="thai-description-content-card"
                     >
-                      <span className="text-[18px]">อ่านต่อ</span>
-                      <IoIosArrowDown className="w-5 h-5 transform group-hover:translate-y-0.5 transition-transform duration-300" />
+                      <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับ{MemberInfo} (ภาษาไทย)</h2>
+                      <IoIosArrowDown
+                        className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                          isThaiDescExpanded ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
                   </div>
-                )}
-              </div>
-            </div>
+                  {isThaiDescExpanded && (
+                    <div id="thai-description-content-card" className="p-4">
+                      <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                        {memberData?.description_TH &&
+                        memberData.description_TH.trim() !== ""
+                          ? memberData.description_TH
+                          : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/*  เกี่ยวกับผู้ประกอบการ ญี่ปุ่ม */}
+                <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                  <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
+                    <button
+                      onClick={() => setIsJapanDescExpanded(!isJapanDescExpanded)}
+                      className="flex items-center justify-between w-full text-left group"
+                      aria-expanded={isJapanDescExpanded}
+                      aria-controls="japan-description-content-card"
+                    >
+                      <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับ{MemberInfo} (ภาษาญี่ปุ่น)</h2>
+                      <IoIosArrowDown
+                        className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                          isJapanDescExpanded ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  {isJapanDescExpanded && (
+                    <div id="japan-description-content-card" className="p-4">
+                      <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                        {memberData?.description_JP &&
+                        memberData.description_JP.trim() !== ""
+                          ? memberData.description_JP
+                          : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* เกี่ยวกับผู้ประกอบการ อังกฤษ */}
+                <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                  <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
+                    <button
+                      onClick={() => setIsEngDescExpanded(!isEngDescExpanded)}
+                      className="flex items-center justify-between w-full text-left group"
+                      aria-expanded={isEngDescExpanded}
+                      aria-controls="eng-description-content-card"
+                    >
+                      <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับ{MemberInfo} (ภาษาอังกฤษ)</h2>
+                      <IoIosArrowDown
+                        className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                          isEngDescExpanded ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  {isEngDescExpanded && (
+                    <div id="eng-description-content-card" className="p-4">
+                      <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                        {memberData?.description_EN &&
+                        memberData.description_EN.trim() !== ""
+                          ? memberData.description_EN
+                          : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {roleThai === "ครูช่าง" && !isLoading && (
@@ -473,7 +451,9 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
                         <p className="text-[16px] text-gray-500">({memberData?.BussinessNameEng})</p>
                       )}
                       {memberData?.Year && (
-                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5"><FaCalendarAlt size={16} className="text-gray-600" /> {memberData?.Year}</p>
+                        <p className="flex items-center gap-2 text-[14px] text-gray-400 mt-0.5">
+                          <FaCalendarAlt size={16} className="text-gray-600" /> {memberData?.Year}
+                        </p>
                       )}
                     </div>
                   </div>

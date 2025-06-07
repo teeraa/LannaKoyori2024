@@ -11,10 +11,6 @@ export interface Product {
   ID: number;
   productName: string;
   price: number;
-  mainMaterial: number;
-  subMaterial1: number;
-  subMaterial2: number;
-  subMaterial3: number;
   bussinessID: number;
   image: string;
   sketch: string;
@@ -46,6 +42,12 @@ export interface ContactUs {
   website_url: string;
 }
 
+interface Description {
+  description_TH: string
+  description_JP: string
+  description_EN: string
+}
+
 export interface Member {
   memberID: number;
   memberNameThai: string;
@@ -56,8 +58,10 @@ export interface Member {
   memberNationality: string;
   memberGender: string;
   memberContact: string;
-  memberDescription: string | null;
-  memberpicture: string;
+  description_EN?: string;
+  description_TH?: string;
+  description_JP?: string;
+  memberpicture: string
   contactUs: ContactUs;
   BusinessID: number;
   BussinessName: string;
@@ -67,10 +71,7 @@ export interface Member {
   Longtitude: string;
   Year: number;
   picture: string;
-
-  //  เพิ่ม
   memberBanner?: string
-  BussinessPicture?: string
 }
 
 

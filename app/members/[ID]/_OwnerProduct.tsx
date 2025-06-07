@@ -1,15 +1,16 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import { useRef, useEffect, useState } from "react"
+import { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
-import type { Product } from "./_client" 
-import { GrLocation } from "react-icons/gr"
+import type { Product } from "./_client"
 import { ProductSkeletonGrid, ProductSkeletonSwiper, HeaderSkeleton } from "./Skeleton"
-
+import { AiOutlineShoppingCart } from "react-icons/ai";
+// LuLeaf seems unused, can be removed if not needed elsewhere or kept if planned for future use.
+// import { LuLeaf } from "react-icons/lu";
 interface OwnerProductProps {
   products: Product[]
   isLoading?: boolean
@@ -18,119 +19,117 @@ interface OwnerProductProps {
 
 const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => void }) => {
   const [imageError, setImageError] = useState(false)
-  const materialsRef = useRef<HTMLDivElement>(null)
-  const [visibleCount, setVisibleCount] = useState(1) 
-  
+  // const materialsRef = useRef<HTMLDivElement>(null)
+  // const [visibleCount, setVisibleCount] = useState(1)
+
   // กำหนดความยาวสูงสุดของชื่อวัสดุ (เป็นตัวอักษร)
-  const MAX_MATERIAL_CHAR_LENGTH = 15
-  const allMaterials = [product?.materialMain?.Material, product?.materialSub1?.Material, product?.materialSub2?.Material]
-    .filter(Boolean)
-    .map(String)
-  
-  const displayableMaterials = allMaterials.filter(material => material.length <= MAX_MATERIAL_CHAR_LENGTH) //แสดง
-  const hiddenMaterials = allMaterials.filter(material => material.length > MAX_MATERIAL_CHAR_LENGTH) // ซ่อน
-  
-  // เรียงลำดับวัสดุที่แสดงได้ตามความยาว (สั้นก่อน)
-  const materials = displayableMaterials.sort((a, b) => a.length - b.length)
-  
-  // จำนวนวัสดุที่ซ่อน (รวมทั้งที่ยาวเกินไปและที่ไม่พอพื้นที่แสดง)
-  const getTotalHiddenCount = () => {
-    const hiddenByLength = hiddenMaterials.length
-    const hiddenBySpace = Math.max(0, materials.length - visibleCount)
-    return hiddenByLength + hiddenBySpace
-  }
+  // const MAX_MATERIAL_CHAR_LENGTH = 15
+  // const allMaterials = [product?.materialMain?.Material, product?.materialSub1?.Material, product?.materialSub2?.Material]
+  //   .filter(Boolean)
+  //   .map(String)
+
+  // const displayableMaterials = allMaterials.filter(material => material.length <= MAX_MATERIAL_CHAR_LENGTH) //แสดง
+  // const hiddenMaterials = allMaterials.filter(material => material.length > MAX_MATERIAL_CHAR_LENGTH) // ซ่อน
+
+  // // เรียงลำดับวัสดุที่แสดงได้ตามความยาว (สั้นก่อน)
+  // const materials = displayableMaterials.sort((a, b) => a.length - b.length)
+
+  // // จำนวนวัสดุที่ซ่อน (รวมทั้งที่ยาวเกินไปและที่ไม่พอพื้นที่แสดง)
+  // const getTotalHiddenCount = () => {
+  //   const hiddenByLength = hiddenMaterials.length
+  //   const hiddenBySpace = Math.max(0, materials.length - visibleCount)
+  //   return hiddenByLength + hiddenBySpace
+  // }
 
   const handleImageError = () => {
     setImageError(true)
   }
 
-  useEffect(() => {
-    if (materials.length === 0) {
-      setVisibleCount(0)
-      return
-    }
+  // useEffect(() => {
+  //   if (materials.length === 0) {
+  //     setVisibleCount(0)
+  //     return
+  //   }
 
-    if (!materialsRef.current) {
-      setVisibleCount(1)
-      return
-    }
+  //   if (!materialsRef.current) {
+  //     setVisibleCount(1)
+  //     return
+  //   }
 
-    const calculateVisibleMaterials = () => {
-      const container = materialsRef.current
-      if (!container) return 1
+  //   const calculateVisibleMaterials = () => {
+  //     const container = materialsRef.current
+  //     if (!container) return 1
 
-      const containerWidth = container.offsetWidth
-      if (containerWidth === 0) return 1
+  //     const containerWidth = container.offsetWidth
+  //     if (containerWidth === 0) return 1
 
-      //js dom เช็ก div เพื่อแสดง tag ของวัสดุตามเงื่อนไข
-      const tester = document.createElement("div")
-      tester.style.cssText = `
-        position: absolute;
-        visibility: hidden;
-        pointer-events: none;
-        width: ${containerWidth}px;
-        height: 32px;
-        overflow: hidden;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-      `
-      document.body.appendChild(tester)
+  //     //js dom เช็ก div เพื่อแสดง tag ของวัสดุตามเงื่อนไข
+  //     const tester = document.createElement("div")
+  //     tester.style.cssText = `
+  //       position: absolute;
+  //       visibility: hidden;
+  //       pointer-events: none;
+  //       width: ${containerWidth}px;
+  //       height: 32px;
+  //       overflow: hidden;
+  //       display: flex;
+  //       flex-wrap: wrap;
+  //       align-items: flex-start;
+  //     `
+  //     document.body.appendChild(tester)
 
-      const tagClass = "inline-block px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-1 mb-1"
+  //     const tagClass = "inline-block px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-1 mb-1"
 
-      const testFit = (count: number): boolean => {
-        const materialsToTest = materials.slice(0, count)
-        const totalHidden = hiddenMaterials.length + Math.max(0, materials.length - count)
-        
-        let html = materialsToTest.map(m => `<span class="${tagClass}">${m}</span>`).join("")
-        if (totalHidden > 0) {
-          html += `<span class="${tagClass}">+${totalHidden}</span>`
-        }
-        
-        tester.innerHTML = html
-        return tester.scrollHeight <= 32 
-      }
+  //     const testFit = (count: number): boolean => {
+  //       const materialsToTest = materials.slice(0, count)
+  //       const totalHidden = hiddenMaterials.length + Math.max(0, materials.length - count)
 
-      let calculatedCount = 1 
+  //       let html = materialsToTest.map(m => `<span class="${tagClass}">${m}</span>`).join("")
+  //       if (totalHidden > 0) {
+  //         html += `<span class="${tagClass}">+${totalHidden}</span>`
+  //       }
 
-      for (let i = Math.min(materials.length, 3); i >= 1; i--) {
-        if (testFit(i)) {
-          calculatedCount = i
-          break
-        }
-      }
+  //       tester.innerHTML = html
+  //       return tester.scrollHeight <= 32
+  //     }
 
-      document.body.removeChild(tester)
-      return calculatedCount
-    }
+  //     let calculatedCount = 1
 
-    const observer = new ResizeObserver(() => {
-      const newCount = calculateVisibleMaterials()
-      setVisibleCount(newCount)
-    })
+  //     for (let i = Math.min(materials.length, 3); i >= 1; i--) {
+  //       if (testFit(i)) {
+  //         calculatedCount = i
+  //         break
+  //       }
+  //     }
 
-    observer.observe(materialsRef.current)
-    
-    const initialCount = calculateVisibleMaterials()
-    setVisibleCount(initialCount)
+  //     document.body.removeChild(tester)
+  //     return calculatedCount
+  //   }
 
-    return () => observer.disconnect()
-  }, [materials, hiddenMaterials.length])
+  //   const observer = new ResizeObserver(() => {
+  //     const newCount = calculateVisibleMaterials()
+  //     setVisibleCount(newCount)
+  //   })
 
-  const visibleMaterials = materials.slice(0, visibleCount)
-  const totalHiddenCount = getTotalHiddenCount()
+  //   observer.observe(materialsRef.current)
 
+  //   const initialCount = calculateVisibleMaterials()
+  //   setVisibleCount(initialCount)
 
-    function isValidUrl(str: string) {
+  //   return () => observer.disconnect()
+  // }, [materials, hiddenMaterials.length])
+
+  // const visibleMaterials = materials.slice(0, visibleCount)
+  // const totalHiddenCount = getTotalHiddenCount()
+
+  function isValidUrl(str: string) {
     try {
-      new URL(str);
-      return true;
+      new URL(str)
+      return true
     } catch {
-      return false;
+      return false
     }
   }
-
 
   return (
     <div
@@ -145,7 +144,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             </div>
           ) : (
             <Image
-             src={isValidUrl(product?.image) ? product?.image : "/"}
+              src={isValidUrl(product?.image) ? product?.image : "/"}
               alt={``}
               width={200}
               height={200}
@@ -166,37 +165,51 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
               {product?.productName || "สินค้า"}
             </h1>
           </div>
-          <div className="flex items-center text-gray-500 text-sm">
-            <GrLocation className="w-4 h-4 mr-1" />
-            <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
+          <div className="flex flex-wrap items-start gap-2 justify-start">
+            {/* <LuLeaf className="w-4 h-4" /> */}
+            {/* <p className="text-[14px] text-gray-500">วัถุดิบหลัก</p> */}
+            <div className="text-[14px] text-blue-500 bg-blue-100 px-4 py-[2px] rounded-md whitespace-nowrap">
+              {product?.materialMain.Material || "ไม่ระบุวัสดุ"}
+            </div>
           </div>
 
-          <div 
-            ref={materialsRef} 
-            className="flex flex-wrap max-h-[32px] overflow-hidden min-h-[32px]"
-          >
-            {materials.length > 0 || hiddenMaterials.length > 0 ? (
-              <>
-                {visibleMaterials.map((material, index) => (
-                  <span
-                    key={index}
-                    className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-2 mb-1"
-                  >
-                    {material}
-                  </span>
-                ))}
-                {totalHiddenCount > 0 && (
-                  <span className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-500 text-xs rounded-md whitespace-nowrap mr-2 mb-1">
-                    +{totalHiddenCount}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-md">
-                ไม่ระบุวัสดุ
-              </span>
-            )}
+          <div className="flex items-center w-full">
+            <AiOutlineShoppingCart className="w-6 h-6 text-gray-600 mr-2" />
+            <div className="flex items-center justify-between w-full border border-gray-300 rounded-md py-1 px-3">
+              {product?.price && Number(product.price) > 0 ? (
+                <p className="text-[14px] text-gray-700 m-0">{Number(product.price).toLocaleString("th-TH")} บาท</p>
+              ) : (
+                <p className="text-[14px] text-red-500 m-0">สินค้าหมด</p>
+              )}
+            </div>
           </div>
+
+          {/* <div className="flex items-center text-gray-500 text-[14px]">
+          <GrLocation className="w-4 h-4 mr-1" />
+          <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
+        </div> */}
+
+          {/* {materials.length > 0 || hiddenMaterials.length > 0 ? (
+            <>
+              {visibleMaterials.map((material, index) => (
+                <span
+                  key={index}
+                  className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-2 mb-1"
+                >
+                  {material}
+                </span>
+              ))}
+              {totalHiddenCount > 0 && (
+                <span className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-500 text-xs rounded-md whitespace-nowrap mr-2 mb-1">
+                  +{totalHiddenCount}
+                </span>
+              )} */}
+          {/* </>
+          ) : (
+            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-md">
+              ไม่ระบุวัสดุ
+            </span>
+          )} */}
         </div>
       </div>
     </div>
@@ -221,9 +234,8 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
 
       <div className="relative">
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-            isLoading ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${isLoading ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
         >
           {shouldUseSwiper ? <ProductSkeletonSwiper /> : <ProductSkeletonGrid />}
         </div>

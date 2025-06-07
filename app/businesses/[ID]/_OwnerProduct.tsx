@@ -237,6 +237,7 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
                     return ""
                   },
                 }}
+                preventInteractionOnTransition={true}
                 spaceBetween={30}
                 slidesPerView={3}
                 slidesPerGroup={1}

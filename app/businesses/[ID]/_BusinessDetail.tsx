@@ -357,7 +357,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
             </div>
           </div>
 
-          <div className="col-span-1 md:col-span-3">
+          <div className="col-span-1 md:col-span-3 ">
             <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md overflow-hidden w-full">
               <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
                 {isLoading ? (
