@@ -64,7 +64,12 @@ export async function GET(req: NextRequest) {
       skip: offset,
     });
 
-    const allData = data.length;
+    const allData = await prisma.businessinfo.count({
+      where: whereClause,
+      orderBy: {
+        ID: orderBy,
+      },
+    })
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = {
