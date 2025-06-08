@@ -71,16 +71,17 @@ export async function GET(req: NextRequest) {
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = data.map((product) => ({
-      ID: product.ID,
-      productName: product.productName,
-      price: product.price,
-      image: product.image,
-      materialMain: product.materialMain,
-      BusinessID: product.businessinfo?.ID,
-      BusiTypeId: product.businessinfo?.BusiTypeId,
-      BussinessName: product.businessinfo?.BussinessName,
-      BussinessNameEng: product.businessinfo?.BussinessNameEng,
-
+      payload: {
+        ID: product.ID,
+        productName: product.productName,
+        price: product.price,
+        image: product.image,
+        materialMain: product.materialMain,
+        BusinessID: product.businessinfo?.ID,
+        BusiTypeId: product.businessinfo?.BusiTypeId,
+        BussinessName: product.businessinfo?.BussinessName,
+        BussinessNameEng: product.businessinfo?.BussinessNameEng,
+      },
       meta: {
         page: Number(page),
         limit: Number(limit),
