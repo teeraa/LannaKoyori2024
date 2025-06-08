@@ -12,8 +12,8 @@ const supabase = createClient(
 
 export async function GET(req: NextRequest) {
   try {
-    // รับ query parameter 'material'
     const material = req.nextUrl.searchParams.get("material");
+    const businessType = req.nextUrl.searchParams.get("businessType");
     const search = req.nextUrl.searchParams.get("search");
     let limit = req.nextUrl.searchParams.get("limit");
     let page = req.nextUrl.searchParams.get("page");
@@ -21,44 +21,48 @@ export async function GET(req: NextRequest) {
 
     const orderBy = order === "desc" ? "desc" : "asc";
 
-    if (!page) {
-      page = "1";
-    }
-    if (!limit) {
-      limit = "12";
-    }
+    if (!page) page = "1";
+    if (!limit) limit = "12";
 
     const offset = (Number(page) - 1) * Number(limit);
 
-    const whereClause: any = {};
+    const whereClause: any = {
+      AND: [],
+    };
 
     if (material) {
-      whereClause.OR = [
-        { materialMain: { Material: material } },
-        { materialSub1: { Material: material } },
-        { materialSub2: { Material: material } },
-        { materialSub3: { Material: material } },
-      ];
+      whereClause.AND.push({
+        OR: [
+          { materialMain: { Material: material } },
+          { materialSub1: { Material: material } },
+          { materialSub2: { Material: material } },
+          { materialSub3: { Material: material } },
+        ],
+      });
     }
 
     if (search) {
-      whereClause.OR = [
-        { materialMain: { Material: material } },
-        { materialSub1: { Material: material } },
-        { materialSub2: { Material: material } },
-        { materialSub3: { Material: material } },
-        { productName: { contains: search } },
-      ];
+      whereClause.AND.push({
+        productName: { contains: search },
+      });
+    }
+
+    if (businessType) {
+      whereClause.AND.push({
+        businessinfo: {
+          BusiTypeId: Number(businessType),
+        },
+      });
     }
 
     const data = await prisma.products.findMany({
       where: whereClause,
       include: {
-        materialMain: true, // Join ตาราง materials สำหรับ mainMaterial
-        materialSub1: true, // Join ตาราง materials สำหรับ subMaterial1
-        materialSub2: true, // Join ตาราง materials สำหรับ subMaterial2
-        materialSub3: true, // Join ตาราง materials สำหรับ subMaterial3
-        businessinfo: true, // Join ตาราง businessinfo
+        materialMain: true,
+        materialSub1: true,
+        materialSub2: true,
+        materialSub3: true,
+        businessinfo: true,
       },
       orderBy: {
         ID: orderBy,
@@ -69,25 +73,22 @@ export async function GET(req: NextRequest) {
 
     const allData = await prisma.products.count({
       where: whereClause,
-      orderBy: {
-        ID: orderBy,
-      }
     });
+
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = {
-      payload:
-        data.map((product) => ({
-          ID: product.ID,
-          productName: product.productName,
-          price: product.price,
-          image: product.image,
-          materialMain: product.materialMain,
-          BusinessID: product.businessinfo?.ID,
-          BusiTypeId: product.businessinfo?.BusiTypeId,
-          BussinessName: product.businessinfo?.BussinessName,
-          BussinessNameEng: product.businessinfo?.BussinessNameEng,
-        })),
+      payload: data.map((product) => ({
+        ID: product.ID,
+        productName: product.productName,
+        price: product.price,
+        image: product.image,
+        materialMain: product.materialMain,
+        BusinessID: product.businessinfo?.ID,
+        BusiTypeId: product.businessinfo?.BusiTypeId,
+        BussinessName: product.businessinfo?.BussinessName,
+        BussinessNameEng: product.businessinfo?.BussinessNameEng,
+      })),
       meta: {
         page: Number(page),
         limit: Number(limit),
@@ -98,7 +99,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        "Access-Control-Allow-Origin": "*", // In production, set this to your specific domain
+        "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
       },
@@ -113,6 +114,7 @@ export async function GET(req: NextRequest) {
     await prisma.$disconnect();
   }
 }
+
 
 export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {

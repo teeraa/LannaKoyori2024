@@ -8,8 +8,8 @@ import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
 import type { Product } from "./_client"
 import { ProductSkeletonGrid, ProductSkeletonSwiper, HeaderSkeleton } from "./Skeleton"
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { IoStorefrontOutline } from "react-icons/io5";
+import { AiOutlineShoppingCart } from "react-icons/ai"
+import { IoStorefrontOutline } from "react-icons/io5"
 
 interface OwnerProductProps {
   products: Product[]
@@ -161,7 +161,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
 
         <div className="flex flex-col justify-center gap-2">
           <div className="flex items-center gap-2 mt-2 w-full">
-            <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[200px]">
+            <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[132px]">
               {product?.productName || "สินค้า"}
             </h1>
             <div className="text-[12px] text-blue-500 bg-blue-100 px-2 py-[1px] rounded-[4px] truncate w-fit text-center min-w-[40px]">
@@ -172,7 +172,9 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
           <div className="flex items-center w-full">
             <IoStorefrontOutline size={20} className="text-gray-400 mr-2" />
             <div className="flex items-center justify-end w-full  border-l w-full border-gray-300">
-                <p className="text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px]">{product?.BussinessName || "ไม่ระบุ"}</p>
+              <p className="text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px]">
+                {product?.BussinessName || "ไม่ระบุ"}
+              </p>
             </div>
           </div>
 
@@ -180,41 +182,14 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             <AiOutlineShoppingCart size={20} className="text-gray-400 mr-2" />
             <div className="flex items-center w-full border-l border-gray-300">
               {product?.price && Number(product.price) > 0 ? (
-                <p className="w-full text-[14px] text-green-600 text-end m-0">{Number(product.price).toLocaleString("th-TH")} บาท</p>
+                <p className="w-full text-[14px] text-green-600 text-end m-0">
+                  {Number(product.price).toLocaleString("th-TH")} บาท
+                </p>
               ) : (
                 <p className="w-full text-[14px] text-red-500 text-end m-0">สินค้าหมด</p>
               )}
             </div>
           </div>
-
-
-        
-          {/* <div className="flex items-center text-gray-500 text-[14px]">
-          <GrLocation className="w-4 h-4 mr-1" />
-          <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
-        </div> */}
-
-          {/* {materials.length > 0 || hiddenMaterials.length > 0 ? (
-            <>
-              {visibleMaterials.map((material, index) => (
-                <span
-                  key={index}
-                  className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-2 mb-1"
-                >
-                  {material}
-                </span>
-              ))}
-              {totalHiddenCount > 0 && (
-                <span className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-500 text-xs rounded-md whitespace-nowrap mr-2 mb-1">
-                  +{totalHiddenCount}
-                </span>
-              )} */}
-          {/* </>
-          ) : (
-            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-md">
-              ไม่ระบุวัสดุ
-            </span>
-          )} */}
         </div>
       </div>
     </div>
@@ -231,7 +206,10 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
       {isLoading ? (
         <HeaderSkeleton />
       ) : (
-        <div className="flex items-center mb-4">
+        <div
+          className="flex items-center
+"
+        >
           <hr className="border-t-4 border-gray-600 flex-grow"></hr>
           <h1 className="text-[24px] font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">{ProductInfo}</h1>
         </div>
@@ -251,7 +229,7 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
               <p className="text-gray-500 text-lg">ไม่มีสินค้าที่จะแสดง</p>
             </div>
           ) : shouldUseSwiper ? (
-            <div className="py-4">
+            <div className="mb-4">
               <Swiper
                 modules={[Pagination, Autoplay]}
                 pagination={{
@@ -267,6 +245,7 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
                 }}
                 spaceBetween={30}
                 slidesPerView={3}
+                centeredSlides={true}
                 slidesPerGroup={1}
                 autoplay={{
                   delay: 3000,
@@ -275,19 +254,28 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
                 speed={1000}
                 loop={products.length > 6}
                 breakpoints={{
-                  0: { slidesPerView: 1, spaceBetween: 15 },
-                  480: { slidesPerView: 1, spaceBetween: 20 },
-                  640: { slidesPerView: 2, spaceBetween: 20 },
-                  768: { slidesPerView: 3, spaceBetween: 25 },
-                  1024: { slidesPerView: 4, spaceBetween: 30 },
-                  1280: { slidesPerView: 5, spaceBetween: 30 },
-                  1536: { slidesPerView: 6, spaceBetween: 30 },
+                  0: {
+                    slidesPerView: "auto", // Use 'auto'
+                    spaceBetween: 15,
+                    centeredSlides: true,
+                  },
+                  480: {
+                    slidesPerView: "auto", // Use 'auto'
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                  },
+                  // Keep other breakpoints as they are, or adjust if needed
+                  640: { slidesPerView: 2, spaceBetween: 20, centeredSlides: false }, // Example: turn off centering for larger views
+                  768: { slidesPerView: 3, spaceBetween: 25, centeredSlides: false },
+                  1024: { slidesPerView: 4, spaceBetween: 30, centeredSlides: false },
+                  1280: { slidesPerView: 5, spaceBetween: 30, centeredSlides: false },
+                  1536: { slidesPerView: 6, spaceBetween: 30, centeredSlides: false },
                 }}
                 className="relative"
               >
                 {products.map((productItem: Product) => (
-                  <SwiperSlide className="my-4 flex justify-center" key={productItem.ID}>
-                    <Link href={`/products/${productItem.ID}`} className="w-full max-w-[250px]">
+                  <SwiperSlide className="my-4" key={productItem.ID}>
+                    <Link href={`/products/${productItem.ID}`} className="w-full flex justify-center">
                       <ProductCard product={productItem} />
                     </Link>
                   </SwiperSlide>
@@ -298,13 +286,15 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
             <div className="">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-6">
                 {products.map((productItem: Product) => (
-                  <Link
-                    key={productItem.ID}
-                    href={`/products/${productItem.ID}`}
-                    className="flex justify-center w-full"
-                  >
-                    <ProductCard product={productItem} />
-                  </Link>
+                  <div className="my-4">
+                    <Link
+                      key={productItem.ID}
+                      href={`/products/${productItem.ID}`}
+                      className="flex justify-center w-full"
+                    >
+                      <ProductCard product={productItem} />
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>

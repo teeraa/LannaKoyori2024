@@ -382,7 +382,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     </div>
                     {isThaiDescExpanded && (
                       <div id="thai-description-content-card" className="p-4">
-                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line indent-8 text-justify">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line indent-8">
                           {storeData?.description_TH && storeData.description_TH.trim() !== ""
                             ? storeData.description_TH
                             : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
@@ -410,7 +410,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     </div>
                     {isJapanDescExpanded && (
                       <div id="japan-description-content-card" className="p-4">
-                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line indent-8">
                           {storeData?.description_JP && storeData.description_JP.trim() !== ""
                             ? storeData.description_JP
                             : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
@@ -438,7 +438,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     </div>
                     {isEngDescExpanded && (
                       <div id="eng-description-content-card" className="p-4">
-                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line indent-8">
                           {storeData?.description_EN && storeData.description_EN.trim() !== ""
                             ? storeData.description_EN
                             : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
