@@ -9,8 +9,8 @@ import { Pagination, Autoplay } from "swiper/modules"
 import type { Product } from "./_client"
 import { ProductSkeletonGrid, ProductSkeletonSwiper, HeaderSkeleton } from "./Skeleton"
 import { AiOutlineShoppingCart } from "react-icons/ai";
-// LuLeaf seems unused, can be removed if not needed elsewhere or kept if planned for future use.
-// import { LuLeaf } from "react-icons/lu";
+import { IoStorefrontOutline } from "react-icons/io5";
+
 interface OwnerProductProps {
   products: Product[]
   isLoading?: boolean
@@ -160,30 +160,35 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
         </div>
 
         <div className="flex flex-col justify-center gap-2">
-          <div className="mt-2 w-full">
+          <div className="flex items-center gap-2 mt-2 w-full">
             <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[200px]">
               {product?.productName || "สินค้า"}
             </h1>
-          </div>
-          <div className="flex flex-wrap items-start gap-2 justify-start">
-            {/* <LuLeaf className="w-4 h-4" /> */}
-            {/* <p className="text-[14px] text-gray-500">วัถุดิบหลัก</p> */}
-            <div className="text-[14px] text-blue-500 bg-blue-100 px-4 py-[2px] rounded-md whitespace-nowrap">
+            <div className="text-[12px] text-blue-500 bg-blue-100 px-2 py-[1px] rounded-[4px] truncate w-fit text-center min-w-[40px]">
               {product?.materialMain.Material || "ไม่ระบุวัสดุ"}
             </div>
           </div>
 
           <div className="flex items-center w-full">
-            <AiOutlineShoppingCart className="w-6 h-6 text-gray-600 mr-2" />
-            <div className="flex items-center justify-between w-full border border-gray-300 rounded-md py-1 px-3">
+            <IoStorefrontOutline size={20} className="text-gray-400 mr-2" />
+            <div className="flex items-center justify-end w-full  border-l w-full border-gray-300">
+                <p className="text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px]">{product?.BussinessName || "ไม่ระบุ"}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center w-full">
+            <AiOutlineShoppingCart size={20} className="text-gray-400 mr-2" />
+            <div className="flex items-center w-full border-l border-gray-300">
               {product?.price && Number(product.price) > 0 ? (
-                <p className="text-[14px] text-gray-700 m-0">{Number(product.price).toLocaleString("th-TH")} บาท</p>
+                <p className="w-full text-[14px] text-green-600 text-end m-0">{Number(product.price).toLocaleString("th-TH")} บาท</p>
               ) : (
-                <p className="text-[14px] text-red-500 m-0">สินค้าหมด</p>
+                <p className="w-full text-[14px] text-red-500 text-end m-0">สินค้าหมด</p>
               )}
             </div>
           </div>
 
+
+        
           {/* <div className="flex items-center text-gray-500 text-[14px]">
           <GrLocation className="w-4 h-4 mr-1" />
           <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
@@ -217,7 +222,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
 }
 
 export default function OwnerProduct({ roleThai, products, isLoading = false }: OwnerProductProps) {
-  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : "ผลิตภัณฑ์ที่เกี่ยวข้อง"
+  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : `ผลิตภัณฑ์ที่ผู้เชี่ยวชาญเกี่ยวข้อง`
   const shouldUseSwiper = products && products.length > 6
   const hasProducts = products && products.length > 0
 

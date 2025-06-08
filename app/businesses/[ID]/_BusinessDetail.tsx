@@ -1,19 +1,20 @@
 "use client"
 
-import Image from "next/image" 
-import type { Business, YouTubeVideo } from "./_client" 
-import { useEffect, useState, useRef } from "react" 
-import Link from "next/link" 
+import Image from "next/image"
+import type { Business, YouTubeVideo } from "./_client"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 import { HiExternalLink, HiLocationMarker } from "react-icons/hi"
 import { FaCalendarAlt, FaRegBuilding, FaGlobeAmericas, FaMapMarkedAlt, FaPlayCircle } from "react-icons/fa"
 import { BsTools } from "react-icons/bs"
-import { PiGenderIntersexFill } from "react-icons/pi" 
+import { PiGenderIntersexFill } from "react-icons/pi"
 import { MdImageNotSupported } from "react-icons/md"
 import { FaFacebookSquare, FaLine, FaYoutube } from "react-icons/fa"
 import { FaPhone, FaEarthAsia } from "react-icons/fa6"
 import { MdEmail } from "react-icons/md"
 import { PiInstagramLogoFill } from "react-icons/pi"
 import { AiFillTikTok } from "react-icons/ai"
+import { IoIosArrowDown } from "react-icons/io"
 
 interface StoreDetailProps {
   store: Business | null
@@ -39,9 +40,10 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
     profile: true,
     storeProfile: true,
   })
-  const [isExpanded, setIsExpanded] = useState(false)
-  const checkLongTextRef = useRef<HTMLParagraphElement>(null)
-  const [ReadMoreButton, setReadMoreButton] = useState(false)
+
+  const [isThaiDescExpanded, setIsThaiDescExpanded] = useState(true)
+  const [isJapanDescExpanded, setIsJapanDescExpanded] = useState(false)
+  const [isEngDescExpanded, setIsEngDescExpanded] = useState(false)
 
   const storeData = isLoading ? null : store
 
@@ -67,33 +69,8 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
     } else {
       setSelectedVideo(null)
     }
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [videos, validVideos.length])
-
-  useEffect(() => {
-    if (!isLoading && store && checkLongTextRef.current) {
-      const pElement = checkLongTextRef.current
-      const styles = window.getComputedStyle(pElement)
-      const lineHeightStyle = styles.lineHeight
-      const fontSizeStyle = styles.fontSize
-      let lineHeightPx: number
-
-      if (lineHeightStyle === "normal") {
-        lineHeightPx = Number.parseFloat(fontSizeStyle) * 1.625
-      } else {
-        lineHeightPx = Number.parseFloat(lineHeightStyle)
-      }
-
-      if (pElement.scrollHeight > 0 && lineHeightPx > 0) {
-        const numberOfLines = Math.ceil(pElement.scrollHeight / lineHeightPx)
-        setReadMoreButton(numberOfLines > 5)
-      } else {
-        setReadMoreButton(false)
-      }
-    } else {
-      setReadMoreButton(false)
-    }
-  }, [isLoading, store, isExpanded])
 
   const handleImageError = (imageKey: string) => {
     setImageErrors((prev) => ({ ...prev, [imageKey]: true }))
@@ -113,7 +90,6 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
       return false
     }
   }
-  
 
   const bannerImageSrc = isValidUrl(storeData?.banner || "/") ? storeData?.banner : "/"
   const storeProfileImageSrc = isValidUrl(storeData?.picture || "/") ? storeData?.picture : "/"
@@ -124,13 +100,43 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
 
   const mapEmbedUrl =
     storeData?.Latitude &&
-      storeData?.Longtitude &&
-      Number.parseFloat(storeData.Latitude) !== 0 &&
-      Number.parseFloat(storeData.Longtitude) !== 0
+    storeData?.Longtitude &&
+    Number.parseFloat(storeData.Latitude) !== 0 &&
+    Number.parseFloat(storeData.Longtitude) !== 0
       ? `https://maps.google.com/maps?q=${storeData.Latitude},${storeData.Longtitude}&hl=th&z=15&output=embed&iwloc=B`
       : ""
 
   const showStoreProfileLoadingAnimation = imageLoadingStates.storeProfile && !isLoading && storeData?.picture
+
+  const handleThaiDescToggle = () => {
+    const currentlyExpanded = isThaiDescExpanded
+    setIsThaiDescExpanded(!currentlyExpanded)
+    if (!currentlyExpanded) {
+      // If it's being opened
+      setIsJapanDescExpanded(false)
+      setIsEngDescExpanded(false)
+    }
+  }
+
+  const handleJapanDescToggle = () => {
+    const currentlyExpanded = isJapanDescExpanded
+    setIsJapanDescExpanded(!currentlyExpanded)
+    if (!currentlyExpanded) {
+      // If it's being opened
+      setIsThaiDescExpanded(false)
+      setIsEngDescExpanded(false)
+    }
+  }
+
+  const handleEngDescToggle = () => {
+    const currentlyExpanded = isEngDescExpanded
+    setIsEngDescExpanded(!currentlyExpanded)
+    if (!currentlyExpanded) {
+      // If it's being opened
+      setIsThaiDescExpanded(false)
+      setIsJapanDescExpanded(false)
+    }
+  }
 
   return (
     <>
@@ -253,22 +259,22 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                       {
                         icon: <FaFacebookSquare className="text-gray-500" size={15} />,
                         label: storeData?.contactUs?.facebook_name,
-                        link: storeData?.contactUs?.facebook_url
+                        link: storeData?.contactUs?.facebook_url,
                       },
                       {
                         icon: <PiInstagramLogoFill className="text-gray-500" size={15} />,
                         label: storeData?.contactUs?.instagram_name,
-                        link: storeData?.contactUs?.instagram_url
+                        link: storeData?.contactUs?.instagram_url,
                       },
                       {
                         icon: <FaLine className="text-gray-500" size={15} />,
                         label: storeData?.contactUs?.lineId_name,
-                        link: storeData?.contactUs?.line_url
+                        link: storeData?.contactUs?.line_url,
                       },
                       {
                         icon: <AiFillTikTok className="text-gray-500" size={15} />,
                         label: storeData?.contactUs?.tiktok_name,
-                        link: storeData?.contactUs?.tiktok_url
+                        link: storeData?.contactUs?.tiktok_url,
                       },
                       {
                         icon: <FaEarthAsia className="text-gray-500" size={15} />,
@@ -278,27 +284,43 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                       {
                         icon: <FaYoutube className="text-gray-500" size={15} />,
                         label: storeData?.contactUs?.youtube_name,
-                        link: storeData?.contactUs?.youtube_url
+                        link: storeData?.contactUs?.youtube_url,
                       },
-                    ].map(({ icon, label, link }, index) =>
-                      label ? (
+                    ].map(({ icon, label, link }, index) => {
+                      let showItem = false
+
+                      // Check for phone or email (identified by 'link' property being undefined in their object definition)
+                      if (typeof link === "undefined") {
+                        if (label && label.trim() !== "") {
+                          // Phone number or email string exists and is not empty
+                          showItem = true
+                        }
+                      } else {
+                        // For social media, website, etc. (identified by 'link' property being present)
+                        if (label && label.trim() !== "" && link && link.trim() !== "") {
+                          // Both name and URL exist and are not empty
+                          showItem = true
+                        }
+                      }
+
+                      return showItem ? (
                         <div key={index} className="flex items-center gap-2 my-1 sm:my-0">
                           <span className="flex-shrink-0 text-gray-600">{icon}</span>
-                          {link ? (
+                          {link ? ( // If it's an item that should be a link (social media, website)
                             <a
-                              href={`${link}`}
+                              href={link} // Ensure 'link' is a valid URL string
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-gray-400 hover:text-blue-600 hover:underline truncate max-w-[150px]"
                             >
                               {label}
-                            </a>
+                            </a> // If it's phone or email (no 'link' property, or 'link' is falsy but showItem is true)
                           ) : (
-                            <span className="text-gray-400 truncate max-w-[150px]">{link || "-"}</span>
+                            <span className="text-gray-400 truncate max-w-[150px]">{label}</span>
                           )}
                         </div>
-                      ) : null,
-                    )}
+                      ) : null
+                    })}
                   </>
                 )}
               </div>
@@ -320,42 +342,112 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
-          <div className="col-span-1 md:col-span-2">
-            <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
-              <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
-                {isLoading ? (
-                  <div className="h-8 w-3/5 bg-gray-300 animate-pulse rounded"></div>
-                ) : (
-                  <h1 className="text-xl sm:text-2xl font-light text-blue-950">รายละเอียดร้าน</h1>
-                )}
-              </div>
-              <div className="p-4">
-                {isLoading ? (
-                  <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2">
-                        <div className="h-4 w-16 bg-gray-300 animate-pulse rounded"></div>
-                        <div className="h-4 w-24 bg-gray-300 animate-pulse rounded"></div>
+          <div className="col-span-1 md:col-span-2 ">
+            <div className={`col-span-1 md:col-span-2 space-y-4`}>
+              {isLoading ? (
+                <>
+                  {[1, 2, 3].map((index) => (
+                    <div
+                      key={index}
+                      className="bg-white/70 backdrop-blur-xl border border-gray-300/70 rounded-md z-10 relative overflow-hidden animate-pulse"
+                    >
+                      <div className="p-4 bg-white-200/50 backdrop-blur-md border-b border-gray-300/70">
+                        <div className="h-8 w-2/3 bg-gray-300/70 rounded"></div>
                       </div>
-                    ))}
+                      <div className="p-4">
+                        <div className="h-4 w-full bg-gray-300/70 rounded"></div>
+                        <div className="h-4 w-5/6 bg-gray-300/70 rounded mt-2"></div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {/* เกี่ยวกับผู้ประกอบการ ไทย */}
+                  <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                    <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
+                      <button
+                        onClick={handleThaiDescToggle}
+                        className="flex items-center justify-between w-full text-left group"
+                        aria-expanded={isThaiDescExpanded}
+                        aria-controls="thai-description-content-card"
+                      >
+                        <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับร้าน (ภาษาไทย)</h2>
+                        <IoIosArrowDown
+                          className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                            isThaiDescExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    {isThaiDescExpanded && (
+                      <div id="thai-description-content-card" className="p-4">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line indent-8 text-justify">
+                          {storeData?.description_TH && storeData.description_TH.trim() !== ""
+                            ? storeData.description_TH
+                            : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-4 text-sm lg:text-base text-gray-700">
-                    <div className="font-semibold text-gray-600">ประเภทธุรกิจ:</div>
-                    <div className="text-gray-500">{storeData?.BusiTypeName_TH || "-"}</div>
-                    <div className="font-semibold text-gray-600">ที่อยู่:</div>
-                    <div className="text-gray-500 text-wrap">{storeData?.AddressThai || "-"}</div>
-                    {/* <div className="font-semibold text-gray-600">ตำบล:</div>
-                    <div className="text-gray-500">{storeData?.AddressThai || "-"}</div>
-                    <div className="font-semibold text-gray-600">อำเภอ:</div>
-                    <div className="text-gray-500">{storeData?.AmphurT || "-"}</div>
-                    <div className="font-semibold text-gray-600">จังหวัด:</div>
-                    <div className="text-gray-500">{storeData?.ProvinceT || "-"}</div>
-                    <div className="font-semibold text-gray-600">รหัสไปรษณีย์:</div> */}
-                    {/* <div className="text-gray-500">{storeData?.ZipCodeT || "-"}</div> */}
+
+                  {/*  เกี่ยวกับผู้ประกอบการ ญี่ปุ่ม */}
+                  <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                    <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
+                      <button
+                        onClick={handleJapanDescToggle}
+                        className="flex items-center justify-between w-full text-left group"
+                        aria-expanded={isJapanDescExpanded}
+                        aria-controls="japan-description-content-card"
+                      >
+                        <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับร้าน (ภาษาญี่ปุ่น)</h2>
+                        <IoIosArrowDown
+                          className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                            isJapanDescExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    {isJapanDescExpanded && (
+                      <div id="japan-description-content-card" className="p-4">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                          {storeData?.description_JP && storeData.description_JP.trim() !== ""
+                            ? storeData.description_JP
+                            : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+
+                  {/* เกี่ยวกับผู้ประกอบการ อังกฤษ */}
+                  <div className="bg-white/70 backdrop-blur-xl border border-gray-200/60 rounded-md z-10 relative overflow-hidden">
+                    <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40">
+                      <button
+                        onClick={handleEngDescToggle}
+                        className="flex items-center justify-between w-full text-left group"
+                        aria-expanded={isEngDescExpanded}
+                        aria-controls="eng-description-content-card"
+                      >
+                        <h2 className="text-xl sm:text-2xl font-light text-blue-950">เกี่ยวกับร้าน (ภาษาอังกฤษ)</h2>
+                        <IoIosArrowDown
+                          className={`w-5 h-5 text-blue-950 transform transition-transform duration-300 ${
+                            isEngDescExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    {isEngDescExpanded && (
+                      <div id="eng-description-content-card" className="p-4">
+                        <p className="text-base font-light text-gray-600 leading-relaxed whitespace-pre-line">
+                          {storeData?.description_EN && storeData.description_EN.trim() !== ""
+                            ? storeData.description_EN
+                            : "ไม่มีข้อมูลเกี่ยวกับผู้ประกอบการ"}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -436,7 +528,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     )}
                   </div>
                 </div>
-                {isLoading ? (
+                {/* {isLoading ? (
                   <div className="space-y-2">
                     <div className="h-4 w-full bg-gray-300 animate-pulse rounded"></div>
                     <div className="h-4 w-5/6 bg-gray-300 animate-pulse rounded"></div>
@@ -456,7 +548,7 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                       </div>
                     )}
                   </>
-                )}
+                )} */}
               </div>
               <div className="p-4">
                 {mapEmbedUrl ? (
@@ -573,8 +665,8 @@ export default function StoreDetailComponent({ store, isLoading, videos = [] }: 
                     key={video.embedId}
                     onClick={() => setSelectedVideo(video)}
                     className={`group cursor-pointer rounded-lg overflow-hidden border-2 transition-all duration-200 ease-in-out
-                              flex-shrink-0 w-40 sm:w-48 md:w-56
-                              ${selectedVideo?.embedId === video.embedId ? "border-red-600 scale-105" : "border-transparent hover:border-red-400"}`}
+                          flex-shrink-0 w-40 sm:w-48 md:w-56
+                          ${selectedVideo?.embedId === video.embedId ? "border-red-600 scale-105" : "border-transparent hover:border-red-400"}`}
                   >
                     <div className="relative aspect-video bg-gray-700">
                       <Image

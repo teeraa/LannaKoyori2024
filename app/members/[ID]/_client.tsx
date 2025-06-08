@@ -21,7 +21,7 @@ export interface Product {
   materialSub1: Material;
   materialSub2: Material;
   materialSub3: Material;
-  businessinfo: Member;
+  BussinessName: string
 }
 
 export interface Material {
@@ -40,12 +40,6 @@ export interface ContactUs {
   phone: string;
   website_name: string;
   website_url: string;
-}
-
-interface Description {
-  description_TH: string
-  description_JP: string
-  description_EN: string
 }
 
 export interface Member {
@@ -106,7 +100,7 @@ export default function MemberDetailPage() {
       setIsProductLoading(true)
       const response = await axios.get("/api/productByBus", { params: { businessID } })
       setProducts(response.data)
-    } catch (error: any) {
+     } catch (error: any) {
       setError(error.response?.data?.error || "Failed to fetch products")
     } finally {
       setIsProductLoading(false)

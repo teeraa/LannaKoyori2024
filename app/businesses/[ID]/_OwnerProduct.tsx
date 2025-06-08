@@ -1,14 +1,15 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import { useRef, useEffect, useState } from "react"
+import { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
-import type { Product } from "./_client" 
-import { GrLocation } from "react-icons/gr"
+import type { Product } from "./_client"
 import { ProductSkeletonGrid, ProductSkeletonSwiper, HeaderSkeleton } from "./Skeleton"
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { IoStorefrontOutline } from "react-icons/io5";
 
 interface OwnerProductProps {
   products: Product[]
@@ -18,108 +19,117 @@ interface OwnerProductProps {
 
 const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => void }) => {
   const [imageError, setImageError] = useState(false)
-  const materialsRef = useRef<HTMLDivElement>(null)
-  const [visibleCount, setVisibleCount] = useState(1) 
-  
+  // const materialsRef = useRef<HTMLDivElement>(null)
+  // const [visibleCount, setVisibleCount] = useState(1)
+
   // กำหนดความยาวสูงสุดของชื่อวัสดุ (เป็นตัวอักษร)
-  const MAX_MATERIAL_CHAR_LENGTH = 8
-  const allMaterials = [product?.materialMain?.Material, product?.materialSub1?.Material, product?.materialSub2?.Material]
-    .filter(Boolean)
-    .map(String)
-  
-  const displayableMaterials = allMaterials.filter(material => material.length <= MAX_MATERIAL_CHAR_LENGTH) //แสดง
-  const hiddenMaterials = allMaterials.filter(material => material.length > MAX_MATERIAL_CHAR_LENGTH) // ซ่อน
-  
-  // เรียงลำดับวัสดุที่แสดงได้ตามความยาว (สั้นก่อน)
-  const materials = displayableMaterials.sort((a, b) => a.length - b.length)
-  
-  // จำนวนวัสดุที่ซ่อน (รวมทั้งที่ยาวเกินไปและที่ไม่พอพื้นที่แสดง)
-  const getTotalHiddenCount = () => {
-    const hiddenByLength = hiddenMaterials.length
-    const hiddenBySpace = Math.max(0, materials.length - visibleCount)
-    return hiddenByLength + hiddenBySpace
-  }
+  // const MAX_MATERIAL_CHAR_LENGTH = 15
+  // const allMaterials = [product?.materialMain?.Material, product?.materialSub1?.Material, product?.materialSub2?.Material]
+  //   .filter(Boolean)
+  //   .map(String)
+
+  // const displayableMaterials = allMaterials.filter(material => material.length <= MAX_MATERIAL_CHAR_LENGTH) //แสดง
+  // const hiddenMaterials = allMaterials.filter(material => material.length > MAX_MATERIAL_CHAR_LENGTH) // ซ่อน
+
+  // // เรียงลำดับวัสดุที่แสดงได้ตามความยาว (สั้นก่อน)
+  // const materials = displayableMaterials.sort((a, b) => a.length - b.length)
+
+  // // จำนวนวัสดุที่ซ่อน (รวมทั้งที่ยาวเกินไปและที่ไม่พอพื้นที่แสดง)
+  // const getTotalHiddenCount = () => {
+  //   const hiddenByLength = hiddenMaterials.length
+  //   const hiddenBySpace = Math.max(0, materials.length - visibleCount)
+  //   return hiddenByLength + hiddenBySpace
+  // }
 
   const handleImageError = () => {
     setImageError(true)
   }
 
-  useEffect(() => {
-    if (materials.length === 0) {
-      setVisibleCount(0)
-      return
+  // useEffect(() => {
+  //   if (materials.length === 0) {
+  //     setVisibleCount(0)
+  //     return
+  //   }
+
+  //   if (!materialsRef.current) {
+  //     setVisibleCount(1)
+  //     return
+  //   }
+
+  //   const calculateVisibleMaterials = () => {
+  //     const container = materialsRef.current
+  //     if (!container) return 1
+
+  //     const containerWidth = container.offsetWidth
+  //     if (containerWidth === 0) return 1
+
+  //     //js dom เช็ก div เพื่อแสดง tag ของวัสดุตามเงื่อนไข
+  //     const tester = document.createElement("div")
+  //     tester.style.cssText = `
+  //       position: absolute;
+  //       visibility: hidden;
+  //       pointer-events: none;
+  //       width: ${containerWidth}px;
+  //       height: 32px;
+  //       overflow: hidden;
+  //       display: flex;
+  //       flex-wrap: wrap;
+  //       align-items: flex-start;
+  //     `
+  //     document.body.appendChild(tester)
+
+  //     const tagClass = "inline-block px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-1 mb-1"
+
+  //     const testFit = (count: number): boolean => {
+  //       const materialsToTest = materials.slice(0, count)
+  //       const totalHidden = hiddenMaterials.length + Math.max(0, materials.length - count)
+
+  //       let html = materialsToTest.map(m => `<span class="${tagClass}">${m}</span>`).join("")
+  //       if (totalHidden > 0) {
+  //         html += `<span class="${tagClass}">+${totalHidden}</span>`
+  //       }
+
+  //       tester.innerHTML = html
+  //       return tester.scrollHeight <= 32
+  //     }
+
+  //     let calculatedCount = 1
+
+  //     for (let i = Math.min(materials.length, 3); i >= 1; i--) {
+  //       if (testFit(i)) {
+  //         calculatedCount = i
+  //         break
+  //       }
+  //     }
+
+  //     document.body.removeChild(tester)
+  //     return calculatedCount
+  //   }
+
+  //   const observer = new ResizeObserver(() => {
+  //     const newCount = calculateVisibleMaterials()
+  //     setVisibleCount(newCount)
+  //   })
+
+  //   observer.observe(materialsRef.current)
+
+  //   const initialCount = calculateVisibleMaterials()
+  //   setVisibleCount(initialCount)
+
+  //   return () => observer.disconnect()
+  // }, [materials, hiddenMaterials.length])
+
+  // const visibleMaterials = materials.slice(0, visibleCount)
+  // const totalHiddenCount = getTotalHiddenCount()
+
+  function isValidUrl(str: string) {
+    try {
+      new URL(str)
+      return true
+    } catch {
+      return false
     }
-
-    if (!materialsRef.current) {
-      setVisibleCount(1)
-      return
-    }
-
-    const calculateVisibleMaterials = () => {
-      const container = materialsRef.current
-      if (!container) return 1
-
-      const containerWidth = container.offsetWidth
-      if (containerWidth === 0) return 1
-
-      //js dom เช็ก div เพื่อแสดง tag ของวัสดุตามเงื่อนไข
-      const tester = document.createElement("div")
-      tester.style.cssText = `
-        position: absolute;
-        visibility: hidden;
-        pointer-events: none;
-        width: ${containerWidth}px;
-        height: 32px;
-        overflow: hidden;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-      `
-      document.body.appendChild(tester)
-
-      const tagClass = "inline-block px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-1 mb-1"
-
-      const testFit = (count: number): boolean => {
-        const materialsToTest = materials.slice(0, count)
-        const totalHidden = hiddenMaterials.length + Math.max(0, materials.length - count)
-        
-        let html = materialsToTest.map(m => `<span class="${tagClass}">${m}</span>`).join("")
-        if (totalHidden > 0) {
-          html += `<span class="${tagClass}">+${totalHidden}</span>`
-        }
-        
-        tester.innerHTML = html
-        return tester.scrollHeight <= 32 
-      }
-
-      let calculatedCount = 1 
-
-      for (let i = Math.min(materials.length, 3); i >= 1; i--) {
-        if (testFit(i)) {
-          calculatedCount = i
-          break
-        }
-      }
-
-      document.body.removeChild(tester)
-      return calculatedCount
-    }
-
-    const observer = new ResizeObserver(() => {
-      const newCount = calculateVisibleMaterials()
-      setVisibleCount(newCount)
-    })
-
-    observer.observe(materialsRef.current)
-    
-    const initialCount = calculateVisibleMaterials()
-    setVisibleCount(initialCount)
-
-    return () => observer.disconnect()
-  }, [materials, hiddenMaterials.length])
-
-  const visibleMaterials = materials.slice(0, visibleCount)
-  const totalHiddenCount = getTotalHiddenCount()
+  }
 
   return (
     <div
@@ -134,8 +144,8 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
             </div>
           ) : (
             <Image
-              src={`/images/entreprenuer/Koyori_${product?.businessinfo?.Year}/Products/${product?.image}`}
-              alt={product?.productName || "สินค้า"}
+              src={isValidUrl(product?.image) ? product?.image : "/"}
+              alt={``}
               width={200}
               height={200}
               quality={90}
@@ -150,42 +160,61 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
         </div>
 
         <div className="flex flex-col justify-center gap-2">
-          <div className="mt-2 w-full">
+          <div className="flex items-center gap-2 mt-2 w-full">
             <h1 className="text-[20px] text-start text-gray-600 truncate max-w-[200px]">
               {product?.productName || "สินค้า"}
             </h1>
-          </div>
-          <div className="flex items-center text-gray-500 text-sm">
-            <GrLocation className="w-4 h-4 mr-1" />
-            <span className="truncate">{product?.businessinfo?.ProvinceT || "ไม่ระบุ"}</span>
+            <div className="text-[12px] text-blue-500 bg-blue-100 px-2 py-[1px] rounded-[4px] truncate w-fit text-center min-w-[40px]">
+              {product?.materialMain.Material || "ไม่ระบุวัสดุ"}
+            </div>
           </div>
 
-          <div 
-            ref={materialsRef} 
-            className="flex flex-wrap max-h-[32px] overflow-hidden min-h-[32px]"
-          >
-            {materials.length > 0 || hiddenMaterials.length > 0 ? (
-              <>
-                {visibleMaterials.map((material, index) => (
-                  <span
-                    key={index}
-                    className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-2 mb-1"
-                  >
-                    {material}
-                  </span>
-                ))}
-                {totalHiddenCount > 0 && (
-                  <span className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-500 text-xs rounded-md whitespace-nowrap mr-2 mb-1">
-                    +{totalHiddenCount}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-md">
-                ไม่ระบุวัสดุ
-              </span>
-            )}
+          <div className="flex items-center w-full">
+            <IoStorefrontOutline size={20} className="text-gray-400 mr-2" />
+            <div className="flex items-center justify-end w-full  border-l w-full border-gray-300">
+                <p className="text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px]">{product?.BussinessName || "ไม่ระบุ"}</p>
+            </div>
           </div>
+
+          <div className="flex items-center w-full">
+            <AiOutlineShoppingCart size={20} className="text-gray-400 mr-2" />
+            <div className="flex items-center w-full border-l border-gray-300">
+              {product?.price && Number(product.price) > 0 ? (
+                <p className="w-full text-[14px] text-green-600 text-end m-0">{Number(product.price).toLocaleString("th-TH")} บาท</p>
+              ) : (
+                <p className="w-full text-[14px] text-red-500 text-end m-0">สินค้าหมด</p>
+              )}
+            </div>
+          </div>
+
+
+        
+          {/* <div className="flex items-center text-gray-500 text-[14px]">
+          <GrLocation className="w-4 h-4 mr-1" />
+          <span className="truncate">{product?.price || "ไม่ระบุ"}</span>
+        </div> */}
+
+          {/* {materials.length > 0 || hiddenMaterials.length > 0 ? (
+            <>
+              {visibleMaterials.map((material, index) => (
+                <span
+                  key={index}
+                  className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-md whitespace-nowrap mr-2 mb-1"
+                >
+                  {material}
+                </span>
+              ))}
+              {totalHiddenCount > 0 && (
+                <span className="inline-block flex items-center px-2 py-1 bg-blue-50 text-blue-500 text-xs rounded-md whitespace-nowrap mr-2 mb-1">
+                  +{totalHiddenCount}
+                </span>
+              )} */}
+          {/* </>
+          ) : (
+            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-400 text-xs rounded-md">
+              ไม่ระบุวัสดุ
+            </span>
+          )} */}
         </div>
       </div>
     </div>
@@ -193,7 +222,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick?: () => v
 }
 
 export default function OwnerProduct({ roleThai, products, isLoading = false }: OwnerProductProps) {
-  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : "ผลิตภัณฑ์ที่เกี่ยวข้อง"
+  const ProductInfo = roleThai === "ครูช่าง" ? "ผลิตภัณฑ์ผู้ประกอบการ" : `ผลิตภัณฑ์ที่ผู้เชี่ยวชาญเกี่ยวข้อง`
   const shouldUseSwiper = products && products.length > 6
   const hasProducts = products && products.length > 0
 
@@ -202,7 +231,8 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
       {isLoading ? (
         <HeaderSkeleton />
       ) : (
-        <div className="flex items-center mb-4">
+        <div className="flex items-center
+        ">
           <hr className="border-t-4 border-gray-600 flex-grow"></hr>
           <h1 className="text-[24px] font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">{ProductInfo}</h1>
         </div>
@@ -210,9 +240,8 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
 
       <div className="relative">
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-            isLoading ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${isLoading ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+            }`}
         >
           {shouldUseSwiper ? <ProductSkeletonSwiper /> : <ProductSkeletonGrid />}
         </div>
@@ -223,7 +252,7 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
               <p className="text-gray-500 text-lg">ไม่มีสินค้าที่จะแสดง</p>
             </div>
           ) : shouldUseSwiper ? (
-            <div className="py-4">
+            <div className="mb-4">
               <Swiper
                 modules={[Pagination, Autoplay]}
                 pagination={{
@@ -237,7 +266,6 @@ export default function OwnerProduct({ roleThai, products, isLoading = false }: 
                     return ""
                   },
                 }}
-                preventInteractionOnTransition={true}
                 spaceBetween={30}
                 slidesPerView={3}
                 slidesPerGroup={1}

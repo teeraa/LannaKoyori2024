@@ -134,10 +134,6 @@ export interface Product {
     ID: number;
     productName: string;
     price: number;
-    mainMaterial: number;
-    subMaterial1: number;
-    subMaterial2: number;
-    subMaterial3: number;
     bussinessID: number;
     image: string;
     sketch: string;
@@ -149,6 +145,7 @@ export interface Product {
     materialSub2: Material;
     materialSub3: Material;
     businessinfo: Business;
+    BussinessName: string
 }
 export default function StoreClientPage() {
     const params = useParams()
@@ -198,30 +195,29 @@ export default function StoreClientPage() {
                 let getBusiness: Business | null = null
                 const responseData = storeResponse.data
 
-                // ปรับปรุงการ parse ข้อมูลให้ชัดเจนขึ้น
                 if (responseData) {
                     // กรณีที่ response เป็น array โดยตรง
                     if (Array.isArray(responseData)) {
-                        console.log("Response is array, length:", responseData.length)
+                        // console.log("Response is array, length:", responseData.length)
                         getBusiness = responseData.find((s: Business) => s.BusinessID === storeId) || null
-                        console.log("Found business from array:", getBusiness?.BussinessName)
+                        // console.log("Found business from array:", getBusiness?.BussinessName)
                     }
                     // กรณีที่ response เป็น object ที่มี data property เป็น array
                     else if (responseData.data && Array.isArray(responseData.data)) {
-                        console.log("Response has data array, length:", responseData.data.length)
+                        // console.log("Response has data array, length:", responseData.data.length)
                         getBusiness = responseData.data.find((s: Business) => s.BusinessID === storeId) || null
-                        console.log("Found business from data array:", getBusiness?.BussinessName)
+                        // console.log("Found business from data array:", getBusiness?.BussinessName)
                     }
                     // กรณีที่ response เป็น business object เดียว
                     else if (responseData.BusinessID) {
-                        console.log("Response is single business object, ID:", responseData.BusinessID)
+                        // console.log("Response is single business object, ID:", responseData.BusinessID)
                         if (responseData.BusinessID === storeId) {
                             getBusiness = responseData as Business
-                            console.log("Using single business object:", getBusiness.BussinessName)
+                            // console.log("Using single business object:", getBusiness.BussinessName)
                         }
                     }
                     else {
-                        console.log("Unknown response structure:", Object.keys(responseData))
+                        // console.log("Unknown response structure:", Object.keys(responseData))
                     }
                 }
 
