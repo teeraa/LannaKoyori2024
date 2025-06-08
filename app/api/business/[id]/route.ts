@@ -2,17 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for server-side operations
 );
 
-export async function GET(
-  request: NextRequest,
-  context: any
-) {
+export async function GET(request: NextRequest, context: any) {
   try {
     const pathname = request.nextUrl.pathname;
     const id = pathname.split("/").pop(); // ดึงค่าจาก dynamic route [id]
@@ -36,7 +33,10 @@ export async function GET(
     });
 
     if (!business) {
-      return NextResponse.json({ error: "Business not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Business not found" },
+        { status: 404 }
+      );
     }
 
     const firstPerson = business.personinfo?.[0];
@@ -70,41 +70,54 @@ export async function GET(
       memberbanner: firstPerson?.banner,
 
       contactUs: {
-        facebook_name: business.contacts?.[0]?.facebook_name || "ไม่ระบุ",
-        facebook_url: business.contacts?.[0]?.facebook_url || "ไม่ระบุ",
-        instagram_name: business.contacts?.[0]?.instagram_name || "ไม่ระบุ",
-        instagram_url: business.contacts?.[0]?.instagram_url || "ไม่ระบุ",
-        lineId_name: business.contacts?.[0]?.lineId_name || "ไม่ระบุ",
-        line_url: business.contacts?.[0]?.line_url || "ไม่ระบุ",
-        email: business.contacts?.[0]?.email || "ไม่ระบุ",
-        phone: business.contacts?.[0]?.phone_number || "ไม่ระบุ",
-        website_name: business.contacts?.[0]?.website_name || "ไม่ระบุ",
-        website_url: business.contacts?.[0]?.website_url || "ไม่ระบุ",
+        facebook_name: business.contacts?.[0]?.facebook_name || null,
+        facebook_url: business.contacts?.[0]?.facebook_url || null,
+        instagram_name: business.contacts?.[0]?.instagram_name || null,
+        instagram_url: business.contacts?.[0]?.instagram_url || null,
+        lineId_name: business.contacts?.[0]?.lineId_name || null,
+        line_url: business.contacts?.[0]?.line_url || null,
+        email: business.contacts?.[0]?.email || null,
+        phone: business.contacts?.[0]?.phone_number || null,
+        website_name: business.contacts?.[0]?.website_name || null,
+        website_url: business.contacts?.[0]?.website_url || null,
       },
-      BusiTypeName_TH: business.businesstype?.BusiTypeName_TH || "ไม่ระบุ",
-      BusiTypeName_EN: business.businesstype?.BusiTypeName_EN || "ไม่ระบุ",
+      BusiTypeName_TH: business.businesstype?.BusiTypeName_TH || null,
+      BusiTypeName_EN: business.businesstype?.BusiTypeName_EN || null,
 
-      description_TH: (business.topic_detail?.[0].First_DescriptionTH || "") + (business.topic_detail?.[0].Second_DescriptionTH || ""),
-      description_EN: (business.topic_detail?.[0].First_DescriptionEN || "") + (business.topic_detail?.[0].Second_DescriptionEN || ""),
-      description_JP: (business.topic_detail?.[0].First_DescriptionJP || "") + (business.topic_detail?.[0].Second_DescriptionJP || ""),
+      description_TH: (
+        (business.topic_detail?.[0].First_DescriptionTH || "") +
+        (business.topic_detail?.[0].Second_DescriptionTH || "")
+      ).replace(/\r\n/g, ""),
+      description_EN: (
+        (business.topic_detail?.[0].First_DescriptionEN || "") +
+        (business.topic_detail?.[0].Second_DescriptionEN || "")
+      ).replace(/\r\n/g, ""),
+      description_JP: (
+        (business.topic_detail?.[0].First_DescriptionJP || "") +
+        (business.topic_detail?.[0].Second_DescriptionJP || "")
+      ).replace(/\r\n/g, ""),
 
-      vedio: business.urlbusiness?.map((url) => ({
-        id: url?.ID || "ไม่ระบุ",
-        url: url?.url || "ไม่ระบุ",
-        title: url?.title || "ไม่ระบุ",
-      })) || [],
+      vedio:
+        business.urlbusiness?.map((url) => ({
+          id: url?.ID || null,
+          url: url?.url || null,
+          title: url?.title || null,
+        })) || [],
     };
 
     return NextResponse.json(result, {
       headers: {
-        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
+        "Access-Control-Allow-Origin": "*", // In production, set this to your specific domain
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }
@@ -114,9 +127,9 @@ export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }
@@ -147,16 +160,16 @@ export async function PUT(req: NextRequest) {
 
   // Add CORS headers to all responses
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 
   let imagePath;
   let bannerPath;
 
-  if (imageFile && imageFile instanceof File) { // Changed from Blob to File
-
+  if (imageFile && imageFile instanceof File) {
+    // Changed from Blob to File
 
     const filename = `${formattedDate}-${imageFile.name}`;
     const filePath = `entreprenuer/Koyori_${DataYear}/LogoBusiness/${filename}`;
@@ -165,29 +178,31 @@ export async function PUT(req: NextRequest) {
       // Optional: Delete old image if updating
       const existingBusiness = await prisma.businessinfo.findUnique({
         where: { ID: Number(id) },
-        select: { picture: true }
+        select: { picture: true },
       });
 
       if (existingBusiness?.picture) {
         // Extract path from existing URL
-        const oldPath = existingBusiness.picture.split('/').pop();
+        const oldPath = existingBusiness.picture.split("/").pop();
         if (oldPath) {
           await supabase.storage
-            .from('koyori-image')
-            .remove([`entreprenuer/Koyori_${DataYear}/LogoBusiness/${oldPath}`]);
+            .from("koyori-image")
+            .remove([
+              `entreprenuer/Koyori_${DataYear}/LogoBusiness/${oldPath}`,
+            ]);
         }
       }
 
       // Upload to Supabase Storage
       const { data, error } = await supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .upload(filePath, imageFile, {
-          cacheControl: '3600',
-          upsert: true
+          cacheControl: "3600",
+          upsert: true,
         });
 
       if (error) {
-        console.error('Supabase upload error:', error);
+        console.error("Supabase upload error:", error);
         return NextResponse.json(
           { error: "Failed to upload image" },
           { status: 500, headers: corsHeaders }
@@ -195,13 +210,12 @@ export async function PUT(req: NextRequest) {
       }
 
       const { data: publicUrlData } = supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .getPublicUrl(filePath);
 
       imagePath = publicUrlData.publicUrl;
-
     } catch (error) {
-      console.error('Failed to upload image:', error);
+      console.error("Failed to upload image:", error);
       return NextResponse.json(
         { error: "Failed to upload image" },
         { status: 500, headers: corsHeaders }
@@ -214,14 +228,14 @@ export async function PUT(req: NextRequest) {
     const bannerFilePath = `entreprenuer/Koyori_${DataYear}/Banner/${bannerFilename}`;
 
     const { data: bannerData, error: bannerError } = await supabase.storage
-      .from('koyori-image')
+      .from("koyori-image")
       .upload(bannerFilePath, bannerFile, {
-        cacheControl: '3600',
-        upsert: true
+        cacheControl: "3600",
+        upsert: true,
       });
 
     if (bannerError) {
-      console.error('Supabase banner upload error:', bannerError);
+      console.error("Supabase banner upload error:", bannerError);
       return NextResponse.json(
         { error: "Failed to upload banner image" },
         { status: 500, headers: corsHeaders }
@@ -230,7 +244,7 @@ export async function PUT(req: NextRequest) {
 
     // Get public URL for banner image
     const { data: bannerUrlData } = supabase.storage
-      .from('koyori-image')
+      .from("koyori-image")
       .getPublicUrl(bannerFilePath);
 
     bannerPath = bannerUrlData.publicUrl;
@@ -246,7 +260,16 @@ export async function PUT(req: NextRequest) {
     !Latitude ||
     !Longtitude
   ) {
-    console.log(BussinessName, AddressT, TumbolT, AmphurT, ProvinceT, ZipCodeT, Latitude, Longtitude);
+    console.log(
+      BussinessName,
+      AddressT,
+      TumbolT,
+      AmphurT,
+      ProvinceT,
+      ZipCodeT,
+      Latitude,
+      Longtitude
+    );
     return NextResponse.json(
       { error: "All fields are required" },
       { status: 400, headers: corsHeaders }
@@ -287,7 +310,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(updateBusiness, { headers: corsHeaders });
   } catch (error) {
-    console.error('Database update error:', error);
+    console.error("Database update error:", error);
     return NextResponse.json(
       { error: "Failed to update business" },
       { status: 500, headers: corsHeaders }

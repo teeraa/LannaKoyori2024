@@ -77,8 +77,6 @@ export async function GET(req: NextRequest) {
       new Map(combinedData.map(item => [`${item.NameThai}-${item.NameEng}`, item])).values()
     );
 
-    const totalCount = uniqueData.length
-
     const allData = await prisma.businessinfo.count();
     const totalPages = Math.ceil(allData / Number(limit));
 
@@ -100,8 +98,8 @@ export async function GET(req: NextRequest) {
       meta: {
         page: Number(page),
         limit: Number(limit),
-        total_rows: totalCount,
         total_pages: totalPages,
+        totalData: allData,
       }
     }));
 
