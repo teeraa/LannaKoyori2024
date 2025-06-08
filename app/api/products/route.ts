@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
       skip: offset,
     });
 
-    const allData = await prisma.businessinfo.count();
+    const allData = data.length;
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = {
