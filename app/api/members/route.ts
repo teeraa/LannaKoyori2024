@@ -68,6 +68,26 @@ export async function GET(req: NextRequest) {
       skip: offset,
     });
 
+    // console.log('Where Clause:', whereClause);
+    const personinfoCount = await prisma.personinfo.count({
+      where: whereClause,
+      orderBy: {
+        ID: orderBy,
+      },
+      take: Number(limit),
+      skip: offset,
+    });
+
+    // ดึงข้อมูลจาก consultantinfo
+    const consultantinfoCount = await prisma.consultantinfo.count({
+      where: whereClause,
+      orderBy: {
+        ID: orderBy,
+      },
+      take: Number(limit),
+      skip: offset,
+    });
+
     // รวมข้อมูลจากทั้งสองตาราง
     const combinedData = [...personinfoData, ...consultantinfoData];
 
@@ -78,7 +98,7 @@ export async function GET(req: NextRequest) {
       ).values()
     );
 
-    const allData = uniqueData.length;
+    const allData = personinfoCount + consultantinfoCount;
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = {
