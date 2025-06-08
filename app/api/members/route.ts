@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
-import { createClient } from '@supabase/supabase-js';
-import { count } from 'console';
+import { createClient } from "@supabase/supabase-js";
+import { count } from "console";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,28 +12,27 @@ const supabase = createClient(
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const roleThai = searchParams.get('roleThai');
-  const year = searchParams.get('Year');
-  const nationality = searchParams.get('nationality');
-  const gender = searchParams.get('gender');
-  const search = searchParams.get('search');
-  let limit = searchParams.get('limit');
-  let page = searchParams.get('page');
+  const roleThai = searchParams.get("roleThai");
+  const year = searchParams.get("Year");
+  const nationality = searchParams.get("nationality");
+  const gender = searchParams.get("gender");
+  const search = searchParams.get("search");
+  let limit = searchParams.get("limit");
+  let page = searchParams.get("page");
   const order = req.nextUrl.searchParams.get("orderBy");
 
-  const orderBy = order === 'desc' ? 'desc' : 'asc';
+  const orderBy = order === "desc" ? "desc" : "asc";
 
   if (!page) {
-    page = "1"
+    page = "1";
   }
   if (!limit) {
-    limit = "12"
+    limit = "12";
   }
 
-  const offset = (Number(page) - 1) * Number(limit)
+  const offset = (Number(page) - 1) * Number(limit);
 
   try {
-
     const existingParams: Record<string, string | undefined> = {};
 
     const whereClause: any = {};
@@ -45,7 +44,7 @@ export async function GET(req: NextRequest) {
     if (search) {
       whereClause.OR = [
         { NameThai: { contains: search } },
-        { NameEng: { startsWith: search, lte: 'insensitive' } },
+        { NameEng: { startsWith: search, lte: "insensitive" } },
         { RoleThai: { contains: search } },
       ];
     }
@@ -56,17 +55,17 @@ export async function GET(req: NextRequest) {
         ID: orderBy,
       },
       take: Number(limit),
-      skip: offset
+      skip: offset,
     });
 
     // ดึงข้อมูลจาก consultantinfo
     const consultantinfoData = await prisma.consultantinfo.findMany({
       where: whereClause,
       orderBy: {
-        ID: orderBy
+        ID: orderBy,
       },
       take: Number(limit),
-      skip: offset
+      skip: offset,
     });
 
     // รวมข้อมูลจากทั้งสองตาราง
@@ -74,33 +73,37 @@ export async function GET(req: NextRequest) {
 
     // กรองข้อมูลที่ซ้ำกันใน NameThai และ NameEng โดยใช้ Set
     const uniqueData = Array.from(
-      new Map(combinedData.map(item => [`${item.NameThai}-${item.NameEng}`, item])).values()
+      new Map(
+        combinedData.map((item) => [`${item.NameThai}-${item.NameEng}`, item])
+      ).values()
     );
 
     const allData = await prisma.businessinfo.count();
     const totalPages = Math.ceil(allData / Number(limit));
 
     const result = uniqueData.map((member) => ({
-      ID: member.ID,
-      BusinessID: member.BusinessID,
-      NameThai: member.NameThai,
-      NameEng: member.NameEng,
-      RoleThai: member.RoleThai,
-      RoleEng: member.RoleEng,
-      Position: 'Position' in member ? member.Position : '',
-      nationality: member.nationality,
-      gender: member.gender,
-      Institute: 'Institute' in member ? member.Institute : '',
-      Contact: 'Contact' in member ? member.Contact : '',
-      Year: member.Year,
-      picture: member.picture,
-      banner: 'banner' in member ? member.banner : null,
+      payload: {
+        ID: member.ID,
+        BusinessID: member.BusinessID,
+        NameThai: member.NameThai,
+        NameEng: member.NameEng,
+        RoleThai: member.RoleThai,
+        RoleEng: member.RoleEng,
+        Position: "Position" in member ? member.Position : "",
+        nationality: member.nationality,
+        gender: member.gender,
+        Institute: "Institute" in member ? member.Institute : "",
+        Contact: "Contact" in member ? member.Contact : "",
+        Year: member.Year,
+        picture: member.picture,
+        banner: "banner" in member ? member.banner : null,
+      },
       meta: {
         page: Number(page),
         limit: Number(limit),
         total_pages: totalPages,
         totalData: allData,
-      }
+      },
     }));
 
     // const members = await prisma.personinfo.findMany({
@@ -109,14 +112,17 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
+        "Access-Control-Allow-Origin": "*", // In production, set this to your specific domain
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     });
   } catch (error) {
-    console.error('Error fetching members:', error);
-    return NextResponse.json({ error: 'Failed to load members' }, { status: 500 });
+    console.error("Error fetching members:", error);
+    return NextResponse.json(
+      { error: "Failed to load members" },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }
@@ -126,9 +132,9 @@ export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }
@@ -151,9 +157,9 @@ export async function POST(req: NextRequest) {
 
   // Add CORS headers to all responses
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 
   const cleanedBusinessName = BussinessNameEng?.toString()
@@ -185,14 +191,14 @@ export async function POST(req: NextRequest) {
     const profileFilePath = `entreprenuer/Koyori_${Year}/Profile/${profileFilename}`;
 
     const { data: profileData, error: profileError } = await supabase.storage
-      .from('koyori-image')
+      .from("koyori-image")
       .upload(profileFilePath, imageFile, {
-        cacheControl: '3600',
-        upsert: true
+        cacheControl: "3600",
+        upsert: true,
       });
 
     if (profileError) {
-      console.error('Supabase profile upload error:', profileError);
+      console.error("Supabase profile upload error:", profileError);
       return NextResponse.json(
         { error: "Failed to upload profile image" },
         { status: 500, headers: corsHeaders }
@@ -201,7 +207,7 @@ export async function POST(req: NextRequest) {
 
     // Get public URL for profile image
     const { data: profileUrlData } = supabase.storage
-      .from('koyori-image')
+      .from("koyori-image")
       .getPublicUrl(profileFilePath);
 
     imagePath = profileUrlData.publicUrl;
@@ -212,14 +218,14 @@ export async function POST(req: NextRequest) {
       const bannerFilePath = `entreprenuer/Koyori_${Year}/Banner/${bannerFilename}`;
 
       const { data: bannerData, error: bannerError } = await supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .upload(bannerFilePath, bannerFile, {
-          cacheControl: '3600',
-          upsert: true
+          cacheControl: "3600",
+          upsert: true,
         });
 
       if (bannerError) {
-        console.error('Supabase banner upload error:', bannerError);
+        console.error("Supabase banner upload error:", bannerError);
         return NextResponse.json(
           { error: "Failed to upload banner image" },
           { status: 500, headers: corsHeaders }
@@ -228,14 +234,13 @@ export async function POST(req: NextRequest) {
 
       // Get public URL for banner image
       const { data: bannerUrlData } = supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .getPublicUrl(bannerFilePath);
 
       bannerPath = bannerUrlData.publicUrl;
     }
-
   } catch (error) {
-    console.error('Failed to upload images:', error);
+    console.error("Failed to upload images:", error);
     return NextResponse.json(
       { error: "Failed to upload images" },
       { status: 500, headers: corsHeaders }
@@ -264,7 +269,7 @@ export async function POST(req: NextRequest) {
   try {
     const newMember = await prisma.personinfo.create({
       data: {
-        ID: Number(Year + '' + randomCode),
+        ID: Number(Year + "" + randomCode),
         BusinessID: Number(BusinessID),
         NameThai: NameThai.toString(),
         NameEng: NameEng.toString(),
@@ -282,15 +287,14 @@ export async function POST(req: NextRequest) {
       data: {
         descriptionTH: description.toString(),
       },
-    })
+    });
 
     return NextResponse.json(
       { message: "Added member successfully", newMember },
       { headers: corsHeaders }
     );
-
   } catch (error) {
-    console.error('Database creation error:', error);
+    console.error("Database creation error:", error);
     return NextResponse.json(
       { error: "Failed to create member" },
       { status: 500, headers: corsHeaders }
