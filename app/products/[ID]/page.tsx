@@ -6,23 +6,66 @@ import Footer from "@/app/components/footer";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { useParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Product  } from "../page";
-import {Member } from "../../members/[ID]/_client";
 import axios from "axios";
+
+interface Product {
+  ID: number;
+  productName: string;
+  price: number;
+  mainMaterial: number;
+  subMaterial1: number;
+  subMaterial2: number;
+  subMaterial3: number;
+  bussinessID: number;
+  image: string;
+  sketch: string;
+  description: string;
+  color: string;
+  size: string;
+  businessinfo: BusinessInfo;
+}
+
+interface ConsultantInfo {
+  ID: number;
+  BusinessID: number;
+  NameThai: string;
+  NameEng: string;
+  gender: string;
+  nationality: string;
+  RoleThai: string;
+  RoleEng: string;
+  Year: number;
+  picture: string;
+}
+
+interface BusinessInfo {
+  ID: number;
+  DataYear: number;
+  BusiTypeId: number;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  Latitude: string;
+  Longtitude: string;
+  picture: string;
+  banner: string;
+  consultantinfo: ConsultantInfo[];
+}
+
 
 export default function ProductDetail() {
     const pathname = usePathname();
     const params = useParams();
     const ID = parseInt(params?.ID as string);
     const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
-    const [consults, setConsults] = useState<Member[]>([]);
+    const [consults, setConsults] = useState<ConsultantInfo[]>([]);
 
 
     // หา product ที่ ID ตรงกัน
     const product = products?.flat().find((m: Product) => m.ID === ID);
-    const businessID = product?.businessinfo?.ID;
+    const businessID = product?.ID;
 
     const fetchProducts = async (id: Number) => {
         setIsLoading(true);
@@ -64,6 +107,16 @@ export default function ProductDetail() {
     if (!product) {
         return <div className="container">ไม่พบข้อมูลสินค้า</div>;
     }
+
+    function isValidUrl(str: string) {
+        try {
+            new URL(str)
+            return true
+        } catch {
+            return false
+        }
+    }
+
     return (
         <>
             <div className="container">
@@ -80,7 +133,7 @@ export default function ProductDetail() {
                         <div className="show-product w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 overflow-hidden">
                             <div className="main-show col-span-1 h-[330px] w-[330px] mx-auto">
                                 <Image
-                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
+                                    src={isValidUrl(product?.image) ? product?.image : "/"}
                                     className="rounded-md w-full h-auto"
                                     width="290"
                                     height="321"
@@ -102,12 +155,12 @@ export default function ProductDetail() {
                                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
                                         {[...Array(7)].map((_, index) => (
                                             <a
-                                                href={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
+                                                href={isValidUrl(product?.image) ? product?.image : "/"}
                                                 data-fancybox="gallery"
                                                 key={index}
                                             >
                                                 <Image
-                                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Products/${product?.image}`}
+                                                    src={isValidUrl(product?.image) ? product?.image : "/"}
                                                     className="rounded-md mb-2"
                                                     width="97"
                                                     height="97"
@@ -121,7 +174,7 @@ export default function ProductDetail() {
                         </div>
                         <div className="show-detail py-4">
                             <div className="flex text-xl md:text-3xl px-0 md:px-4 pb-4">
-                                <Link href={`/businesses/${product?.businessinfo?.ID}`} className="gap-2 items-center">
+                                <Link href={`/businesses/${product?.ID}`} className="gap-2 items-center">
                                     <h1 className="text-gray-600 text-md md:text-3xl font-regular flex">ผลิตภัณฑ์จากร้าน:
                                         <span className="font-bold text-blue-950 hover:underline text-wrap">{product?.businessinfo?.BussinessName}</span>
                                         <AiOutlineLink size={40} className="text-gray-600" />
@@ -145,7 +198,7 @@ export default function ProductDetail() {
                             </div>
                             <div className="skech-image col-span-2 flex justify-end">
                                 <Image
-                                    src={`/images/entreprenuer/Koyori_${product?.businessinfo?.DataYear}/Sketch/${product?.sketch}` || "/images/default.png"}
+                                    src={isValidUrl(product?.sketch) ? product?.sketch : "/"}
                                     className="rounded-xl w-full h-auto"
                                     width="365"
                                     height="300"
@@ -164,12 +217,12 @@ export default function ProductDetail() {
 
                         <div className="show-member h-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 items-center gap-8 md:gap-4 mb-4 place-content-center">
 
-                            {consults.map((consult: any) => (
+                            {consults.map((consult: ConsultantInfo) => (
 
                                 <div key={consult?.ID} className="personal relative mx-auto">
                                     <a href={`/members/${consult?.ID}`}>
                                         <Image
-                                            src={`/images/entreprenuer/Koyori_${consult?.businessinfo?.DataYear}/Profile/${consult?.picture}` || "/images/default.png"}
+                                            src={isValidUrl(consult?.picture) ? consult?.picture : "/"}
                                             className="rounded-3xl border-4 border-white"
                                             width="177"
                                             height="165"
