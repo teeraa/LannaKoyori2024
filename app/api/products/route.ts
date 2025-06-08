@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { writeFile } from "fs/promises";
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,13 +19,13 @@ export async function GET(req: NextRequest) {
     let page = req.nextUrl.searchParams.get("page");
     const order = req.nextUrl.searchParams.get("orderBy");
 
-    const orderBy = order === 'desc' ? 'desc' : 'asc';
+    const orderBy = order === "desc" ? "desc" : "asc";
 
     if (!page) {
-      page = "1"
+      page = "1";
     }
     if (!limit) {
-      limit = "12"
+      limit = "12";
     }
 
     const offset = (Number(page) - 1) * Number(limit);
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
         businessinfo: true, // Join ตาราง businessinfo
       },
       orderBy: {
-        ID: orderBy
+        ID: orderBy,
       },
       take: Number(limit),
       skip: offset,
@@ -74,45 +74,27 @@ export async function GET(req: NextRequest) {
       ID: product.ID,
       productName: product.productName,
       price: product.price,
-      material: [
-        product.materialMain,
-        product.materialSub1,
-        product.materialSub2,
-        product.materialSub3
-      ],
-      bussinessID: product.bussinessID,
       image: product.image,
-      sketch: product.sketch,
-      description: product.description,
-      color: product.color,
-      size: product.size,
-      businessinfo: {
-        ID: product.businessinfo?.ID,
-        DataYear: product.businessinfo?.DataYear,
-        BusiTypeId: product.businessinfo?.BusiTypeId,
-        BussinessName: product.businessinfo?.BussinessName,
-        BussinessNameEng: product.businessinfo?.BussinessNameEng,
-        AddressThai: product.businessinfo?.AddressThai,
-        Latitude: product.businessinfo?.Latitude,
-        Longtitude: product.businessinfo?.Longtitude,
-        picture: product.businessinfo?.picture,
-        banner: product.businessinfo?.banner,
-      },
+      materialMain: product.materialMain,
+      BusinessID: product.businessinfo?.ID,
+      BusiTypeId: product.businessinfo?.BusiTypeId,
+      BussinessName: product.businessinfo?.BussinessName,
+      BussinessNameEng: product.businessinfo?.BussinessNameEng,
+
       meta: {
         page: Number(page),
         limit: Number(limit),
         total_pages: totalPages,
         totalData: allData,
-      }
-    })
-    )
+      },
+    }));
 
     return NextResponse.json(result, {
       headers: {
-        'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      }
+        "Access-Control-Allow-Origin": "*", // In production, set this to your specific domain
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
     });
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -129,9 +111,9 @@ export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
 }
@@ -155,9 +137,9 @@ export async function POST(req: NextRequest) {
 
   // Add CORS headers to all responses
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 
   const cleanedBusinessName = BussinessNameEng?.toString()
@@ -207,14 +189,14 @@ export async function POST(req: NextRequest) {
       const mainFilePath = `entreprenuer/Koyori_${DataYear}/Products/${mainFilename}`;
 
       const { data: mainData, error: mainError } = await supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .upload(mainFilePath, imageFile, {
-          cacheControl: '3600',
-          upsert: true
+          cacheControl: "3600",
+          upsert: true,
         });
 
       if (mainError) {
-        console.error('Supabase main image upload error:', mainError);
+        console.error("Supabase main image upload error:", mainError);
         return NextResponse.json(
           { error: "Failed to upload main image" },
           { status: 500, headers: corsHeaders }
@@ -223,7 +205,7 @@ export async function POST(req: NextRequest) {
 
       // Get public URL for main image
       const { data: mainUrlData } = supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .getPublicUrl(mainFilePath);
 
       imagePath = mainUrlData.publicUrl;
@@ -234,14 +216,14 @@ export async function POST(req: NextRequest) {
       const mainFilePath = `entreprenuer/Koyori_${DataYear}/Sketch/${mainFilename}`;
 
       const { data: mainData, error: mainError } = await supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .upload(mainFilePath, sketchFile, {
-          cacheControl: '3600',
-          upsert: true
+          cacheControl: "3600",
+          upsert: true,
         });
 
       if (mainError) {
-        console.error('Supabase main image upload error:', mainError);
+        console.error("Supabase main image upload error:", mainError);
         return NextResponse.json(
           { error: "Failed to upload main image" },
           { status: 500, headers: corsHeaders }
@@ -250,7 +232,7 @@ export async function POST(req: NextRequest) {
 
       // Get public URL for main image
       const { data: mainUrlData } = supabase.storage
-        .from('koyori-image')
+        .from("koyori-image")
         .getPublicUrl(mainFilePath);
 
       sketchPath = mainUrlData.publicUrl;
@@ -266,31 +248,34 @@ export async function POST(req: NextRequest) {
           const additionalFilename = `${timestamp}-${image.name}`;
           const additionalFilePath = `entreprenuer/Koyori_${DataYear}/Products/${additionalFilename}`;
 
-          const { data: additionalData, error: additionalError } = await supabase.storage
-            .from('koyori-image')
-            .upload(additionalFilePath, image, {
-              cacheControl: '3600',
-              upsert: true
-            });
+          const { data: additionalData, error: additionalError } =
+            await supabase.storage
+              .from("koyori-image")
+              .upload(additionalFilePath, image, {
+                cacheControl: "3600",
+                upsert: true,
+              });
 
           if (additionalError) {
-            console.error('Supabase additional image upload error:', additionalError);
+            console.error(
+              "Supabase additional image upload error:",
+              additionalError
+            );
             // Continue with other images even if one fails
             continue;
           }
 
           // Get public URL for additional image
           const { data: additionalUrlData } = supabase.storage
-            .from('koyori-image')
+            .from("koyori-image")
             .getPublicUrl(additionalFilePath);
 
           uploadedImageUrls.push(additionalUrlData.publicUrl);
         }
       }
     }
-
   } catch (error) {
-    console.error('Failed to upload images:', error);
+    console.error("Failed to upload images:", error);
     return NextResponse.json(
       { error: "Failed to upload images" },
       { status: 500, headers: corsHeaders }
@@ -360,14 +345,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({
-      message: "บันทึกข้อมูลเรียบร้อยแล้ว",
-      product: newProduct,
-      additionalImages: uploadedImageUrls.length,
-    }, { headers: corsHeaders });
-
+    return NextResponse.json(
+      {
+        message: "บันทึกข้อมูลเรียบร้อยแล้ว",
+        product: newProduct,
+        additionalImages: uploadedImageUrls.length,
+      },
+      { headers: corsHeaders }
+    );
   } catch (error) {
-    console.error('Database creation error:', error);
+    console.error("Database creation error:", error);
     return NextResponse.json(
       { error: "Failed to create product" },
       { status: 500, headers: corsHeaders }
