@@ -74,8 +74,6 @@ export async function GET(req: NextRequest) {
       orderBy: {
         ID: orderBy,
       },
-      take: Number(limit),
-      skip: offset,
     });
 
     // ดึงข้อมูลจาก consultantinfo
@@ -84,8 +82,6 @@ export async function GET(req: NextRequest) {
       orderBy: {
         ID: orderBy,
       },
-      take: Number(limit),
-      skip: offset,
     });
 
     // รวมข้อมูลจากทั้งสองตาราง
