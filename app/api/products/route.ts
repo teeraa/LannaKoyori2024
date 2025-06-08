@@ -67,15 +67,6 @@ export async function GET(req: NextRequest) {
       skip: offset,
     });
 
-    const totalCount = await prisma.businessinfo.count({
-      where: whereClause,
-      orderBy: {
-        ID: orderBy,
-      },
-      take: Number(limit),
-      skip: offset,
-    })
-
     const allData = await prisma.businessinfo.count();
     const totalPages = Math.ceil(allData / Number(limit));
 
@@ -110,8 +101,8 @@ export async function GET(req: NextRequest) {
       meta: {
         page: Number(page),
         limit: Number(limit),
-        total_rows: totalCount,
         total_pages: totalPages,
+        totalData: allData,
       }
     })
     )
