@@ -67,25 +67,27 @@ export async function GET(req: NextRequest) {
     const allData = await prisma.businessinfo.count();
     const totalPages = Math.ceil(allData / Number(limit));
 
-    const result = data.map((business) => ({
-      payload: {
-        BusinessID: business.ID,
-        BussinessName: business.BussinessName,
-        BussinessNameEng: business.BussinessNameEng,
-        AddressThai: business.AddressThai,
-        Latitude: business.Latitude,
-        Longtitude: business.Longtitude,
-        Year: business.DataYear,
-        picture: business.picture,
-        ProvinceT: business.ProvinceT,
-      },
+    const result = {
+      payload:
+        data.map((business) => ({
+          BusinessID: business.ID,
+          BussinessName: business.BussinessName,
+          BussinessNameEng: business.BussinessNameEng,
+          AddressThai: business.AddressThai,
+          Latitude: business.Latitude,
+          Longtitude: business.Longtitude,
+          Year: business.DataYear,
+          picture: business.picture,
+          ProvinceT: business.ProvinceT,
+        })),
       meta: {
-        page: Number(page),
-        limit: Number(limit),
-        totalPages: totalPages,
-        totalData: allData,
-      },
-    }));
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: totalPages,
+      totalData: allData,
+    }
+    };
+    
 
     return NextResponse.json(result, {
       headers: {

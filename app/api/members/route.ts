@@ -81,8 +81,8 @@ export async function GET(req: NextRequest) {
     const allData = await prisma.businessinfo.count();
     const totalPages = Math.ceil(allData / Number(limit));
 
-    const result = uniqueData.map((member) => ({
-      payload: {
+    const result = {
+      payload: uniqueData.map((member) => ({
         ID: member.ID,
         BusinessID: member.BusinessID,
         NameThai: member.NameThai,
@@ -97,14 +97,14 @@ export async function GET(req: NextRequest) {
         Year: member.Year,
         picture: member.picture,
         banner: "banner" in member ? member.banner : null,
-      },
+      })),
       meta: {
         page: Number(page),
         limit: Number(limit),
         total_pages: totalPages,
         totalData: allData,
       },
-    }));
+    };
 
     // const members = await prisma.personinfo.findMany({
     //     where: whereClause,
