@@ -32,12 +32,12 @@ export interface Material {
   Material: string
 }
 
-// Corrected interface to match the API response for business types
 interface BusinessType {
   BusiTypeId: number
   BusiTypeName_TH: string
   BusiTypeName_EN: string
 }
+
 export default function ProductList() {
   const router = useRouter()
   const pathname = usePathname()
@@ -54,8 +54,7 @@ export default function ProductList() {
   const [searchbtn_moblie, setsearchbtn_moblie] = useState(false)
 
   const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null)
-  // State now holds the numeric ID
-  const [selectedType, setSelectedType] = useState<number | null>(null)
+  const [selectedType, setSelectedType] = useState<string | null>(null) // Changed to string for BusiTypeName_TH
 
   const [error, setError] = useState<string | null>(null)
   const [isInitialLoading, setIsInitialLoading] = useState(true)
@@ -111,7 +110,7 @@ export default function ProductList() {
     async (
       currentSearch: string,
       currentMaterial: string | null,
-      currentBusiTypeId: number | null, // Parameter is the ID
+      currentBusiTypeName: string | null, // Changed to BusiTypeName_TH
       page: number,
       limit: number,
       isInitialProductFetch = false,
@@ -124,8 +123,7 @@ export default function ProductList() {
         const params: Record<string, any> = { page, limit }
         if (currentSearch) params.search = currentSearch
         if (currentMaterial) params.material = currentMaterial
-        // The parameter NAME is 'businessType', but the VALUE is the numeric ID
-        if (currentBusiTypeId) params.businessType = currentBusiTypeId
+        if (currentBusiTypeName) params.businessType = currentBusiTypeName // Send BusiTypeName_TH
 
         const response = await axios.get("/api/products", { params })
 
@@ -135,7 +133,6 @@ export default function ProductList() {
         setFilteredProducts(Array.isArray(productsPayload) ? productsPayload : [])
 
         if (metaPayload && typeof metaPayload.totalData === "number" && typeof metaPayload.total_pages === "number") {
-          // ใช้ total_pages ตามที่ API ส่งมา
           setMeta({
             page: metaPayload.page,
             limit: metaPayload.limit,
@@ -165,10 +162,9 @@ export default function ProductList() {
   )
 
   useEffect(() => {
-    // Read the 'businessType' parameter from the URL, as that's what we're setting
     const initialSearch = searchParams.get("search") || ""
     const initialMaterial = searchParams.get("material") || null
-    const initialType = searchParams.get("businessType") ? Number(searchParams.get("businessType")) : null
+    const initialType = searchParams.get("businessType") || null // Now BusiTypeName_TH
 
     setSearch(initialSearch)
     setSelectedMaterial(initialMaterial)
@@ -255,7 +251,7 @@ export default function ProductList() {
           }
         }
       })
-;
+
       if (pageNeedsReset) {
         if (!("page" in newParamsUpdates) || isLimitChange) {
           currentParams.set("page", "1")
@@ -293,9 +289,9 @@ export default function ProductList() {
     updateURLParams({ material: newMaterial, page: 1 })
   }
 
-  const handleBusinessTypeFilter = (typeIdClicked: number) => {
-    const newTypeId = selectedType === typeIdClicked ? null : typeIdClicked
-    updateURLParams({ businessType: newTypeId, page: 1 })
+  const handleBusinessTypeFilter = (typeNameClicked: string) => {
+    const newTypeName = selectedType === typeNameClicked ? null : typeNameClicked
+    updateURLParams({ businessType: newTypeName, page: 1 })
   }
 
   function isValidUrl(str: string) {
@@ -323,8 +319,7 @@ export default function ProductList() {
       <div className="flex h-full max-h-full md:h-screen lg:h-screen overflow-hidden bg-white/75 border-none border-gray-200 md:border pt-12 lg:pt-[68px] md:pt-[68px]">
         {/* Filter Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 w-3/4 lg:w-1/4 h-full border-l no-scrollbar overflow-y-auto border-gray-200 bg-white transform transition-transform duration-300 ease-in-out z-50 md:z-20 lg:static lg:translate-x-0 ${FilterToggle ? "translate-x-0 w-full" : "-translate-x-full"
-            }`}
+          className={`fixed inset-y-0 left-0 w-3/4 lg:w-1/4 h-full border-l no-scrollbar overflow-y-auto border-gray-200 bg-white transform transition-transform duration-300 ease-in-out z-50 md:z-20 lg:static lg:translate-x-0 ${FilterToggle ? "translate-x-0 w-full" : "-translate-x-full"}`}
         >
           <div className="sticky top-0 inset-x-0 z-20 px-4 py-[11px] text-center border-y border-gray-200 bg-gray-50 flex items-center justify-between lg:justify-center md:justify-between">
             <h1 className="text-3xl font-medium text-gray-600">กรองข้อมูล</h1>
@@ -394,11 +389,10 @@ export default function ProductList() {
                         </li>
                       ))
                       : businessType.map((type: BusinessType) => (
-                        // Logic here is correct: use BusiTypeId for key, click handler, and selection check
                         <li key={type.BusiTypeId}>
                           <button
-                            onClick={() => handleBusinessTypeFilter(type.BusiTypeId)}
-                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedType === type.BusiTypeId
+                            onClick={() => handleBusinessTypeFilter(type.BusiTypeName_TH)}
+                            className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedType === type.BusiTypeName_TH
                                 ? "bg-blue-500 text-white"
                                 : "bg-white hover:bg-gray-200 text-gray-800"
                               }`}
@@ -416,10 +410,10 @@ export default function ProductList() {
 
         {/* Main Content */}
         <main
-          className={`w-screen flex-1  h-full overflow-y-auto relative no-scrollbar top-[-2px] lg:top-0 md:top-0 transform duration-300 ease-in-out md:border-x border-gray-200 `}
+          className={`w-screen flex-1 h-full overflow-y-auto relative no-scrollbar top-[-2px] lg:top-0 md:top-0 transform duration-300 ease-in-out md:border-x border-gray-200`}
         >
-          <div className="sticky top-0  flex-1 overflow-y-auto bg-white/75 backdrop-blur-m z-20  border-none md:border-y border-gray-200 ">
-            <div className="bg-gray-50 flex justify-center items-center h-full py-2 px-2 md:px-4 border-y border-gray-200 rounded-none w-full ">
+          <div className="sticky top-0 flex-1 overflow-y-auto bg-white/75 backdrop-blur-m z-20 border-none md:border-y border-gray-200">
+            <div className="bg-gray-50 flex justify-center items-center h-full py-2 px-2 md:px-4 border-y border-gray-200 rounded-none w-full">
               <button
                 className="lg:hidden md:block bg-white text-gray-500 py-1 px-1 rounded-md mr-2 border border-gray-300"
                 onClick={toggleSidebar}
@@ -456,8 +450,8 @@ export default function ProductList() {
                 แสดงผลลัพธ์สำหรับ&nbsp;"
                 <span className="font-medium text-blue-950">{search ? search : "ค้นหาผลิตภัณฑ์"}</span>"
               </h1>
-              <div className="flex justify-center items-center gap-2 ">
-                <IoBagOutline className="text-gray-600 " />
+              <div className="flex justify-center items-center gap-2">
+                <IoBagOutline className="text-gray-600" />
                 <p className="font-light text-gray-600">ค้นพบ</p>
                 {!shouldShowContentLoading ? (
                   <h1 className="text-gray-600 font-light">{meta.totalData || 0}</h1>
@@ -510,7 +504,7 @@ export default function ProductList() {
               <div className="px-4">
                 {error && <p className="text-red-500 text-center py-4">{error}</p>}
                 {!error && productsToDisplay.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0 ">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center py-4 px-16 md:px-0">
                     {productsToDisplay.map((product: Product) => (
                       <ProductCard
                         key={product.ID}
@@ -531,7 +525,7 @@ export default function ProductList() {
           )}
 
           {!shouldShowContentLoading && productsToDisplay.length > 0 ? (
-            <div className=" sticky bottom-0 w-full bg-white px-4">
+            <div className="sticky bottom-0 w-full bg-white px-4">
               <Pagination
                 currentPage={currentPage}
                 pageSize={pageSize}

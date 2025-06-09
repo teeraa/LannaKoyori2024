@@ -13,7 +13,7 @@ const supabase = createClient(
 export async function GET(req: NextRequest) {
   try {
     const material = req.nextUrl.searchParams.get("material");
-    const businessType = req.nextUrl.searchParams.get("businessType");
+    const businessType = req.nextUrl.searchParams.get("businessType"); // Now expects BusiTypeName_TH
     const search = req.nextUrl.searchParams.get("search");
     let limit = req.nextUrl.searchParams.get("limit");
     let page = req.nextUrl.searchParams.get("page");
@@ -48,11 +48,30 @@ export async function GET(req: NextRequest) {
     }
 
     if (businessType) {
-      whereClause.AND.push({
-        businessinfo: {
-          BusiTypeId: Number(businessType),
+      // Find the BusiTypeId based on BusiTypeName_TH
+      const businessTypeRecord = await prisma.businesstype.findFirst({
+        where: {
+          BusiTypeName_TH: businessType,
+        },
+        select: {
+          BusiTypeId: true,
         },
       });
+
+      if (businessTypeRecord) {
+        whereClause.AND.push({
+          businessinfo: {
+            BusiTypeId: businessTypeRecord.BusiTypeId,
+          },
+        });
+      } else {
+        // If no matching business type is found, return empty results
+        whereClause.AND.push({
+          businessinfo: {
+            BusiTypeId: -1, // Invalid ID to return no results
+          },
+        });
+      }
     }
 
     const data = await prisma.products.findMany({
@@ -64,7 +83,7 @@ export async function GET(req: NextRequest) {
         materialSub3: true,
         businessinfo: {
           include: {
-            businesstype: true, // join ไปที่ businesstype ผ่าน businessinfo
+            businesstype: true,
           },
         },
       },
