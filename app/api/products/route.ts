@@ -62,7 +62,11 @@ export async function GET(req: NextRequest) {
         materialSub1: true,
         materialSub2: true,
         materialSub3: true,
-        businessinfo: true,
+        businessinfo: {
+          include: {
+            businesstype: true, // join ไปที่ businesstype ผ่าน businessinfo
+          },
+        },
       },
       orderBy: {
         ID: orderBy,
@@ -86,6 +90,7 @@ export async function GET(req: NextRequest) {
         materialMain: product.materialMain,
         BusinessID: product.businessinfo?.ID,
         BusiTypeId: product.businessinfo?.BusiTypeId,
+        BusinessType: product.businessinfo?.businesstype?.BusiTypeName_TH,
         BussinessName: product.businessinfo?.BussinessName,
         BussinessNameEng: product.businessinfo?.BussinessNameEng,
       })),
@@ -114,7 +119,6 @@ export async function GET(req: NextRequest) {
     await prisma.$disconnect();
   }
 }
-
 
 export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
