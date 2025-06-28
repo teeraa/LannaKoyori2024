@@ -169,7 +169,7 @@ export default function MembersList() {
       if (gender) params.gender = gender
       if (searchTerm) params.search = searchTerm
 
-      const response = await axios.get("/api/members", { params }) 
+      const response = await axios.get("/api/members", { params })
       const newMeta = response.data.meta
       const fetchedMembers = response.data.payload
 
@@ -210,7 +210,7 @@ export default function MembersList() {
 
   useEffect(() => {
     const roleFromUrl = searchParams.get("roleThai")
-    const yearFromUrl = searchParams.get("Year") 
+    const yearFromUrl = searchParams.get("Year")
     const nationFromUrl = searchParams.get("nationality")
     const genderFromUrl = searchParams.get("gender")
     const searchFromUrl = searchParams.get("search")
@@ -225,7 +225,7 @@ export default function MembersList() {
       let isThisTheVeryFirstFetch = false
       if (!initialFetchDone.current) {
         isThisTheVeryFirstFetch = true
-        initialFetchDone.current = true 
+        initialFetchDone.current = true
       }
 
       fetchMembers(
@@ -365,20 +365,20 @@ export default function MembersList() {
                 <ul className="mt-2 flex flex-wrap gap-2 justify-start">
                   {shouldShowFilterLoading
                     ? Array.from({ length: GenderOptions.length }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : GenderOptions.map((item) => (
-                        <li key={item}>
-                          <button
-                            onClick={() => applyFilter("gender", item)}
-                            className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedGender === item ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
-                          >
-                            {item}
-                          </button>
-                        </li>
-                      ))}
+                      <li key={item}>
+                        <button
+                          onClick={() => applyFilter("gender", item)}
+                          className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedGender === item ? "bg-blue-950 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
+                        >
+                          {item}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -399,20 +399,20 @@ export default function MembersList() {
                 <ul className="mt-2 flex flex-wrap gap-2 justify-start overflow-y-auto">
                   {shouldShowFilterLoading
                     ? Array.from({ length: RoleThaiOptions.length }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-28 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-28 h-8"></div>
+                      </li>
+                    ))
                     : RoleThaiOptions.map((item) => (
-                        <li key={item}>
-                          <button
-                            onClick={() => applyFilter("roleThai", item)}
-                            className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedRole === item ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
-                          >
-                            {item}
-                          </button>
-                        </li>
-                      ))}
+                      <li key={item}>
+                        <button
+                          onClick={() => applyFilter("roleThai", item)}
+                          className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedRole === item ? "bg-blue-950 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
+                        >
+                          {item}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -433,20 +433,20 @@ export default function MembersList() {
                 <ul className="mt-2 flex flex-wrap gap-2 justify-start">
                   {shouldShowFilterLoading
                     ? Array.from({ length: NationOptions.length }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-24 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-24 h-8"></div>
+                      </li>
+                    ))
                     : NationOptions.map((item) => (
-                        <li key={item}>
-                          <button
-                            onClick={() => applyFilter("nationality", item)}
-                            className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedNation === item ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
-                          >
-                            {item}
-                          </button>
-                        </li>
-                      ))}
+                      <li key={item}>
+                        <button
+                          onClick={() => applyFilter("nationality", item)}
+                          className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedNation === item ? "bg-blue-950 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
+                        >
+                          {item}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -467,20 +467,20 @@ export default function MembersList() {
                 <ul className="mt-2 flex flex-wrap gap-2 justify-start">
                   {shouldShowFilterLoading
                     ? Array.from({ length: YearOptions.length }).map((_, index) => (
-                        <li key={index}>
-                          <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                        </li>
-                      ))
+                      <li key={index}>
+                        <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                      </li>
+                    ))
                     : YearOptions.map((item) => (
-                        <li key={item}>
-                          <button
-                            onClick={() => applyFilter("Year", item)}
-                            className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedYear === item ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
-                          >
-                            {item}
-                          </button>
-                        </li>
-                      ))}
+                      <li key={item}>
+                        <button
+                          onClick={() => applyFilter("Year", item)}
+                          className={`text-sm block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedYear === item ? "bg-blue-950 text-white" : "bg-white hover:bg-gray-200 text-gray-800"}`}
+                        >
+                          {item}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
@@ -508,7 +508,7 @@ export default function MembersList() {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-500 rounded-r-md hover:bg-blue-600"
+                  className="bg-blue-950 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-950 rounded-r-md hover:bg-blue-950/90"
                 >
                   {searchbtn_moblie ? (
                     <span className="flex justify-center items-center gap-2">
@@ -585,7 +585,7 @@ export default function MembersList() {
             </div>
           )}
 
-          {!shouldShowContentLoading && members.length > 0 && (
+          {!shouldShowContentLoading && members.length > 0 ? (
             <div className="sticky bottom-0 w-full bg-white px-4">
               <Pagination
                 currentPage={currentPage}
@@ -596,6 +596,17 @@ export default function MembersList() {
                 onChangeLimit={handleLimitChange}
               />
             </div>
+          ): (
+          <div className="sticky bottom-0 w-full bg-white px-4">
+            <Pagination
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalPages={meta.totalPages || 1}
+              totalItems={meta.totalData || 0}
+              onChangePage={handlePageChange}
+              onChangeLimit={handleLimitChange}
+            />
+          </div>
           )}
         </main>
       </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { VscTools } from "react-icons/vsc";
 
@@ -15,17 +16,22 @@ interface MemberCardProps {
 export default function MemberCard({ NameThai, Role, image, memberID }: MemberCardProps) {
   const router = useRouter()
 
-  const handleMemberLink = () => {
-    if (memberID) router.push(`/members/${memberID}`)
+  const handlePrefetch = () => {
+    if (memberID) {
+      router.prefetch(`/members/${memberID}`)
+    }
   }
 
   const imageSrc = image || "/placeholder.svg?width=200&height=200"
   const blurSrc = "/placeholder.svg?width=20&height=20"
+  const memberUrl = `/members/${memberID}`
 
   return (
-    <div
-      className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full group" 
-      onClick={handleMemberLink}
+    <Link 
+      href={memberUrl}
+      prefetch={true}
+      onMouseEnter={handlePrefetch}
+      className="bg-white rounded-md hover:shadow-lg p-4 cursor-pointer shadow-md w-full group block transition-shadow duration-300"
     >
       <div className="rounded-md bg-white w-full">
         <div className="mx-auto w-full aspect-square max-w-[200px] overflow-hidden rounded-md">
@@ -51,6 +57,6 @@ export default function MemberCard({ NameThai, Role, image, memberID }: MemberCa
           </h2>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
