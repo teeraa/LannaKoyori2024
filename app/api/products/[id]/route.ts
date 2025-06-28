@@ -25,11 +25,10 @@ export async function GET(request: NextRequest) {
     const productinfoData = await prisma.products.findMany({
       where: { ID: productID },
       include: {
-        businessinfo: {
-          include: {
-            consultantinfo: true, // Include consultants for the business
-          },
-        }, // Join ตาราง businessinfo
+        businessinfo: true,
+        materialMain: true,
+        materialSub1: true,
+        materialSub2: true,
       },
     });
 
@@ -37,16 +36,16 @@ export async function GET(request: NextRequest) {
       ID: product.ID,
       productName: product.productName,
       price: product.price,
-      mainMaterial: product.mainMaterial,
-      subMaterial1: product.subMaterial1,
-      subMaterial2: product.subMaterial2,
-      subMaterial3: product.subMaterial3,
+      mainMaterial: product.materialMain?.Material,
+      subMaterial1: product.materialSub1?.Material,
+      subMaterial2: product.materialSub2?.Material,
       bussinessID: product.bussinessID,
       image: product.image,
       sketch: product.sketch,
       description: product.description,
       color: product.color,
       size: product.size,
+      link: product.link,
       businessinfo: {
         ID: product.businessinfo?.ID,
         DataYear: product.businessinfo?.DataYear,
@@ -58,20 +57,6 @@ export async function GET(request: NextRequest) {
         Longtitude: product.businessinfo?.Longtitude,
         picture: product.businessinfo?.picture,
         banner: product.businessinfo?.banner,
-        consultantinfo: product.businessinfo?.consultantinfo.map((consult) => ({
-          ID: consult.ID,
-          BusinessID: consult.BusinessID,
-          NameThai: consult.NameThai,
-          NameEng: consult.NameEng,
-          gender: consult.gender,
-          nationality: consult.nationality,
-          RoleThai: consult.RoleThai,
-          RoleEng: consult.RoleEng,
-          Year: consult.Year,
-          picture: consult.picture
-
-        })
-        )
       }
     })
     )
