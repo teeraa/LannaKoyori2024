@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
     try {
-        const businessID = req.nextUrl.searchParams.get("businessID");
+        const pathname = req.nextUrl.pathname
+        const businessID = pathname.split("/").pop()
         if (!businessID) {
             return NextResponse.json(
-                { error: "Missing 'material' parameter" },
+                { error: "Missing business id parameter" },
                 { status: 400 }
             );
         }
@@ -30,7 +31,30 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        return NextResponse.json(data, {
+        const allData = await prisma.consultantinfo.count({
+            where: whereClause,
+        });
+
+        const result = {
+            payload : 
+            data.map ((consult)=>({
+                ID: consult.ID,
+                BusinessID: consult.BusinessID,
+                NameThai: consult.NameThai,        
+                NameEng: consult.NameEng,
+                RoleThai: consult.RoleThai,
+                RoleEng: consult.RoleEng,
+                nationality: consult.nationality,
+                gender: consult.gender,
+                Year: consult.Year,
+                picture: consult.picture
+            })),
+            meta : {
+                totalData: allData
+            }
+        }
+
+        return NextResponse.json(result, {
             headers: {
                 'Access-Control-Allow-Origin': '*', // In production, set this to your specific domain
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

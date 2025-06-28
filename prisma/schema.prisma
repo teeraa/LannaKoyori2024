@@ -118,6 +118,7 @@ model products {
   design      String? @db.Text
   color       String? @db.Text
   size        String? @db.Text
+  link        String? @db.Text
 
   materialMain materials? @relation("mainMaterial", fields: [mainMaterial], references: [ID])
   materialSub1 materials? @relation("subMaterial1", fields: [subMaterial1], references: [ID])
