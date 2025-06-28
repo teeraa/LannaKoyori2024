@@ -268,24 +268,23 @@ export default function BusinessList() {
                     <ul className="mt-2 flex flex-wrap gap-4 overflow-y-auto justify-start mx-4 max-h-60">
                       {shouldShowFilterLoading
                         ? Array.from({ length: 9 }).map((_, index) => (
-                            <li key={index}>
-                              <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
-                            </li>
-                          ))
+                          <li key={index}>
+                            <div className="animate-pulse bg-gray-200 text-md block py-1 px-3 rounded-md border border-gray-300 w-20 h-8"></div>
+                          </li>
+                        ))
                         : provinces.map((province) => (
-                            <li key={province}>
-                              <button
-                                onClick={() => provinceFilter(province)}
-                                className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${
-                                  selectedProvince === province
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white hover:bg-gray-200 text-gray-800"
+                          <li key={province}>
+                            <button
+                              onClick={() => provinceFilter(province)}
+                              className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedProvince === province
+                                  ? "bg-blue-950 text-white"
+                                  : "bg-white hover:bg-gray-200 text-gray-800"
                                 }`}
-                              >
-                                {province}
-                              </button>
-                            </li>
-                          ))}
+                            >
+                              {province}
+                            </button>
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>
@@ -314,7 +313,7 @@ export default function BusinessList() {
                   />
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-500 rounded-r-md hover:bg-blue-600"
+                    className="bg-blue-950 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-950 rounded-r-md hover:bg-blue-950/90"
                   >
                     {searchbtn_moblie ? (
                       <span className="flex justify-center items-center gap-2">
@@ -391,7 +390,18 @@ export default function BusinessList() {
               </div>
             )}
 
-            {!shouldShowContentLoading && businesses.length > 0 && (
+            {!shouldShowContentLoading && businesses.length > 0 ? (
+              <div className="sticky bottom-0 w-full bg-white px-4">
+                <Pagination
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  totalPages={meta.totalPages || 1}
+                  totalItems={meta.totalData || 0}
+                  onChangePage={handlePageChange}
+                  onChangeLimit={handleLimitChange}
+                />
+              </div>
+            ) : (
               <div className="sticky bottom-0 w-full bg-white px-4">
                 <Pagination
                   currentPage={currentPage}

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import NavbarLogo from "../../public/images/korori-logo.png";
 import SidebarLogo from "../../public/images/koyori-logo-banner.png";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
@@ -10,13 +10,12 @@ import { IoClose } from "react-icons/io5";
 import { MdArrowUpward } from "react-icons/md";
 import GoogleTranslate from "./GoogleTranslate";
 
-
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,16 +31,16 @@ export default function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 
@@ -69,7 +68,7 @@ export default function Navbar() {
     { href: "/#about", label: "เกี่ยวกับ" },
     { href: "/products", label: "ผลิตภัณฑ์" },
     { href: "/businesses", label: "ร้านค้า" },
-    { href: `/members`, label: "สมาชิก" },
+    { href: "/members", label: "สมาชิก" },
     { href: "/sponsors", label: "ผู้สนับสนุน" },
     { href: "/location", label: "ที่ตั้งร้าน" },
     { href: "/#contact", label: "ติดต่อ" },
@@ -87,12 +86,12 @@ export default function Navbar() {
         <div className="lg:container md:container">
           <nav
             className={`${isMenuOpen
-              ? "bg-none"
-              : "bg-white lg:bg-transparent md:bg-transparent"
-              } container  mx-auto px-4 lg:px-0 md:px-0 md:py-0 lg:py-0 py-2 flex justify-end lg:justify-between md:justify-between items-center`}
+                ? "bg-none"
+                : "bg-white lg:bg-transparent md:bg-transparent"
+              } container mx-auto px-4 lg:px-0 md:px-0 md:py-0 lg:py-0 py-2 flex justify-end lg:justify-between md:justify-between items-center`}
           >
             <div className="hidden lg:block md:block">
-              <Link href="/">
+              <Link href="/" className="cursor-pointer">
                 <Image
                   src={NavbarLogo}
                   width={120}
@@ -109,18 +108,19 @@ export default function Navbar() {
                   <li key={href}>
                     <Link
                       href={href}
-                      className={`${
-                        pathname === href || pathname.startsWith(`${href}/`)
+                      prefetch={true}
+                      onMouseEnter={() => router.prefetch(href)}
+                      className={`${pathname === href || pathname.startsWith(`${href}/`)
                           ? "text-sm bg-blue-950 text-white rounded-full px-3 py-1"
                           : "text-sm hover:bg-gray-200 hover:text-blue-950 px-3 py-1 rounded-full"
-                        } transition-all duration-300`}
+                        } transition-all duration-300 cursor-pointer block`}
                     >
                       {label}
                     </Link>
-
                   </li>
                 ))}
               </ul>
+
               {/* <GoogleTranslate /> */}
             </div>
 
@@ -155,14 +155,13 @@ export default function Navbar() {
       >
         <div className="flex flex-col justify-center items-center space-y-4 p-4 h-full">
           <div className="block">
-            <Link href="/">
+            <Link href="/" onClick={closeMenu} className="cursor-pointer">
               <Image
                 src={SidebarLogo}
                 width={120}
                 height={120}
                 alt="Logo"
                 className="w-[120px] md:w-[120px] lg:w-[120px]"
-                onClick={closeMenu}
                 priority={true}
               />
             </Link>
@@ -171,12 +170,13 @@ export default function Navbar() {
             <ul key={href} className="w-1/2 flex justify-center items-center">
               <Link
                 href={href}
+                prefetch={true}
                 onClick={closeMenu}
-                className={`${
-                  pathname === href || pathname.startsWith(`${href}/`)
-                  ? "text-sm  bg-blue-950 text-white rounded-full px-3 py-2"
-                  : "text-sm hover:bg-gray-200 hover:text-blue-950 px-3 py-2 rounded-full"
-                  } transition-all duration-300 text-center w-full`}
+                onMouseEnter={() => router.prefetch(href)}
+                className={`${pathname === href || pathname.startsWith(`${href}/`)
+                    ? "text-sm bg-blue-950 text-white rounded-full px-3 py-2"
+                    : "text-sm hover:bg-gray-200 hover:text-blue-950 px-3 py-2 rounded-full"
+                  } transition-all duration-300 text-center w-full cursor-pointer block`}
               >
                 {label}
               </Link>

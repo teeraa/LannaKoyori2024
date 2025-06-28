@@ -12,6 +12,7 @@ import { VscSettings } from "react-icons/vsc"
 import { IoClose, IoBagOutline } from "react-icons/io5"
 import { IoIosSearch } from "react-icons/io"
 import axios from "axios"
+import Loading from "../loading"
 
 export interface Product {
   ID: number
@@ -355,7 +356,7 @@ export default function ProductList() {
                           <button
                             onClick={() => handleMaterialFilter(mat.Material)}
                             className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedMaterial === mat.Material
-                                ? "bg-blue-500 text-white"
+                                ? "bg-blue-950 text-white"
                                 : "bg-white hover:bg-gray-200 text-gray-800"
                               }`}
                           >
@@ -393,7 +394,7 @@ export default function ProductList() {
                           <button
                             onClick={() => handleBusinessTypeFilter(type.BusiTypeName_TH)}
                             className={`text-md block py-1 px-3 rounded-md border border-gray-300 font-light transition ${selectedType === type.BusiTypeName_TH
-                                ? "bg-blue-500 text-white"
+                                ? "bg-blue-950 text-white"
                                 : "bg-white hover:bg-gray-200 text-gray-800"
                               }`}
                           >
@@ -430,7 +431,7 @@ export default function ProductList() {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-500 rounded-r-md hover:bg-blue-600"
+                  className="bg-blue-950 text-white py-1 px-2 md:py-2 md:px-4 border border-blue-950 rounded-r-md hover:bg-blue-950/90"
                 >
                   {searchbtn_moblie ? (
                     <span className="flex justify-center items-center gap-2">
@@ -533,9 +534,21 @@ export default function ProductList() {
                 totalItems={meta.totalData || 0}
                 onChangePage={handlePageChange}
                 onChangeLimit={handleLimitChange}
+                
               />
             </div>
-          ) : null}
+           ) : (
+            <div className="sticky bottom-0 w-full bg-white px-4">
+              <Pagination
+                currentPage={currentPage}
+                pageSize={pageSize}
+                totalPages={meta.totalPages || 1}
+                totalItems={meta.totalData || 0}
+                onChangePage={handlePageChange}
+                onChangeLimit={handleLimitChange}
+              />
+            </div>
+          )} 
         </main>
       </div>
     </div>
