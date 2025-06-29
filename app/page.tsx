@@ -120,7 +120,7 @@ export default function Home({ }) {
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen={true}
-                    className="rounded-lg shadow-lg"
+                    className="rounded-lg "
                   ></iframe>
                 </div>
               </div>
@@ -258,10 +258,10 @@ export default function Home({ }) {
               {personals.map((personal: any, index) => (
                 <SwiperSlide className="my-4 flex justify-center" key={index}>
 
-                  <div className="bg-white pb-4 py-6 px-6 w-64 lg:w-72 md:w-72 h-[450px] drop-shadow-[0px_0px_10px_rgba(0,0,0,0.09)]  border-1 boderder border-gray-300 rounded-lg mx-auto overflow-hidden hover:drop-shadow-md duration-300 transition ease-in-out">
+                  <div className="bg-white pb-4 py-6 px-6 w-64 lg:w-72 md:w-72 h-[450px] drop-shadow-[0px_0px_10px_rgba(0,0,0,0.09)]  border-1 boderder border-gray-300 rounded-lg mx-auto overflow-hidden  duration-300 transition ease-in-out">
                     <div className="space-y-4">
                       <div className="w-96 h-10 bg-blue-950 rotate-45 absolute -right-40">
-                        <p className="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-1/2 rotate-60 text-center text-white text-2xl">{personal.year}</p>
+                        <p className="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-1/2 rotate-60 text-center text-white text-md md:text-2xl">{personal.year}</p>
                       </div>
                       <div className="mx-auto w-32 h-32 rounded-full overflow-hidden bg-gray-200 mb-4 relative">
                         <Image
@@ -326,7 +326,7 @@ export default function Home({ }) {
               <div className=" flex flex-col jstify-start items-start w-full md:w-1/4 gap-4 ">
                 {
                   contact.map((item: any) => (
-                    <div key={item.id} className="rounded-md shadow-md bg-base-500 p-4 items-center m-0 w-full bg-white ">
+                    <div key={item.id} className="rounded-md  bg-base-500 p-4 items-center m-0 w-full bg-white ">
                       <b className="text-3xl m-0 p-0 text-blue-950">{item.icon}</b>
                       <div className="">
                         <h4 className="text-gray-600 font-bold">{item.title}</h4>
