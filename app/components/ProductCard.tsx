@@ -77,7 +77,7 @@ export default function ProductCard({ productName, image, BusinessName, ID  ,pri
               <div className="flex items-center w-full">
                 <IoStorefrontOutline size={20} className="text-gray-400 mr-2" />
                 <div className="flex items-center justify-end border-l w-full border-gray-300">
-                  <p className="text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px]">
+                  <p className="pl-2 text-[14px] text-gray-400 m-0 text-end truncate max-w-[135px] md:max-w-[125px]">
                     {BusinessName || "ไม่ระบุ"}
                   </p>
                 </div>

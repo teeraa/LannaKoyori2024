@@ -1,11 +1,15 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AiOutlineLink } from "react-icons/ai";
 import Link from "next/link";
-import type { Product, ConsultantInfo } from "./_client";
+import { HiOutlineExternalLink } from "react-icons/hi";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import type { Product } from "./_client";
 import ConsultDetail from "./_ConsultDetial";
-
+import { IoCartOutline } from "react-icons/io5";
+import { FiShoppingBag } from "react-icons/fi";
+import { ProductDetailSkeleton } from "./Skeleton";
 interface ProductDetailProps {
   product: Product | null | undefined;
   isLoading: boolean;
@@ -28,158 +32,186 @@ export default function ProductDetail({ product, isLoading, isValidUrl }: Produc
     setImageLoadingStates(prev => ({ ...prev, [imageType]: false }));
   };
 
-  // Loading skeleton
-  if (isLoading && !product) {
-    return (
-      <div className="animate-pulse">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="h-[330px] w-[330px] bg-gray-300 rounded-md"></div>
-          <div className="col-span-2">
-            <div className="h-8 bg-gray-300 rounded mb-4"></div>
-            <div className="h-4 bg-gray-300 rounded mb-2"></div>
-            <div className="h-4 bg-gray-300 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+if (isLoading && !product) {
+  return <ProductDetailSkeleton />;
+}
 
   if (!product) {
-    return <div className="text-red-500">ไม่มีข้อมูลสินค้า</div>;
+    return <div className="text-red-500 text-center py-8">ไม่มีข้อมูลสินค้า</div>;
   }
 
+
   return (
-    <>
-      <div className="grid grid-cols-1 py-4 px-0">
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 overflow-hidden">
-          <div className="col-span-1 h-[450px] w-full">
+    <div className="">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <div className="relative bg-white/50 p-4 rounded-md overflow-hidden h-[400px] md:h-[400px]">
             {isValidUrl(product.image) && !imageErrors.main ? (
               <Image
                 src={product.image}
-                className="rounded-md w-full h-full object-cover"
-                width={330}
-                height={330}
+                className="w-full h-full object-cover p-4 rounded-md"
+                fill
                 alt={product.productName || "Product image"}
-                priority={true}
+                priority
                 onError={() => handleImageError('main')}
                 onLoad={() => handleImageLoad('main')}
               />
             ) : (
-              <div className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center">
-                <span className="text-gray-500">ไม่มีรูปภาพ</span>
+              <div className="w-full h-full bg-white/50 flex items-center justify-center">
+                <span className="text-gray-400">ไม่มีรูปภาพ</span>
               </div>
             )}
           </div>
-
-          <div className="justify-center col-span-2 border-1 rounded-md px-0 md:p-4 bg-white/50 z-10 border-gray-100">
-            <div className="flex items-center gap-2">
-              <div className="text-[24px] font-bold text-blue-950 text-wrap">
-                {product.productName || 'ไม่มีชื่อสินค้า'}
-              </div>
-              <span className="text-[14px] text-blue-500 bg-blue-100 px-4 py-[2px] rounded-md truncate w-fit text-center min-w-[40px]">
-                วัตถุดืบหลัก
-              </span>
-            </div>
-
-            {product.price && (
-              <div className="text-[20px] font-bold text-gray-600 mb-4">
-                ราคา : <span className="text-green-500">
-                  {product.price.toLocaleString()+" บาท"}
-                </span>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 gap-4 text-sm">
-              {product.color && (
-                <div>
-                  <span className="font-semibold">สี:</span> {product.color}
-                </div>
-              )}
-              {product.size && (
-                <div>
-                  <span className="font-semibold">ขนาด:</span> {product.size}
-                </div>
-              )}
-              {product.subMaterial1Id && product.subMaterial2Id && product.subMaterial3Id && (
-                <div>
-                  <span className="font-semibold">ขนาด:</span> {product.subMaterial1Id}, {product.subMaterial2Id}, {product.subMaterial3Id}
-                </div>
-              )}
-            </div>
-
-
-          </div>
-        </div>
-        {/* Gallery */}
-        <div className="border-1 more-show rounded-md px-0 md:p-4 bg-white/50 z-10 border-gray-100">
-          <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 ">
-            {[...Array(5)].map((_, index) => (
-              <a
-                href={isValidUrl(product.image) ? product.image : "#"}
-                data-fancybox="gallery"
-                key={product.image}
-                className=""
-              >
-                {isValidUrl(product.image) && !imageErrors.main ? (
-                  <Image
-                    src={product.image}
-                    className="w-40 h-40 rounded-md object-cover"
-                    width={97}
-                    height={97}
-                    alt={`${product.productName} gallery ${1}`}
-                  />
-                ) : (
-                  <div className="w-40 h-40 bg-gray-300 rounded-md flex items-center justify-center">
-                    <span className="text-xs text-gray-500">ไม่มีรูป</span>
-                  </div>
-                )}
-              </a>
-            ))}
-          </div>
-        </div>
-        {/* Business Info */}
-        <div className="show-detail py-4">
-          <div className="border-1 border-gray-100 rounded-md bg-white/50 md:p-4 px-4 mb-6">
-            <h1 className="text-2xl font-semibold text-gray-600 mb-2">รายละเอียดผลิตภัณฑ์</h1>
-            <div className="text-lg text-gray-600">
-              {product.description || 'ไม่มีรายละเอียดสินค้า'}
+          <div className="relative bg-white/50 rounded-md p-4">
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar" >
+              {[...Array(5)].map((_, index) => (
+                <a
+                  href={isValidUrl(product.image) ? product.image : "#"}
+                  data-fancybox="gallery"
+                  key={`${product.image}-${product.ID}-${index}`}
+                  className="snap-start flex-shrink-0 w-32 h-32"
+                >
+                  {isValidUrl(product.image) && !imageErrors.main ? (
+                    <Image
+                      src={product.image}
+                      className="w-32 h-32 rounded-lg object-cover hover:scale-105 transition-transform duration-300"
+                      width={128}
+                      height={128}
+                      alt={`${product.productName}`}
+                    />
+                  ) : (
+                    <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <span className="text-sm text-gray-400">ไม่มีรูป</span>
+                    </div>
+                  )}
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Sketch Section */}
-        <div className="show-sketch grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div className="sketch-detail bg-white/50 text-gray-600 rounded-xl px-4 md:p-4 col-span-3">
-            <h1 className="font-semibold text-2xl text-gray-600 mb-2">การออกแบบ</h1>
-            <div className="text-gray-600">
-              {product.description ?
-                `รายละเอียดการออกแบบ: ${product.description}` :
-                'ไม่มีข้อมูลการออกแบบ'
+        <div className="bg-white/50 rounded-md p-4 space-y-4">
+          <h1 className="text-3xl font-bold text-blue-950">{product.productName || 'ไม่มีชื่อสินค้า'}</h1>
+
+          <div className="space-y-4">
+            <div className="flex gap-2 text-[24px] text-gray-600">
+              ราคา :
+              {product.price ? (
+                <span className="text-green-600 font-semibold">{product.price.toLocaleString()} บาท</span>
+              ) : (
+                <span className="text-red-500">สินค้าหมด</span>
+              )
               }
             </div>
-          </div>
 
-          <div className="sketch-image col-span-2 flex justify-end">
-            {isValidUrl(product.sketch) && !imageErrors.sketch ? (
+            <div className="text-[18px] text-gray-600 flex items-center gap-2">
+              ร้าน :
+              <Link
+                href={`/businesses/${product.bussinessID}`}
+                className="flex items-center gap-2 text-blue-950 hover:underline underline-offset-4 transition-colors"
+              >
+                {" "}<span className="font-medium flex items-center gap-1">{product.businessinfo.BussinessName} <HiOutlineExternalLink size={18} /></span>
+              </Link>
+            </div>
+
+            <div className="text-[18px] text-gray-600 flex items-center gap-2">
+              ปี : <span>{product.businessinfo.DataYear}</span>
+            </div>
+
+
+            <div className="flex flex-wrap gap-2 text-[18px] border-b border-gray-200 pb-4">
+              <span className="text-gray-600 font-medium">วัสดุ : </span>
+              {product.mainMaterial && (
+                <span className="text-sm text-blue-500 bg-blue-100 px-3 py-1 rounded-md">
+                  {product.mainMaterial}
+                </span>
+              )}
+              {product.subMaterial1 && (
+                <span className="text-sm text-sky-500 bg-sky-100 px-3 py-1 rounded-md">
+                  {product.subMaterial1}
+                </span>
+              )}
+              {product.subMaterial2 && (
+                <span className="text-sm text-sky-500 bg-sky-100 px-3 py-1 rounded-md">
+                  {product.subMaterial2}
+                </span>
+              )}
+              {product.subMaterial3 && (
+                <span className="text-sm text-sky-500 bg-sky-100 px-3 py-1 rounded-md">
+                  {product.subMaterial3}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-row gap-4 text-[18px]">
+              <div className="text-gray-600 w-full">
+                <span className="font-medium">สี : </span>
+                {product.color ? (
+                  <span className="">{product.color}</span>
+                ) : (
+                  <span className="">-</span>
+                )
+                }
+              </div>
+              <div className="text-gray-600 w-full">
+                <span className="font-medium">ขนาด : </span>
+                {product.size ? (
+                  <span className="">{product.size}</span>
+                ) : (
+                  <span className="">-</span>
+                )
+                }
+              </div>
+            </div>
+
+            <Link
+              href={product.link || "#"}
+              className={`flex justify-center items-center gap-2 ${product.link ? "bg-blue-950 text-white hover:bg-blue-950/90 " : "bg-gray-300 text-gray-400 cursor-default"} w-full px-6 py-2 rounded-lg  transition-colors`}
+            >
+              <FiShoppingBag className="w-5 h-5" /> <span>สนใจสั่งซื้อ</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 bg-white/50 rounded-md">
+             <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40 rounded-t-md">
+            <h2 className="text-xl sm:text-2xl font-light text-blue-950">รายละเอียดผลิตภัณฑ์</h2>
+          </div>
+        <p className="text-gray-600 leading-relaxed p-4">{product.description || 'ไม่มีรายละเอียดสินค้า'}</p>
+      </div>
+
+      {/* Design Section */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-4 rounded-md">
+        <div className="md:col-span-3 bg-white/50 rounded-md">
+          <div className="p-4 bg-white/30 backdrop-blur-md border-b border-gray-200/40 rounded-t-md">
+            <h2 className="text-xl sm:text-2xl font-light text-blue-950">การออกแบบ</h2>
+          </div>
+          {/* <h2 className="text-[20px] text-blue-950 mb-4">การออกแบบ</h2> */}
+          <p className="text-gray-600 leading-relaxed p-4">
+            {product.description ? `รายละเอียดการออกแบบ: ${product.description}` : 'ไม่มีข้อมูลการออกแบบ'}
+          </p>
+        </div>
+        <div className="md:col-span-2">
+          {isValidUrl(product.sketch) && !imageErrors.sketch ? (
+            <div className="bg-white/50 rounded-md p-4">
               <Image
                 src={product.sketch}
-                className="rounded-xl w-full h-auto object-cover"
+                className="w-full h-auto rounded-md object-cover"
                 width={365}
                 height={300}
                 alt="Product sketch"
                 onError={() => handleImageError('sketch')}
                 onLoad={() => handleImageLoad('sketch')}
               />
-            ) : (
-              <div className="w-full h-[300px] bg-gray-300 rounded-xl flex items-center justify-center">
-                <span className="text-gray-500">ไม่มีภาพร่าง</span>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="w-full h-[300px] bg-gray-100 rounded-2xl flex items-center justify-center">
+              <span className="text-gray-400">ไม่มีภาพร่าง</span>
+            </div>
+          )}
         </div>
-
-
       </div>
-    </>
+    </div>
   );
 }

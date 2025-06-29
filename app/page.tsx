@@ -11,18 +11,50 @@ import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import GoogleTranslate from "./components/GoogleTranslate";
 
+import Marquee from "react-fast-marquee";
 
+const SponsorImage = [
+  { id: 1, image: "/images/worchor.png", alt: "sponsor1" },
+  { id: 2, image: "/images/high_education.png", alt: "sponsor2" },
+  { id: 3, image: "/images/otop.png", alt: "sponsor3" },
+  { id: 4, image: "/images/develop_human.png", alt: "sponsor4" },
+  { id: 5, image: "/images/pbs.png", alt: "sponsor5" },
+  { id: 6, image: "/images/cea.png", alt: "sponsor6" },
+  { id: 7, image: "/images/yip.png", alt: "sponsor7" },
+  { id: 8, image: "/images/lanna_culture.png", alt: "sponsor8" },
+  { id: 9, image: "/images/rmutl.png", alt: "sponsor9" },
+];
+function SponsorMarquee() {
+  return (
+    <div className="flex flex-row gap-12 ml-12">
+      {SponsorImage.map((sponsor) => (
+        <div
+          key={sponsor.id}
+          className="w-20 h-20 md:w-32 md:h-32 flex justify-center items-center overflow-hidden"
+        >
+          <Image
+            src={sponsor.image}
+            width={160}
+            height={160}
+            alt={sponsor.alt}
+            quality={100}
+            priority={true}
+            className="object-center w-full h-full object-contain flex justify-center items-center"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Home({ }) {
   return (
     <>
       {/* <main className="main relative bg-gradient-to-b from-white via-gray-100 to-white"> */}
       <main className="bg-white relative">
-        <div
-          className="w-full h-screen lg:h-screen md:h-screen bg-no-repeat bg-cover md:bg-fixed bg-center relative"
-        >
+        <div className="w-full h-screen lg:h-[60vh] md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center relative" >
           <div
-            className="absolute w-full h-screen lg:h-screen md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center"
+            className="absolute w-full h-screen lg:h-[70vh] md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center"
             style={{
               backgroundImage:
                 "linear-gradient(to bottom, rgba(255,255,255,1), rgba(255, 255, 255, 0.7), rgba(255,255,255,1)), url('/images/banner.jpg')",
@@ -45,13 +77,13 @@ export default function Home({ }) {
                   <h1 className="text-2xl lg:text-5xl md:text-3xl text-center lg:text-start  font-bold  text-red-600 mb-0 lg:mb-4 md:mb-4">
                     Lanna-Koyori Project
                   </h1>
-                  <p className="text-sm lg:text-xl md:text-xl text-center text-medium lg:text-start text-lg text-gray-600">
+                  <p className="text-sm lg:text-xl md:text-xl text-center text-medium lg:text-start text-gray-600">
                     Koyori
                     เป็นโครงการที่มีนักออกแบบทั้งชาวญี่ปุ่นและชาวไทยได้ร่วมมือกับช่างฝีมือจาก
                     8
                     จังหวัดทางภาคเหนือของประเทศไทยเพื่อพัฒนาคุณภาพงานหัตถกรรมด้วยการผสมผสานเทคนิคแบบดั้งเดิมเข้ากับการออกแบบที่สร้างสรรค์แล้วประดิษฐ์เป็นงานหัตถกรรมใหม่
                   </p>
-                  
+
                 </div>
 
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
@@ -62,7 +94,7 @@ export default function Home({ }) {
                   <div className="w-96 h-96 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-red-500 rounded-[60%] blur-3xl opacity-30 transform scale-80 rotate-[0deg] md:rotate-[140deg]">
                   </div>
                 </div>
-            
+
                 <div className="relative w-3/4 lg:w-1/3 md:w-1/2">
                   <div className="flex justify-center lg:justify-end md:justify-center">
                     <Image
@@ -77,16 +109,77 @@ export default function Home({ }) {
               </div>
             </div>
           </div>
+          <div className="relative z-10 pb-8 -top-20 md:top-5 lg:-top-24">
+            <div className="flex justify-center">
+              <div className="w-full max-w-[300px] md:max-w-lg lg:max-w-2xl bg-white/40 p-4 rounded-md">
+                <div className="aspect-video">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/vWvjqOVJOio?autoplay=1&mute=1"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen={true}
+                    className="rounded-lg shadow-lg"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
 
-        <div className="container">
+        <div className="container flex items-center my-4 pt-28 md:pt-0 lg:pt-[350px]">
+          
+        </div>
+        <div className="bg-white p-0 h-full">
+        <div className="container flex items-center py-4">
+            <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:mr-4 lg:mr-4 mr-4 text-blue-950">
+            ผู้สนับสนุน
+          </h1>
+          <hr className="border-t-4 border-blue-950 flex-grow"></hr>
+        </div>
+          <div className="container relative text-center text-block py-5">
+            <Marquee
+              pauseOnHover={true}
+              speed={20}
+              direction="left"
+              gradientWidth={100}
+              gradientColor="rgba(23, 37, 84, 0.2)"
+              gradient={false}
+            >
+              <SponsorMarquee />
+            </Marquee>
+          </div>
+        </div>
+
+        <div className="container ">
+          {/*marquee */}
+          {/* <div className="flex items-center my-4">
+            <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:mr-4 lg:mr-4 mr-4 text-blue-950">
+              ผู้สนับสนุน
+            </h1>
+            <hr className="border-t-4 border-blue-950 flex-grow"></hr>
+          </div>
+          <div className="bg-blue-950 p-0 h-full">
+            <div className="relative  text-center text-block py-5">
+              <Marquee
+                pauseOnHover={true}
+                speed={20}
+                direction="left"
+                gradientWidth={100}
+                gradientColor="rgba(255, 255, 255, 0.9)"
+              >
+                <SponsorMarquee />
+              </Marquee>
+            </div>
+          </div> */}
+
           <div className="flex items-center my-4">
-            <hr className="border-t-4 border-blue-950 border-blue-950 flex-grow"></hr>
+            <hr className="border-t-4 border-blue-950 flex-grow"></hr>
             <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">
               คำสำคัญ
             </h1>
-            
           </div>
           <div
             id="about"
@@ -96,7 +189,7 @@ export default function Home({ }) {
               <div
                 key={item.id}
                 className="relative z-10 rounded-md m-2 w-40 md:w-48 drop-shadow-md inline-block 
-                bg-gradient-to-tl from-blue-600 via-transparent to-cyan-500 p-px"
+        bg-gradient-to-tl from-blue-600 via-transparent to-cyan-500 p-px"
               >
                 <div className="p-4 md:card-body lg:card-body text-blue-950 text-center bg-white rounded-md">
                   <h1 className="text-3xl lg:text-5xl md:text-4xl mb-2 flex justify-center items-center">
@@ -129,6 +222,7 @@ export default function Home({ }) {
           </div>
         </div>
 
+
         <div className="container">
           <div className="flex items-center my-4">
             <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:mr-4 lg:mr-4 mr-4 text-blue-950">
@@ -157,13 +251,13 @@ export default function Home({ }) {
                 640: { slidesPerView: 1 },
                 768: { slidesPerView: 2 },
                 1024: { slidesPerView: 2 },
-                1280: { slidesPerView: 3  },
+                1280: { slidesPerView: 3 },
               }}
               className="relative"
             >
               {personals.map((personal: any, index) => (
                 <SwiperSlide className="my-4 flex justify-center" key={index}>
-             
+
                   <div className="bg-white pb-4 py-6 px-6 w-64 lg:w-72 md:w-72 h-[450px] drop-shadow-[0px_0px_10px_rgba(0,0,0,0.09)]  border-1 boderder border-gray-300 rounded-lg mx-auto overflow-hidden hover:drop-shadow-md duration-300 transition ease-in-out">
                     <div className="space-y-4">
                       <div className="w-96 h-10 bg-blue-950 rotate-45 absolute -right-40">
@@ -212,18 +306,18 @@ export default function Home({ }) {
                       </div>
                     </div>
                   </div>
-              
+
                 </SwiperSlide>
               ))}
             </Swiper>
             <div className="custom-pagination absolute bottom-0 left-0 right-0 flex justify-center mt-4"></div>
           </div>
         </div>
-        
+
         <div className="relative w-full h-full lg:h-full md:h-full z-10" id="contact">
           <div className="container py-4">
             <div className="flex items-center">
-              <hr className="border-t-4 border-blue-950 border-blue-950 flex-grow"></hr>
+              <hr className="border-t-4 border-blue-950 flex-grow"></hr>
               <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:ms-4 lg:ms-4 ms-4 text-blue-950">
                 ช่องทางการติดต่อ
               </h1>
