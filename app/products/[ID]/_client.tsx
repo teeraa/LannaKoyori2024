@@ -11,48 +11,50 @@ import ProductDetail from "./_ProductDetail";
 import ConsultDetail from "./_ConsultDetial";
 
 export interface Product {
-    ID: number;
-    productName: string;
-    price: number;
-    mainMaterialId: number;
-    subMaterial1Id: number;
-    subMaterial2Id: number;
-    subMaterial3Id: number;
-    businessId: number;
-    image: string;
-    sketch: string;
-    description: string;
-    color: string;
-    size: string;
-    businessInfo: BusinessInfo;
+  ID: number;
+  productName: string;
+  price: number;
+  mainMaterial: number;
+  subMaterial1: number;
+  subMaterial2: number;
+  subMaterial3: number;
+  bussinessID: number;
+  image: string;
+  sketch: string;
+  description: string;
+  color: string;
+  size: string;
+  businessinfo: BusinessInfo;
+  link: string | null;
 }
 
 export interface ConsultantInfo {
-    BusinessID: number;
-    ID: number;
-    NameThai: string;
-    NameEng: string;
-    gender: string;
-    nationality: string;
-    RoleThai: string;
-    RoleEng: string;
-    year: number;
-    picture: string;
+  ID: number;
+  BusinessID: number;
+  NameThai: string;
+  NameEng: string;
+  gender: string;
+  nationality: string;
+  RoleThai: string;
+  RoleEng: string;
+  Year: number;
+  picture: string;
 }
 
 export interface BusinessInfo {
-    id: number;
-    dataYear: number;
-    typeId: number;
-    nameTh: string;
-    nameEn: string;
-    addressTh: string;
-    latitude: string;
-    longitude: string;
-    logoUrl: string;
-    bannerUrl: string;
-    consultants: ConsultantInfo[];
+  ID: number;
+  DataYear: number;
+  BusiTypeId: number;
+  BussinessName: string;
+  BussinessNameEng: string;
+  AddressThai: string;
+  Latitude: string;
+  Longtitude: string;
+  picture: string;
+  banner: string;
+  consultantinfo: ConsultantInfo[];
 }
+
 
 export default function Product() {
     const pathname = usePathname();
@@ -70,6 +72,8 @@ export default function Product() {
         setIsProductLoading(true);
         try {
             const response = await axios.get(`/api/products/${ID}`)
+            console.log("Fetched Product Data:", response.data)
+            // setBusinessesId(response.data.map((product: Product) => product.bussinessID));
             setProducts(response.data)
         } catch (error: any) {
             setError(error.response?.data?.error || 'Failed to fetch products');
@@ -82,13 +86,15 @@ export default function Product() {
         setIsCousultLoading(true);
         try {
             const response = await axios.get(`/api/consultants/${ID}`)
-            setConsults(response?.data);
+            console.log("Fetched Consultant Data:", response.data)
+            setConsults(response.data.payload);
         } catch (error: any) {
             setError(error.response?.data?.error || 'Failed to fetch consultants');
         } finally {
             setIsCousultLoading(false);
         }
     }
+
 
     useEffect(() => {
         const Fancybox = require('@fancyapps/ui').Fancybox;
@@ -100,10 +106,10 @@ export default function Product() {
     }, [ID]);
 
     useEffect(() => {
-        if (product?.businessId) {
-            fetchConsults(product.businessId);
+        if (product?.bussinessID) {
+            fetchConsults(product.bussinessID);
         }
-    }, [product?.businessId]);
+    }, [product?.bussinessID]);
 
 
     function isValidUrl(str: string) {

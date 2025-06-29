@@ -234,7 +234,7 @@ export default function MemberDetail({ member, isLoading, roleThai }: MemberDeta
               ) : (
                 <>
                   <h1 className="text-[24px] sm:text-2xl lg:text-2xl font-light text-blue-950 text-wrap">
-                    {memberData?.memberNameThai || "-"}
+                    {memberData?.memberNameThai || memberData?.memberNameEng || "-"}
                   </h1>
                   <h2 className="text-[20px] text-gray-600 text-wrap mb-2">{memberData?.memberNameEng || "-"}</h2>
                 </>

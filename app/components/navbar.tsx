@@ -69,7 +69,7 @@ export default function Navbar() {
     { href: "/products", label: "ผลิตภัณฑ์" },
     { href: "/businesses", label: "ร้านค้า" },
     { href: "/members", label: "สมาชิก" },
-    { href: "/sponsors", label: "ผู้สนับสนุน" },
+    // { href: "/sponsors", label: "ผู้สนับสนุน" },
     { href: "/location", label: "ที่ตั้งร้าน" },
     { href: "/#contact", label: "ติดต่อ" },
   ];
