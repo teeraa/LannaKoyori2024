@@ -141,6 +141,7 @@ export async function POST(req: NextRequest) {
   const color = formData.get("color");
   const size = formData.get("size");
   const price = formData.get("price");
+  const link = formData.get("link");
   const mainMaterial = formData.get("mainMaterial");
   const subMaterial1 = formData.get("subMaterial1");
   const subMaterial2 = formData.get("subMaterial2");
@@ -322,6 +323,9 @@ export async function POST(req: NextRequest) {
   }
   if (size) {
     productData.size = size.toString();
+  }
+  if (link) {
+    productData.link = link.toString();
   }
   if (mainMaterial) {
     productData.mainMaterial = Number(mainMaterial);
