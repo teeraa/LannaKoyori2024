@@ -24,7 +24,7 @@ const MyComponent = () => {
       if (province) params.province = province;
 
       const response = await axios.get('/api/business', { params });
-      setFilteredStores(response.data);
+      setFilteredStores(response.data.payload);
     } catch (error: any) {
       setError(error.response?.data?.error || 'Failed to fetch Business');
     } finally {
@@ -69,7 +69,7 @@ const MyComponent = () => {
           </thead>
           <tbody>
             {filteredStores.map((store: any, index: number) => (
-              <tr key={store.ID}>
+              <tr key={store.ID || index}>
                 <td className="p-4 border-b border-blue-gray-50">{index + 1}</td>
                 <td className="p-4 border-b border-blue-gray-50">{store.BussinessName}</td>
                 <td className="p-4 border-b border-blue-gray-50">{store.AddressThai}</td>
