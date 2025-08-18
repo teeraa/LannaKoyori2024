@@ -85,16 +85,16 @@ export async function GET(request: NextRequest, context: any) {
       BusiTypeName_EN: business.businesstype?.BusiTypeName_EN || null,
 
       description_TH: (
-        (business.topic_detail?.[0].First_DescriptionTH || "") +
-        (business.topic_detail?.[0].Second_DescriptionTH || "")
+        (business.topic_detail?.[0]?.First_DescriptionTH || "") +
+        (business.topic_detail?.[0]?.Second_DescriptionTH || "")
       ).replace(/\r\n/g, ""),
       description_EN: (
-        (business.topic_detail?.[0].First_DescriptionEN || "") +
-        (business.topic_detail?.[0].Second_DescriptionEN || "")
+        (business.topic_detail?.[0]?.First_DescriptionEN || "") +
+        (business.topic_detail?.[0]?.Second_DescriptionEN || "")
       ).replace(/\r\n/g, ""),
       description_JP: (
-        (business.topic_detail?.[0].First_DescriptionJP || "") +
-        (business.topic_detail?.[0].Second_DescriptionJP || "")
+        (business.topic_detail?.[0]?.First_DescriptionJP || "") +
+        (business.topic_detail?.[0]?.Second_DescriptionJP || "")
       ).replace(/\r\n/g, ""),
 
       vedio:
