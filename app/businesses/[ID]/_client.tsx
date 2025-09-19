@@ -10,11 +10,11 @@ import BusinessDetailComponent from "./_BusinessDetail"
 import axios from "axios"
 
 const sampleYoutubeVideos: YouTubeVideo[] = [
-    {
-        id: "lC72308b18Y",
-        url: "https://www.youtube.com/watch?v=lC72308b18Y&t=7s",
-        title: "Marks within Patterns of Clay : koyori Season 2 [ENG]",
-    },
+    // {
+    //     id: "lC72308b18Y",
+    //     url: "https://www.youtube.com/watch?v=lC72308b18Y&t=7s",
+    //     title: "Marks within Patterns of Clay : koyori Season 2 [ENG]",
+    // },
     {
         id: "vWvjqOVJOio",
         url: "https://www.youtube.com/watch?v=vWvjqOVJOio",
@@ -25,26 +25,26 @@ const sampleYoutubeVideos: YouTubeVideo[] = [
         url: "https://www.youtube.com/watch?v=rvaHMcgLGnk",
         title: "MHESI Inside ตอน Koyori Project 2021งานวิจัยเพิ่มสมรรถนะการออกแบบงานหัตถกรรมพื้นเมือง",
     },
-    {
-        id: "HccWHra-y_g",
-        url: "https://www.youtube.com/watch?v=HccWHra-y_g",
-        title: "นวัตหัตถศิลป์แห่งล้านนา | koyori หลอมรวม สืบสาน งานหัตถศิลป์",
-    },
-    {
-        id: "iCCB5s4X0dc",
-        url: "https://www.youtube.com/watch?v=iCCB5s4X0dc",
-        title: "ผลิตภัณฑ์ท้องถิ่นจากมิตรสองวัย | koyori หลอมรวม สืบสาน งานหัตถศิลป์",
-    },
+    // {
+    //     id: "HccWHra-y_g",
+    //     url: "https://www.youtube.com/watch?v=HccWHra-y_g",
+    //     title: "นวัตหัตถศิลป์แห่งล้านนา | koyori หลอมรวม สืบสาน งานหัตถศิลป์",
+    // },
+    // {
+    //     id: "iCCB5s4X0dc",
+    //     url: "https://www.youtube.com/watch?v=iCCB5s4X0dc",
+    //     title: "ผลิตภัณฑ์ท้องถิ่นจากมิตรสองวัย | koyori หลอมรวม สืบสาน งานหัตถศิลป์",
+    // },
     {
         id: "6aq1AcgKJ_U",
         url: "https://www.youtube.com/watch?v=6aq1AcgKJ_U",
         title: `กระทรวง อว.สนับสนุนโครงการ "Koyori Project 2021" หวังเพิ่มมูลค่าหัตถกรรมชุมชนในยุค New Normal`,
     },
-    {
-        id: "zG3x3qAF534",
-        url: "https://www.youtube.com/watch?v=zG3x3qAF534",
-        title: "รอยยิ้มจากธรรมชาติ : koyori หลอมรวม สืบสาน งานหัตถศิลป์ ซีซัน 2 [ไทย]",
-    },
+    // {
+    //     id: "zG3x3qAF534",
+    //     url: "https://www.youtube.com/watch?v=zG3x3qAF534",
+    //     title: "รอยยิ้มจากธรรมชาติ : koyori หลอมรวม สืบสาน งานหัตถศิลป์ ซีซัน 2 [ไทย]",
+    // },
     {
         id: "Qiib6swlTY4",
         url: "https://www.youtube.com/watch?v=Qiib6swlTY4",

@@ -47,12 +47,12 @@ function SponsorMarquee() {
   );
 }
 
-export default function Home({ }) {
+export default function Home({}) {
   return (
     <>
       {/* <main className="main relative bg-gradient-to-b from-white via-gray-100 to-white"> */}
       <main className="bg-white relative">
-        <div className="w-full h-screen lg:h-[60vh] md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center relative" >
+        <div className="w-full h-screen lg:h-[60vh] md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center relative">
           <div
             className="absolute w-full h-screen lg:h-[70vh] md:h-full bg-no-repeat bg-cover md:bg-fixed bg-center"
             style={{
@@ -63,10 +63,9 @@ export default function Home({ }) {
               backgroundRepeat: "no-repeat",
               width: "100%",
               zIndex: 0,
-              opacity: "0.5"
+              opacity: "0.5",
             }}
-          >
-          </div>
+          ></div>
           <div className="relative container h-full">
             <div className="grid place-items-center lg:place-items-center md:place-items-center mx-auto px-0 h-full">
               <div className="flex flex-col-reverse lg:flex-row h-auto items-center justify-center px-0 ">
@@ -83,16 +82,13 @@ export default function Home({ }) {
                     8
                     จังหวัดทางภาคเหนือของประเทศไทยเพื่อพัฒนาคุณภาพงานหัตถกรรมด้วยการผสมผสานเทคนิคแบบดั้งเดิมเข้ากับการออกแบบที่สร้างสรรค์แล้วประดิษฐ์เป็นงานหัตถกรรมใหม่
                   </p>
-
                 </div>
 
                 <div className="fixed inset-0 z-0 flex justify-start items-start top-40">
-                  <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]">
-                  </div>
+                  <div className="w-10/12 h-40 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-green-500 rounded-[60%] blur-3xl opacity-30 transform scale-110 rotate-[20deg] md:rotate-[20deg]"></div>
                 </div>
                 <div className="fixed inset-0 z-0 flex justify-between items-end bottom-0">
-                  <div className="w-96 h-96 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-red-500 rounded-[60%] blur-3xl opacity-30 transform scale-80 rotate-[0deg] md:rotate-[140deg]">
-                  </div>
+                  <div className="w-96 h-96 md:h-96 bg-gradient-to-tr from-cyan-500 via-blue-300 to-red-500 rounded-[60%] blur-3xl opacity-30 transform scale-80 rotate-[0deg] md:rotate-[140deg]"></div>
                 </div>
 
                 <div className="relative w-3/4 lg:w-1/3 md:w-1/2">
@@ -128,17 +124,14 @@ export default function Home({ }) {
           </div>
         </div>
 
-
-        <div className="container flex items-center my-4 pt-28 md:pt-0 lg:pt-[350px]">
-          
-        </div>
+        <div className="container flex items-center my-4 pt-28 md:pt-0 lg:pt-[350px]"></div>
         <div className="bg-white p-0 h-full">
-        <div className="container flex items-center py-4">
+          <div className="container flex items-center py-4">
             <h1 className="text-3xl md:text-3xl lg:text-5xl font-bold md:mr-4 lg:mr-4 mr-4 text-blue-950">
-            ผู้สนับสนุน
-          </h1>
-          <hr className="border-t-4 border-blue-950 flex-grow"></hr>
-        </div>
+              ผู้สนับสนุน
+            </h1>
+            <hr className="border-t-4 border-blue-950 flex-grow"></hr>
+          </div>
           <div className="container relative text-center text-block py-5">
             <Marquee
               pauseOnHover={true}
@@ -198,9 +191,7 @@ export default function Home({ }) {
                   <h1 className="text-sm md:text-2xl text-nowrap">
                     {item.titleTH}
                   </h1>
-                  <h1 className="text-sm md:text-lg">
-                    {item.titleEN}
-                  </h1>
+                  <h1 className="text-sm md:text-lg">{item.titleEN}</h1>
                 </div>
               </div>
             ))}
@@ -221,7 +212,6 @@ export default function Home({ }) {
             </h1>
           </div>
         </div>
-
 
         <div className="container">
           <div className="flex items-center my-4">
@@ -257,11 +247,12 @@ export default function Home({ }) {
             >
               {personals.map((personal: any, index) => (
                 <SwiperSlide className="my-4 flex justify-center" key={index}>
-
                   <div className="bg-white pb-4 py-6 px-6 w-64 lg:w-72 md:w-72 h-[450px] drop-shadow-[0px_0px_10px_rgba(0,0,0,0.09)]  border-1 boderder border-gray-300 rounded-lg mx-auto overflow-hidden  duration-300 transition ease-in-out">
                     <div className="space-y-4">
                       <div className="w-96 h-10 bg-blue-950 rotate-45 absolute -right-40">
-                        <p className="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-1/2 rotate-60 text-center text-white text-md md:text-2xl">{personal.year}</p>
+                        <p className="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-1/2 rotate-60 text-center text-white text-md md:text-2xl">
+                          {personal.year}
+                        </p>
                       </div>
                       <div className="mx-auto w-32 h-32 rounded-full overflow-hidden bg-gray-200 mb-4 relative">
                         <Image
@@ -306,7 +297,6 @@ export default function Home({ }) {
                       </div>
                     </div>
                   </div>
-
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -314,7 +304,10 @@ export default function Home({ }) {
           </div>
         </div>
 
-        <div className="relative w-full h-full lg:h-full md:h-full z-10" id="contact">
+        <div
+          className="relative w-full h-full lg:h-full md:h-full z-10"
+          id="contact"
+        >
           <div className="container py-4">
             <div className="flex items-center">
               <hr className="border-t-4 border-blue-950 flex-grow"></hr>
@@ -324,24 +317,27 @@ export default function Home({ }) {
             </div>
             <div className="block md:flex py-4 justify-start gap-4 space-y-4 ">
               <div className=" flex flex-col jstify-start items-start w-full md:w-1/4 gap-4 ">
-                {
-                  contact.map((item: any) => (
-                    <div key={item.id} className="rounded-md  bg-base-500 p-4 items-center m-0 w-full bg-white ">
-                      <b className="text-3xl m-0 p-0 text-blue-950">{item.icon}</b>
-                      <div className="">
-                        <h4 className="text-gray-600 font-bold">{item.title}</h4>
-                        <p className="text-gray-500">{item.subtitle}</p>
-                      </div>
+                {contact.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="rounded-md  bg-base-500 p-4 items-center m-0 w-full bg-white "
+                  >
+                    <b className="text-3xl m-0 p-0 text-blue-950">
+                      {item.icon}
+                    </b>
+                    <div className="">
+                      <h4 className="text-gray-600 font-bold">{item.title}</h4>
+                      <p className="text-gray-500">{item.subtitle}</p>
                     </div>
-                  ))
-                }
+                  </div>
+                ))}
               </div>
               <div className="w-full md:w-3/4 ">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3786.521992403125!2d99.59297107518798!3d18.36907928269539!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30d9127bfc5f3283%3A0xd1908855f2f0f59c!2z4Lih4Lir4Liy4Lin4Li04LiX4Lii4Liy4Lil4Lix4Lii4LmA4LiX4LiE4LmC4LiZ4LmC4Lil4Lii4Li14Lij4Liy4LiK4Lih4LiH4LiE4Lil4Lil4LmJ4Liy4LiZ4LiZ4LiyIOC4peC4s-C4m-C4suC4hw!5e0!3m2!1sth!2sth!4v1733463021019!5m2!1sth!2sth"
                   className="w-full h-96 md:h-full rounded-lg"
-                  loading="lazy">
-                </iframe>
+                  loading="lazy"
+                ></iframe>
               </div>
             </div>
           </div>
@@ -350,7 +346,6 @@ export default function Home({ }) {
           <Footer />
         </div>
       </main>
-
     </>
   );
 }
